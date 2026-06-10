@@ -22,7 +22,15 @@ if (!response.ok && response.status !== 200) {
 }
 
 const html = await response.text();
+
+// Strip out all the pre-rendered UI from the body, keeping ONLY the scripts.
+// This prevents the "homepage flash" when the fallback index.html is used for other routes.
+const shellHtml = html.replace(/<body[^>]*>([\s\S]*?)<\/body>/i, (match, bodyContent) => {
+  const scripts = bodyContent.match(/<script[\s\S]*?<\/script>/gi) || [];
+  return `<body>${scripts.join("")}</body>`;
+});
+
 mkdirSync(resolve(__dirname, "../dist/client"), { recursive: true });
-writeFileSync(outPath, html, "utf-8");
+writeFileSync(outPath, shellHtml, "utf-8");
 
 console.log(`[generate-html] Written ${html.length} chars to dist/client/index.html ✓`);
