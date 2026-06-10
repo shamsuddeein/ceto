@@ -63,14 +63,6 @@ export function SiteHeader() {
           ))}
         </nav>
         <div className="hidden items-center gap-4 lg:flex">
-          <DropdownMenu>
-            <DropdownMenuTrigger className="inline-flex items-center gap-1 rounded-full px-4 py-2 text-base font-bold text-foreground transition focus:outline-none hover:bg-accent data-[state=open]:bg-accent">
-              <Globe className="h-4 w-4" /> EN <ChevronDown className="h-4 w-4 stroke-[3px]" />
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="rounded-2xl border-2 border-border shadow-vibe p-2 font-bold text-foreground">
-              <DropdownMenuItem className="cursor-pointer rounded-xl focus:bg-tint-peach">English (EN)</DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
           <Link
             to="/login"
             className="inline-flex items-center justify-center gap-2 rounded-full border-[3px] border-border bg-white px-6 py-2.5 text-base font-black text-foreground shadow-vibe shadow-vibe-hover"
@@ -148,11 +140,8 @@ const FOOTER_COLS = [
     title: "Support & Resources",
     links: [
       { label: "Blog", href: "/blog" },
-      { label: "Helpdesk & Guides", href: "/contact" },
-      { label: "Creator Academy", href: "/faq" },
+      { label: "Contact Support", href: "/contact" },
       { label: "FAQs", href: "/faq" },
-      { label: "Contact Us", href: "/contact" },
-      { label: "Press & Media Kits", href: "/contact" },
     ],
   },
   {
@@ -160,7 +149,6 @@ const FOOTER_COLS = [
     links: [
       { label: "Terms & Conditions", href: "/terms" },
       { label: "Privacy Policy", href: "/privacy" },
-      { label: "Copyright Policy", href: "/privacy" },
     ],
   },
 ];

@@ -44,7 +44,7 @@ function Hero() {
           <h1 className="font-display text-5xl font-black leading-[1.1] text-foreground sm:text-6xl md:text-7xl">
             The best way to <br />
             <span className="text-primary">sell digital</span> <br />
-            Products.
+            products.
           </h1>
           <p className="mt-6 text-lg text-foreground/80 md:text-xl font-medium leading-relaxed max-w-xl">
             Launch your store and start selling digital products in minutes. The cleanest, most reliable commerce platform for creators in Nigeria.
@@ -67,7 +67,7 @@ function Hero() {
 
         <div className="relative mx-auto mt-10 w-full max-w-md lg:mt-0 lg:max-w-sm">
            <div className="absolute -top-10 right-0 rounded-xl border-[3px] border-border bg-gold px-4 py-2 font-bold shadow-vibe rotate-3 text-sm z-10">
-              The Cetoh <br /> Mastery Platform ✦
+              The Cetoh <br /> Creator Platform ✦
            </div>
            
            <div className="relative rounded-[2.5rem] border-[4px] border-border bg-tint-mint p-8 shadow-vibe -rotate-2 transform">
