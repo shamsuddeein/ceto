@@ -22,7 +22,6 @@ const NAV = [
   { label: "Pricing", href: "/pricing" },
   { label: "Features", href: "/features", caret: true, items: [{label: "Digital Downloads", href: "/features"}, {label: "Online Courses", href: "/features"}, {label: "Community", href: "/features"}] },
   { label: "Learn", href: "/#learn", caret: true, items: [{label: "Creator Academy", href: "/faq"}, {label: "Helpdesk", href: "/contact"}, {label: "Blog", href: "/blog"}] },
-  { label: "Affiliate Network", href: "/features" },
 ];
 
 export function SiteHeader() {

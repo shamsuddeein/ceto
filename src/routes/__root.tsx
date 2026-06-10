@@ -107,10 +107,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:site", content: "@cetoh" },
-      { property: "og:image", content: "/og-image.png" },
+      { property: "og:image", content: "https://cetoh.com/og-image.png" },
       { property: "og:image:width", content: "1200" },
       { property: "og:image:height", content: "630" },
-      { name: "twitter:image", content: "/og-image.png" },
+      { name: "twitter:image", content: "https://cetoh.com/og-image.png" },
     ],
     links: [
       { rel: "icon", type: "image/x-icon", href: "/favicon.ico" },

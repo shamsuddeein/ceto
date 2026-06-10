@@ -50,12 +50,12 @@ function Hero() {
             Launch your store and start selling digital products in minutes. The cleanest, most reliable commerce platform for creators in Nigeria.
           </p>
           <div className="mt-8 flex flex-wrap items-center gap-4">
-            <a
-              href="#start"
+            <Link
+              to="/signup"
               className="inline-flex items-center justify-center rounded-full border-[3px] border-border bg-primary px-10 py-5 text-xl font-black text-white shadow-vibe shadow-vibe-hover"
             >
               Start Selling with Cetoh
-            </a>
+            </Link>
             <a 
               href="#features" 
               className="inline-flex items-center justify-center rounded-full border-[3px] border-border bg-white px-10 py-5 text-xl font-black text-foreground shadow-vibe shadow-vibe-hover"
