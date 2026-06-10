@@ -90,7 +90,7 @@ function LoginPage() {
               width={640}
               height={640}
               loading="lazy"
-              className="relative z-10 w-full max-w-sm drop-shadow-2xl"
+              className="relative z-10 w-full max-w-sm drop-shadow-2xl mix-blend-darken"
             />
             
             {/* Floating element */}
