@@ -4,8 +4,7 @@ import { Eye, EyeOff, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { AuthHeader } from "@/components/auth-header";
 import { SocialAuthButton } from "@/components/social-auth-button";
-
-
+import loginIllustration from "@/assets/setup-person-cartoon.png";
 export const Route = createFileRoute("/login")({
   head: () => ({
     meta: [
@@ -73,33 +72,31 @@ function LoginPage() {
         <div className="pointer-events-none absolute -left-32 top-40 h-80 w-80 rounded-full border-[3px] border-border bg-tint-rose shadow-vibe-sm opacity-40" />
 
         <div className="container-page relative grid min-h-[calc(100vh-4rem)] items-center gap-8 py-8 md:py-12 lg:grid-cols-2 lg:gap-10">
-          {/* Marketing / Testimonial Block */}
-          <div className="order-2 flex flex-col justify-between rounded-[2.5rem] border-[4px] border-border bg-tint-mint p-8 shadow-vibe lg:order-1 relative overflow-hidden h-full min-h-[400px]">
-            <div className="relative z-10">
-               <div className="inline-flex items-center rounded-full border-[3px] border-border bg-white px-4 py-1.5 text-sm font-bold text-foreground shadow-vibe-sm mb-6">
-                 Join 10,000+ Creators
-               </div>
-               <h2 className="font-display text-4xl font-black leading-[1.1] text-foreground md:text-5xl">
-                 "Cetoh has completely transformed how I sell my digital products. The instant payouts are a game-changer."
-               </h2>
-            </div>
+          {/* Illustration Block */}
+          <div className="order-2 lg:order-1 relative h-full min-h-[400px] w-full rounded-[2.5rem] border-[4px] border-border bg-tint-peach p-8 flex flex-col items-center justify-end shadow-vibe overflow-hidden pt-16">
             
-            <div className="relative z-10 mt-12 flex items-center gap-4">
-              <div className="h-14 w-14 rounded-full border-[3px] border-border bg-tint-peach shadow-vibe-sm flex items-center justify-center font-display text-2xl font-black text-foreground">
-                 SO
-              </div>
-              <div>
-                <p className="font-black text-foreground text-lg leading-tight">Sarah O.</p>
-                <p className="font-bold text-foreground/70 text-sm">Digital Artist & Course Creator</p>
-              </div>
+            <div className="absolute top-8 left-8 right-8 z-20">
+               <div className="inline-flex items-center rounded-full border-[3px] border-border bg-white px-5 py-2 text-sm font-black text-foreground shadow-vibe-sm">
+                 👋 Welcome back, Creator!
+               </div>
             </div>
 
-            {/* Abstract Decorative Elements */}
-            <div className="absolute right-[-10%] top-[10%] h-64 w-64 rounded-full border-[4px] border-border bg-tint-peach opacity-50 blur-xl"></div>
-            <div className="absolute left-[-10%] bottom-[-10%] h-64 w-64 rounded-full border-[4px] border-border bg-primary opacity-20 blur-2xl"></div>
+            {/* Decorative background circle */}
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-80 w-80 rounded-full border-[4px] border-border bg-gold/50 shadow-vibe blur-sm"></div>
+
+            <img
+              src={loginIllustration}
+              alt="Creator"
+              width={640}
+              height={640}
+              loading="lazy"
+              className="relative z-10 w-full max-w-sm drop-shadow-2xl"
+            />
             
-            {/* Grid background pattern */}
-            <div className="absolute inset-0 z-0 bg-[radial-gradient(#00000033_2px,transparent_2px)] [background-size:24px_24px] opacity-20"></div>
+            {/* Floating element */}
+            <div className="absolute bottom-12 left-6 z-20 rotate-[-6deg] rounded-xl border-[3px] border-border bg-white px-4 py-3 font-bold text-foreground shadow-vibe text-sm max-w-[200px]">
+              Ready to see today's sales? 💸
+            </div>
           </div>
 
           {/* Card */}
