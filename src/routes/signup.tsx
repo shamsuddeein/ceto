@@ -76,8 +76,6 @@ function SignupPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <AuthHeader />
-
       {/* Top banner */}
       <div className="relative overflow-hidden bg-primary text-primary-foreground">
         <div className="container-page flex flex-col items-center justify-center gap-3 py-6 text-center md:flex-row md:gap-8 md:py-5">
@@ -90,6 +88,10 @@ function SignupPage() {
             </p>
           </div>
         </div>
+      </div>
+
+      <div className="pt-6">
+        <AuthHeader />
       </div>
 
       <main className="grid gap-0 lg:grid-cols-2">
