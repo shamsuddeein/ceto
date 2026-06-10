@@ -360,24 +360,31 @@ function PaymentGateways() {
         <div className="relative mx-auto mt-20 max-w-4xl overflow-hidden rounded-[3rem] border-[3px] border-border bg-white p-8 shadow-vibe md:p-12 flex flex-col items-center">
           {/* Floating Badges */}
           <div className="absolute top-8 left-8 z-10 rotate-[-6deg] rounded-full border-[3px] border-border bg-tint-mint px-4 py-2 text-sm font-black text-foreground shadow-vibe-sm hidden sm:block">
-            🌍 Global Reach
+            🇳🇬 Proudly Nigerian
           </div>
           <div className="absolute bottom-12 left-10 z-10 rotate-[4deg] rounded-full border-[3px] border-border bg-tint-peach px-4 py-2 text-sm font-black text-foreground shadow-vibe-sm hidden sm:block">
-            💸 Local Settlements
+            ⚡ Instant Payouts
           </div>
           <div className="absolute top-1/3 right-8 z-10 rotate-[-2deg] rounded-2xl border-[3px] border-border bg-white p-3 shadow-vibe flex flex-col items-center hidden md:flex">
-             <span className="font-display font-black text-3xl text-foreground">100+</span>
-             <span className="text-xs font-bold text-foreground/70 uppercase">Countries</span>
+             <span className="font-display font-black text-3xl text-foreground text-primary">₦</span>
+             <span className="text-xs font-bold text-foreground/70 uppercase text-center mt-1">Direct to<br/>Bank</span>
           </div>
 
-          <div className="relative w-full max-w-md">
-            <GlobeViz />
+          <div className="relative flex h-64 w-full max-w-md items-center justify-center">
+            {/* Naira visual instead of Globe */}
+            <div className="absolute inset-0 rounded-full bg-tint-mint/20 blur-3xl"></div>
+            <div className="relative z-10 flex h-40 w-40 items-center justify-center rounded-full border-[4px] border-border bg-primary shadow-vibe">
+              <span className="font-display text-8xl font-black text-white">₦</span>
+            </div>
+            {/* Decorative rings */}
+            <div className="absolute h-56 w-56 rounded-full border-2 border-dashed border-border opacity-30 animate-spin-slow"></div>
+            <div className="absolute h-72 w-72 rounded-full border border-border opacity-20"></div>
           </div>
 
-          <div className="relative z-10 mt-4 text-center max-w-md">
-             <h3 className="font-display text-2xl font-black text-foreground">Sell to the World</h3>
+          <div className="relative z-10 mt-6 text-center max-w-md">
+             <h3 className="font-display text-2xl font-black text-foreground">Settle directly in Naira</h3>
              <p className="mt-2 text-[15px] font-medium leading-relaxed text-foreground/80">
-               Your digital products are available globally. We handle the cross-border payments and currency conversions automatically.
+               No more foreign exchange headaches or delayed international wires. Get your sales deposited directly into your local Nigerian bank account instantly.
              </p>
           </div>
         </div>
