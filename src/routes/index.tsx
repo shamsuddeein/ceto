@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { Suspense, lazy } from "react";
 import { SiteHeader, SiteFooter } from "@/components/site-layout";
 const HomeSections = lazy(() => import("@/components/home-sections"));
