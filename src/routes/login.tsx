@@ -73,30 +73,51 @@ function LoginPage() {
 
         <div className="container-page relative grid min-h-[calc(100vh-4rem)] items-center gap-8 py-8 md:py-12 lg:grid-cols-2 lg:gap-10">
           {/* Illustration Block */}
-          <div className="order-2 lg:order-1 relative h-full min-h-[400px] w-full rounded-[2.5rem] border-[4px] border-border bg-tint-peach p-8 flex flex-col items-center justify-end shadow-vibe overflow-hidden pt-16">
-            
-            <div className="absolute top-8 left-8 right-8 z-20">
-               <div className="inline-flex items-center rounded-full border-[3px] border-border bg-white px-5 py-2 text-sm font-black text-foreground shadow-vibe-sm">
-                 👋 Welcome back, Creator!
-               </div>
-            </div>
+          <div className="order-2 lg:order-1 relative h-full min-h-[500px] w-full rounded-[2.5rem] border-[4px] border-border bg-tint-mint p-8 flex flex-col justify-end shadow-vibe overflow-hidden">
+             {/* Background Grid Pattern */}
+             <div className="absolute inset-0 opacity-30" style={{ backgroundImage: "radial-gradient(#000 2px, transparent 2px)", backgroundSize: "24px 24px" }} />
 
-            {/* Decorative background circle */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-80 w-80 rounded-full border-[4px] border-border bg-gold/50 shadow-vibe blur-sm"></div>
+             {/* Huge Typography Background */}
+             <div className="absolute -left-10 top-12 rotate-[-5deg] font-display text-[100px] font-black leading-none text-foreground/5 whitespace-nowrap select-none md:text-[140px]">
+                CREATE.
+             </div>
+             <div className="absolute -right-10 top-44 rotate-[5deg] font-display text-[100px] font-black leading-none text-foreground/5 whitespace-nowrap select-none md:text-[140px]">
+                SELL.
+             </div>
 
-            <img
-              src={loginIllustration}
-              alt="Creator"
-              width={640}
-              height={640}
-              loading="lazy"
-              className="relative z-10 w-full max-w-sm drop-shadow-2xl mix-blend-darken"
-            />
-            
-            {/* Floating element */}
-            <div className="absolute bottom-12 left-6 z-20 rotate-[-6deg] rounded-xl border-[3px] border-border bg-white px-4 py-3 font-bold text-foreground shadow-vibe text-sm max-w-[200px]">
-              Ready to see today's sales? 💸
-            </div>
+             {/* Geometric Accents */}
+             <div className="absolute top-10 right-10 h-16 w-16 rotate-12 rounded-2xl border-[4px] border-border bg-tint-peach shadow-vibe"></div>
+             <div className="absolute top-40 left-8 h-12 w-12 rounded-full border-[4px] border-border bg-tint-rose shadow-vibe"></div>
+
+             {/* Character Image */}
+             <div className="relative z-10 mx-auto mt-auto flex w-full max-w-[320px] items-end justify-center">
+               {/* Behind-Character Graphic (Solid Circle) */}
+               <div className="absolute bottom-8 left-1/2 h-64 w-64 -translate-x-1/2 rounded-full border-[4px] border-border bg-gold shadow-vibe md:h-72 md:w-72" />
+               
+               <img
+                 src={loginIllustration}
+                 alt="Creator"
+                 width={640}
+                 height={640}
+                 loading="lazy"
+                 className="relative z-10 w-full drop-shadow-2xl mix-blend-darken scale-110 translate-y-4"
+               />
+             </div>
+
+             {/* Floating Badges */}
+             <div className="absolute top-12 left-6 z-20 rotate-[-4deg] rounded-full border-[3px] border-border bg-white px-5 py-2.5 font-bold text-foreground shadow-vibe">
+               👋 Welcome back!
+             </div>
+             
+             <div className="absolute bottom-16 right-4 z-20 rotate-[4deg] rounded-2xl border-[4px] border-border bg-white p-3 shadow-vibe flex items-center gap-3 sm:right-8 sm:p-4">
+                <div className="flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center rounded-full border-[3px] border-border bg-primary text-white text-lg sm:text-xl shadow-vibe-sm">
+                  💰
+                </div>
+                <div>
+                   <p className="text-[10px] sm:text-xs font-bold text-foreground/70 uppercase tracking-wider">Today's Sales</p>
+                   <p className="font-display text-lg sm:text-2xl font-black text-foreground leading-none mt-1">₦145,000</p>
+                </div>
+             </div>
           </div>
 
           {/* Card */}
