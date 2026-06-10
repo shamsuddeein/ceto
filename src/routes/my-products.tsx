@@ -17,7 +17,7 @@ function MyProducts() {
   return (
     <DashboardLayout title="My Products">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-8">
-        <div className="flex flex-1 items-center gap-4">
+        <div className="flex flex-1 flex-col sm:flex-row sm:items-center gap-4">
           <div className="flex flex-1 items-center gap-3 rounded-[1.5rem] border-[3px] border-border bg-white px-4 py-3 shadow-vibe-sm transition-all focus-within:translate-x-[2px] focus-within:translate-y-[2px] focus-within:shadow-none">
             <Search className="h-5 w-5 text-foreground stroke-[3px]" />
             <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search your products..." className="w-full bg-transparent text-base font-bold text-foreground outline-none placeholder:text-foreground/50" />
@@ -26,7 +26,7 @@ function MyProducts() {
             <option value="all">All status</option><option value="live">Live</option><option value="draft">Draft</option>
           </select>
         </div>
-        <Link to="/add-product" className="inline-flex items-center gap-2 rounded-full border-[3px] border-border bg-primary px-6 py-3 text-base font-black text-white shadow-vibe-sm transition-transform hover:-translate-y-1 hover:shadow-vibe">
+        <Link to="/add-product" className="inline-flex items-center justify-center gap-2 rounded-full border-[3px] border-border bg-primary px-6 py-3 text-base font-black text-white shadow-vibe-sm transition-transform hover:-translate-y-1 hover:shadow-vibe">
           <Plus className="h-5 w-5 stroke-[3px]" /> New product
         </Link>
       </div>

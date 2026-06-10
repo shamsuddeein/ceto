@@ -80,9 +80,9 @@ function AnalyticsComponent() {
           </div>
         </div>
 
-        <div className="rounded-[2.5rem] border-[4px] border-border bg-white p-8 shadow-vibe">
+        <div className="rounded-[2.5rem] border-[4px] border-border bg-white p-6 sm:p-8 shadow-vibe">
           <div className="mb-8">
-            <h2 className="font-display text-2xl font-black text-foreground">Revenue & Traffic Overview</h2>
+            <h2 className="font-display text-xl sm:text-2xl font-black text-foreground">Revenue & Traffic Overview</h2>
           </div>
           <div>
             <div className="h-[400px] w-full pt-4 font-bold">

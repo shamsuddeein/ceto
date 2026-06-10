@@ -20,9 +20,9 @@ function Settings() {
   ] as const;
   return (
     <DashboardLayout title="Settings">
-      <div className="flex flex-wrap gap-4 mb-8">
+      <div className="flex gap-2 overflow-x-auto pb-4 mb-4 sm:gap-4 sm:mb-8 sm:pb-0 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
         {tabs.map((t) => (
-          <button key={t.id} onClick={() => setTab(t.id)} className={`rounded-xl border-[3px] px-6 py-3 text-base font-black transition-all ${tab === t.id ? "border-border bg-tint-mint text-foreground shadow-vibe-sm -translate-y-1" : "border-transparent bg-transparent text-foreground/70 hover:border-border hover:bg-tint-cream hover:-translate-y-1 hover:shadow-vibe-sm"}`}>
+          <button key={t.id} onClick={() => setTab(t.id)} className={`shrink-0 whitespace-nowrap rounded-xl border-[3px] px-5 py-2.5 sm:px-6 sm:py-3 text-sm sm:text-base font-black transition-all ${tab === t.id ? "border-border bg-tint-mint text-foreground shadow-vibe-sm sm:-translate-y-1" : "border-transparent bg-transparent text-foreground/70 hover:border-border hover:bg-tint-cream sm:hover:-translate-y-1 hover:shadow-vibe-sm"}`}>
             {t.label}
           </button>
         ))}
@@ -48,8 +48,8 @@ function SaveCard({ title, children }: { title: string; children: React.ReactNod
     toast.success("Settings saved");
   }
   return (
-    <form onSubmit={save} className="rounded-[2.5rem] border-[4px] border-border bg-white p-8 shadow-vibe">
-      <h2 className="font-display text-2xl font-black text-foreground">{title}</h2>
+    <form onSubmit={save} className="rounded-[2.5rem] border-[4px] border-border bg-white p-6 sm:p-8 shadow-vibe">
+      <h2 className="font-display text-xl sm:text-2xl font-black text-foreground">{title}</h2>
       <div className="mt-8 space-y-6">{children}</div>
       <button type="submit" disabled={loading} className="mt-10 inline-flex items-center justify-center gap-2 rounded-full border-[3px] border-border bg-primary px-8 py-4 text-base font-black text-white shadow-vibe hover:-translate-y-1 hover:shadow-vibe-hover disabled:opacity-70 transition-transform">
         {loading && <Loader2 className="h-5 w-5 animate-spin stroke-[3px]" />} {loading ? "Saving..." : "Save changes"}

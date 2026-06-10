@@ -33,7 +33,7 @@ function Withdrawals() {
   return (
     <DashboardLayout title="Withdraw Funds">
       <div className="grid gap-8 lg:grid-cols-[1fr_400px]">
-        <form onSubmit={submit} className="rounded-[2.5rem] border-[4px] border-border bg-white p-8 shadow-vibe flex flex-col justify-between">
+        <form onSubmit={submit} className="rounded-[2.5rem] border-[4px] border-border bg-white p-6 sm:p-8 shadow-vibe flex flex-col justify-between">
           <div>
             <h2 className="font-display text-3xl font-black text-foreground">Request a withdrawal</h2>
             <p className="mt-2 text-base font-bold text-foreground/70">Funds usually arrive within 1–3 business days.</p>
@@ -66,7 +66,7 @@ function Withdrawals() {
             {loading && <Loader2 className="h-6 w-6 animate-spin stroke-[3px]" />} {loading ? "Submitting..." : "Request withdrawal"}
           </button>
         </form>
-        <aside className="rounded-[2.5rem] border-[4px] border-border bg-tint-lilac p-8 shadow-vibe flex flex-col justify-center text-center">
+        <aside className="rounded-[2.5rem] border-[4px] border-border bg-tint-lilac p-6 sm:p-8 shadow-vibe flex flex-col justify-center text-center">
           <p className="text-lg font-bold text-foreground/80">Available balance</p>
           <p className="mt-2 font-display text-5xl font-black text-foreground">₦{balance.toLocaleString('en-US')}</p>
           <p className="mt-6 inline-flex items-center justify-center rounded-full border-[3px] border-border bg-white px-4 py-2 text-sm font-black shadow-vibe-sm mx-auto">Min withdrawal: ₦10,000</p>
@@ -74,7 +74,7 @@ function Withdrawals() {
         </aside>
       </div>
 
-      <div className="mt-10 rounded-[2.5rem] border-[4px] border-border bg-white p-8 shadow-vibe">
+      <div className="mt-10 rounded-[2.5rem] border-[4px] border-border bg-white p-6 sm:p-8 shadow-vibe">
         <h2 className="font-display text-2xl font-black text-foreground">Withdrawal history</h2>
         <div className="mt-6 overflow-x-auto">
           <table className="min-w-full text-base">

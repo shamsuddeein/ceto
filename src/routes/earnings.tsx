@@ -22,14 +22,14 @@ function Earnings() {
         <Stat icon={TrendingUp} label="Pending clearance" value="₦41,800.00" />
         <Stat icon={ArrowDownToLine} label="Total withdrawn" value="₦822,000.00" />
       </div>
-      <div className="mt-10 flex flex-col gap-6 rounded-[2.5rem] border-[4px] border-border bg-tint-peach p-8 sm:flex-row sm:items-center sm:justify-between shadow-vibe">
+      <div className="mt-10 flex flex-col gap-6 rounded-[2.5rem] border-[4px] border-border bg-tint-peach p-6 sm:p-8 sm:flex-row sm:items-center sm:justify-between shadow-vibe">
         <div>
           <p className="text-lg font-bold text-foreground/80">Ready to cash out?</p>
           <p className="font-display text-4xl font-black text-foreground">Withdraw your earnings</p>
         </div>
         <Link to="/withdrawals" className="rounded-full border-[3px] border-border bg-white px-8 py-4 text-lg font-black text-foreground shadow-vibe-sm hover:-translate-y-1 hover:shadow-vibe transition-all whitespace-nowrap">Withdraw funds</Link>
       </div>
-      <div className="mt-10 rounded-[2.5rem] border-[4px] border-border bg-white p-8 shadow-vibe">
+      <div className="mt-10 rounded-[2.5rem] border-[4px] border-border bg-white p-6 sm:p-8 shadow-vibe">
         <h2 className="font-display text-2xl font-black text-foreground">Recent transactions</h2>
         <div className="mt-6 overflow-x-auto">
           <table className="min-w-full text-base">

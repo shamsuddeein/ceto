@@ -82,8 +82,8 @@ function AddProduct() {
 
 function Card({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <div className="rounded-[2.5rem] border-[4px] border-border bg-white p-8 shadow-vibe">
-      <h3 className="font-display text-2xl font-black text-foreground">{title}</h3>
+    <div className="rounded-[2.5rem] border-[4px] border-border bg-white p-6 sm:p-8 shadow-vibe">
+      <h3 className="font-display text-xl sm:text-2xl font-black text-foreground">{title}</h3>
       <div className="mt-6 space-y-6">{children}</div>
     </div>
   );
