@@ -42,7 +42,7 @@ export function SocialAuthButton({
     <button
       type="button"
       {...rest}
-      className="flex w-full items-center justify-center gap-3 rounded-md border border-border bg-card px-4 py-3 text-sm font-semibold text-foreground transition hover:bg-muted disabled:opacity-60"
+      className="flex w-full items-center justify-center gap-3 rounded-full border-[3px] border-border bg-white px-4 py-3 text-sm font-black text-foreground shadow-vibe-sm shadow-vibe-hover transition disabled:opacity-60"
     >
       {loading ? <Loader2 className="h-5 w-5 animate-spin" /> : <ProviderIcon provider={provider} />}
       {children}
