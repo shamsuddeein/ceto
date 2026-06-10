@@ -1,0 +1,597 @@
+import { Link } from "@tanstack/react-router";
+import { useState, useMemo } from "react";
+import {
+  ChevronDown,
+  Globe,
+  Search,
+  ShoppingCart,
+  Monitor,
+  BookOpen,
+  GraduationCap,
+  Ticket,
+  Star,
+  Package,
+  Briefcase,
+  Check,
+  ArrowRight,
+  Share2,
+  LayoutTemplate,
+  MailCheck,
+  ChevronLeft,
+  ChevronRight,
+  Quote,
+  Menu,
+  X as XClose,
+  Code2,
+  CreditCard,
+  Zap,
+  LayoutDashboard,
+} from "lucide-react";
+import {
+  SiPaypal,
+  SiStripe,
+  SiMastercard,
+  SiVisa,
+  SiAmericanexpress,
+  SiGooglepay,
+  SiAirtel,
+  SiMailchimp,
+  SiZapier,
+  SiKit,
+  SiFacebook,
+  SiInstagram,
+  SiX,
+  SiYoutube,
+  SiTheguardian,
+} from "@icons-pack/react-simple-icons";
+import setupPerson from "@/assets/setup-person-cartoon.png";
+import marketplacePreview from "@/assets/marketplace-preview.png";
+import ebookCover from "@/assets/ebook-cover.jpg";
+import avatarImg from "@/assets/avatar.png";
+import avatar2 from "@/assets/avatar-2.jpg";
+import avatar3 from "@/assets/avatar-3.jpg";
+
+/* ---------- Reusable ---------- */
+function PrimaryButton({
+  children,
+  className = "",
+  to,
+  href,
+  ...rest
+}: any) {
+  const cn = `inline-flex items-center justify-center gap-2 rounded-full border-[3px] border-border bg-primary px-10 py-4 text-lg font-black text-white shadow-vibe shadow-vibe-hover ${className}`;
+  if (to) return <Link to={to} className={cn} {...rest}>{children}</Link>;
+  if (href) return <a href={href} className={cn} {...rest}>{children}</a>;
+  return <button className={cn} {...rest}>{children}</button>;
+}
+function GhostButton({
+  children,
+  className = "",
+  to,
+  href,
+  ...rest
+}: any) {
+  const cn = `inline-flex items-center justify-center gap-2 rounded-full border-[3px] border-border bg-white px-10 py-4 text-lg font-black text-foreground shadow-vibe shadow-vibe-hover ${className}`;
+  if (to) return <Link to={to} className={cn} {...rest}>{children}</Link>;
+  if (href) return <a href={href} className={cn} {...rest}>{children}</a>;
+  return <button className={cn} {...rest}>{children}</button>;
+}
+/* ---------- Brand wordmarks (no SVG available) ---------- */
+const MpesaMark = () => (
+  <span className="inline-flex items-center font-extrabold tracking-tight text-[#1a8f3f]">
+    M<span className="mx-px inline-block h-4 w-2 rounded-sm bg-[#e30613]" />PESA
+  </span>
+);
+const MtnMark = () => (
+  <span className="grid h-9 w-14 place-items-center rounded-full bg-[#ffcb05] text-xs font-extrabold tracking-wider text-[#003e7e]">
+    MTN
+  </span>
+);
+const TigoMark = () => (
+  <span className="font-bold italic text-[#005ea8]">tig<span className="text-[#005ea8]">o</span></span>
+);
+const VerveMark = () => (
+  <span className="inline-flex items-center gap-1 font-extrabold text-[#1a1a1a]">
+    <span className="grid h-5 w-5 place-items-center rounded-full bg-[#e30613] text-[10px] text-white">V</span>
+    erve
+  </span>
+);
+const OpenAiMark = () => (
+  <span className="inline-flex items-center gap-1.5 font-semibold text-foreground">
+    <svg viewBox="0 0 24 24" className="h-5 w-5" fill="currentColor" aria-hidden>
+      <path d="M22.2819 9.8211a5.9847 5.9847 0 0 0-.5157-4.9108 6.0462 6.0462 0 0 0-6.5098-2.9A6.0651 6.0651 0 0 0 4.9807 4.1818a5.9847 5.9847 0 0 0-3.9977 2.9 6.0462 6.0462 0 0 0 .7427 7.0966 5.98 5.98 0 0 0 .511 4.9107 6.051 6.051 0 0 0 6.5146 2.9001A5.9847 5.9847 0 0 0 13.2599 24a6.0557 6.0557 0 0 0 5.7718-4.2058 5.9894 5.9894 0 0 0 3.9977-2.9001 6.0557 6.0557 0 0 0-.7475-7.0729zm-9.022 12.6081a4.4755 4.4755 0 0 1-2.8764-1.0408l.1419-.0804 4.7783-2.7582a.7948.7948 0 0 0 .3927-.6813v-6.7369l2.02 1.1686a.071.071 0 0 1 .038.052v5.5826a4.504 4.504 0 0 1-4.4945 4.4944zm-9.6607-4.1254a4.4708 4.4708 0 0 1-.5346-3.0137l.142.0852 4.783 2.7582a.7712.7712 0 0 0 .7806 0l5.8428-3.3685v2.3324a.0804.0804 0 0 1-.0332.0615L9.74 19.9502a4.4992 4.4992 0 0 1-6.1408-1.6464zM2.3408 7.8956a4.485 4.485 0 0 1 2.3655-1.9728V11.6a.7664.7664 0 0 0 .3879.6765l5.8144 3.3543-2.0201 1.1685a.0757.0757 0 0 1-.071 0l-4.8303-2.7865A4.504 4.504 0 0 1 2.3408 7.872zm16.5963 3.8558L13.1038 8.364 15.1192 7.2a.0757.0757 0 0 1 .071 0l4.8303 2.7913a4.4944 4.4944 0 0 1-.6765 8.1042v-5.6772a.79.79 0 0 0-.407-.667zm2.0107-3.0231l-.142-.0852-4.7735-2.7818a.7759.7759 0 0 0-.7854 0L9.409 9.2297V6.8974a.0662.0662 0 0 1 .0284-.0615l4.8303-2.7866a4.4992 4.4992 0 0 1 6.6802 4.66zM8.3065 12.863l-2.02-1.1638a.0804.0804 0 0 1-.038-.0567V6.0742a4.4992 4.4992 0 0 1 7.3757-3.4537l-.142.0805L8.704 5.459a.7948.7948 0 0 0-.3927.6813zm1.0976-2.3654l2.602-1.4998 2.6069 1.4998v2.9994l-2.5974 1.4997-2.6067-1.4997Z" />
+    </svg>
+    OpenAI
+  </span>
+);
+
+/* Press wordmarks (small publications) */
+const PressMark = ({ name, color }: { name: string; color: string }) => (
+  <span className="font-display text-xl font-bold tracking-tight" style={{ color }}>
+    {name}
+  </span>
+);
+
+/* ---------- Marketplace explore ---------- */
+const products = [
+  { tint: "bg-tint-lilac", title: "Milk and Honey by Rupi Kaur [eBook]", price: "₦4,500.00", Icon: BookOpen },
+  { tint: "bg-tint-mint", title: "Course", price: "₦30,000.00", Icon: GraduationCap },
+  { tint: "bg-tint-peach", title: "Subscription", price: "₦42,000.00", Icon: Star },
+  { tint: "bg-tint-cream", title: "Coaching service", price: "₦90,000.00", Icon: Briefcase },
+  { tint: "bg-tint-mint", title: "Good Vibes Tee", price: "₦5,000.00", Icon: Package },
+  { tint: "bg-tint-rose", title: "Event Ticket", price: "₦10,000.00", Icon: Ticket },
+];
+
+function MarketplaceExplore() {
+  return (
+    <section className="bg-background py-16 md:py-24 relative overflow-hidden">
+      <div className="pointer-events-none absolute left-1/2 top-1/2 h-[40rem] w-[40rem] -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-border bg-tint-mint shadow-vibe opacity-40" />
+      <div className="container-page relative z-10 animate-fade-in-up">
+        <div className="mx-auto w-full max-w-5xl overflow-hidden rounded-[2rem] border-[4px] border-border bg-background shadow-vibe relative z-10 flex flex-col pointer-events-none select-none">
+          {/* Browser Header */}
+          <div className="flex items-center justify-between border-b-[4px] border-border bg-tint-cream px-6 py-4">
+            <div className="flex gap-2">
+              <div className="h-3 w-3 rounded-full border-[2.5px] border-border bg-tint-rose"></div>
+              <div className="h-3 w-3 rounded-full border-[2.5px] border-border bg-gold"></div>
+              <div className="h-3 w-3 rounded-full border-[2.5px] border-border bg-tint-mint"></div>
+            </div>
+            <div className="flex h-8 w-1/2 max-w-xs items-center justify-center rounded-full border-[3px] border-border bg-white text-xs font-bold text-foreground/50">
+              cetoh.com/demo
+            </div>
+            <div className="w-12"></div>
+          </div>
+          {/* Browser Content */}
+          <div className="flex flex-col md:flex-row">
+            <div className="hidden md:block w-64 border-r-[4px] border-border bg-white p-8">
+              <img src={avatarImg} alt="Creator Profile" className="h-20 w-20 rounded-full border-[4px] border-border object-cover shadow-vibe-sm mb-6 bg-white" />
+              <h3 className="font-display text-2xl font-black">Cetoh Market</h3>
+              <p className="mt-4 text-sm font-bold text-foreground/70 leading-relaxed">
+                Turn what you know into income. We handle payments, delivery, and everything else.
+              </p>
+              <div className="mt-6 flex gap-4">
+                <SiInstagram className="h-5 w-5 text-foreground/60 transition-colors hover:text-primary cursor-pointer" />
+                <SiX className="h-5 w-5 text-foreground/60 transition-colors hover:text-primary cursor-pointer" />
+                <SiFacebook className="h-5 w-5 text-foreground/60 transition-colors hover:text-primary cursor-pointer" />
+              </div>
+            </div>
+            {/* Main Area */}
+            <div className="flex-1 bg-muted/30 p-6 md:p-8">
+              {/* Top Bar */}
+              <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-8">
+                <div className="flex w-full max-w-md items-center gap-2 rounded-xl border-[3px] border-border bg-white px-4 py-2.5 shadow-vibe-sm">
+                  <Search className="h-4 w-4 stroke-[3px] text-foreground/40" />
+                  <span className="text-sm font-bold text-foreground/40">Search products...</span>
+                </div>
+                <div className="flex items-center gap-4 w-full sm:w-auto">
+                  <div className="flex-1 sm:flex-none rounded-xl border-[3px] border-border bg-white px-4 py-2.5 text-center text-sm font-black shadow-vibe-sm cursor-pointer hover:bg-muted/50">
+                    NGN ▾
+                  </div>
+                  <div className="flex-1 sm:flex-none flex items-center justify-center gap-2 rounded-xl border-[3px] border-border bg-tint-mint px-4 py-2.5 text-sm font-black shadow-vibe-sm cursor-pointer hover:-translate-y-1 transition-transform">
+                    <ShoppingCart className="h-4 w-4 stroke-[3px]" /> Cart <span className="flex h-5 w-5 items-center justify-center rounded-full bg-foreground text-xs text-white">3</span>
+                  </div>
+                </div>
+              </div>
+              {/* Grid */}
+              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                {[
+                  { title: "Digital eBook", price: "₦4,500.00", tint: "bg-tint-peach", Icon: BookOpen },
+                  { title: "Video Course", price: "₦30,000.00", tint: "bg-tint-mint", Icon: GraduationCap },
+                  { title: "Notion Template", price: "₦15,000.00", tint: "bg-tint-lilac", Icon: Monitor },
+                  { title: "1-on-1 Coaching", price: "₦90,000.00", tint: "bg-gold", Icon: Star },
+                  { title: "Design Assets", price: "₦5,000.00", tint: "bg-tint-cream", Icon: Package },
+                  { title: "Event Ticket", price: "₦10,000.00", tint: "bg-tint-rose", Icon: Ticket },
+                ].map((item, i) => (
+                  <div key={i} className={`flex flex-col rounded-[1.5rem] border-[4px] border-border ${item.tint} p-4 shadow-vibe-sm transition-transform hover:-translate-y-1 hover:shadow-vibe cursor-pointer`}>
+                    <div className="flex h-28 items-center justify-center rounded-xl border-[3px] border-border bg-white">
+                      <item.Icon className="h-10 w-10 stroke-[2.5] text-foreground" />
+                    </div>
+                    <h4 className="mt-4 font-black">{item.title}</h4>
+                    <p className="mt-1 text-sm font-bold text-foreground/70">{item.price}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ---------- Sellable types ---------- */
+const sellTypes = [
+  { Icon: Monitor, title: "Digital Products", body: "Sell digital downloads, software, templates, and content packs instantly." },
+  { Icon: BookOpen, title: "Ebooks", body: "Sell PDFs, EPUBs, and audiobooks securely with automatic delivery." },
+  { Icon: GraduationCap, title: "Courses & Memberships", body: "Host video courses and private communities with built-in content protection." },
+  { Icon: Ticket, title: "Event Tickets", body: "Sell access to webinars, workshops, and physical events." },
+  { Icon: Star, title: "Services", body: "Book 1-on-1 coaching, consultations, or freelance design services." },
+  { Icon: Package, title: "Physical Goods", body: "Ship physical merchandise alongside your digital products from one dashboard." },
+];
+
+function SellableTypes() {
+  const tints = ["bg-tint-mint", "bg-tint-peach", "bg-tint-rose", "bg-tint-cream", "bg-tint-lilac", "bg-tint-mint"];
+
+  return (
+    <section id="features" className="relative overflow-hidden bg-surface py-20 md:py-28 border-y-2 border-border">
+      <div className="absolute right-10 top-10 hidden lg:block">
+        <div className="relative h-20 w-20">
+          <div className="absolute inset-0 rounded-full border-2 border-border bg-gold shadow-vibe" />
+          <div className="absolute left-3 top-3 h-16 w-16 rounded-full border-2 border-border bg-tint-mint" />
+        </div>
+      </div>
+      <div className="container-page animate-fade-in-up" style={{ animationDelay: '100ms' }}>
+        <div className="mx-auto max-w-3xl text-center">
+          <h2 className="font-display text-4xl font-black leading-tight md:text-5xl">
+            Sell any kind of <span className="relative inline-block px-2"><span className="relative z-10 text-primary">product</span><div className="absolute bottom-1 left-0 right-0 h-3 bg-tint-peach -rotate-2"></div></span>,
+            <br className="hidden sm:block" /> service or template
+          </h2>
+          <p className="mt-5 text-lg font-medium text-foreground/80 md:text-xl">
+            Everything you need to launch and run your online business from a single dashboard.
+          </p>
+        </div>
+
+        <div className="mt-16 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+          {sellTypes.map((t, i) => (
+            <div key={t.title} className={`rounded-[2rem] border-2 border-border ${tints[i]} p-8 shadow-vibe transition-transform hover:-translate-y-1`}>
+              <div className="grid h-16 w-16 place-items-center rounded-full border-2 border-border bg-white shadow-vibe-sm">
+                <t.Icon className="h-8 w-8 text-foreground" />
+              </div>
+              <h3 className="mt-6 text-2xl font-black text-foreground">{t.title}</h3>
+              <p className="mt-3 text-[16px] font-medium leading-relaxed text-foreground/80">{t.body}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ---------- Setup steps ---------- */
+function SetupSteps() {
+  const steps = [
+    { title: "Sign up and add your bank details", body: "Create your account and connect your Nigerian bank account." },
+    { title: "Upload your products", body: "Customize your storefront and set your pricing." },
+    { title: "Share your link and get paid", body: "Send your store link to your audience and receive payments directly." },
+  ];
+  return (
+    <section id="how" className="relative overflow-hidden bg-background py-20 md:py-28 border-y-2 border-border">
+      <div className="container-page animate-fade-in-up" style={{ animationDelay: '200ms' }}>
+        <div className="text-center">
+          <h2 className="font-display text-4xl font-black md:text-5xl">Start selling in three steps</h2>
+          <div className="mx-auto mt-6 h-2 w-20 rounded-full border-2 border-border bg-tint-peach shadow-vibe-sm" />
+        </div>
+
+        <div className="mt-16 grid items-center gap-12 lg:grid-cols-2">
+          <ol className="relative space-y-8">
+            {steps.map((s, i) => (
+              <li key={i} className="relative flex gap-6 rounded-[2rem] border-2 border-border bg-white p-6 shadow-vibe">
+                <span className="relative z-10 grid h-12 w-12 shrink-0 place-items-center rounded-full border-2 border-border bg-tint-mint text-foreground shadow-vibe-sm">
+                  <Check className="h-6 w-6 font-bold" />
+                </span>
+                <div>
+                  <h3 className="text-xl font-black text-foreground md:text-2xl">{s.title}</h3>
+                  <p className="mt-2 max-w-md text-[16px] font-medium leading-relaxed text-foreground/80">{s.body}</p>
+                </div>
+              </li>
+            ))}
+            <li className="pl-6 pt-4">
+              <PrimaryButton to="/signup">
+                Find out More <ArrowRight className="h-5 w-5" />
+              </PrimaryButton>
+            </li>
+          </ol>
+
+          <div className="relative mx-auto w-full max-w-md lg:max-w-none">
+            <div className="absolute -right-6 -bottom-6 h-full w-full rounded-[2.5rem] border-2 border-border bg-tint-peach shadow-vibe" />
+            <img
+              src={setupPerson}
+              alt="Creator setting up Cetoh store on phone"
+              width={1024}
+              height={1280}
+              loading="lazy"
+              className="relative w-full rounded-[2rem] border-2 border-border object-cover shadow-vibe bg-white"
+            />
+            <div className="absolute -bottom-6 left-4 w-[85%] max-w-sm rounded-[1.5rem] border-2 border-border bg-white p-6 shadow-vibe rotate-3 sm:left-auto sm:-bottom-10 sm:-left-10">
+              <h4 className="text-lg font-black text-foreground">Connect your bank account</h4>
+              <p className="mt-2 text-sm font-medium leading-relaxed text-foreground/80">
+                Enter your details to start receiving payments directly to your bank account.
+              </p>
+              <button className="mt-4 rounded-full border-2 border-border bg-tint-mint px-6 py-2.5 text-sm font-bold text-foreground shadow-vibe-sm hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[6px_6px_0px_0px_var(--color-border)] transition-all">
+                Connect
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ---------- Payment gateways ---------- */
+const PaystackMark = () => (
+  <span className="inline-flex items-center gap-1.5 font-extrabold text-[#00c3f7]">
+    <span className="grid h-6 w-6 place-items-center rounded-full bg-[#00c3f7] text-xs font-black text-white">P</span>
+    Paystack
+  </span>
+);
+const FlutterwaveMark = () => (
+  <span className="inline-flex items-center gap-1.5 font-extrabold text-[#f5a623]">
+    <svg viewBox="0 0 32 32" className="h-6 w-6" aria-hidden>
+      <circle cx="16" cy="16" r="16" fill="#f5a623" />
+      <path d="M8 20 Q12 10 16 16 Q20 22 24 12" stroke="white" strokeWidth="2.5" fill="none" strokeLinecap="round" />
+    </svg>
+    Flutterwave
+  </span>
+);
+
+type Gate = { node: React.ReactNode; key: string };
+const gateways: Gate[] = [
+  { key: "paystack", node: <PaystackMark /> },
+  { key: "flutterwave", node: <FlutterwaveMark /> },
+  { key: "verve", node: <VerveMark /> },
+  { key: "mastercard", node: <span className="inline-flex items-center gap-1.5"><SiMastercard color="#EB001B" className="h-7 w-7" /><span className="text-xs font-bold text-foreground/80">mastercard</span></span> },
+  { key: "visa", node: <SiVisa color="#1A1F71" className="h-7" /> },
+];
+
+function GlobeViz() {
+  const cx = 300, cy = 200, r = 170;
+  const dots = useMemo(() => {
+    const items: React.ReactNode[] = [];
+    const step = 11;
+    for (let row = 0; row <= Math.ceil((2 * r) / step); row++) {
+      for (let col = 0; col <= Math.ceil((2 * r) / step); col++) {
+        const x = cx - r + col * step;
+        const y = cy - r + row * step;
+        const dist = Math.sqrt((x - cx) ** 2 + (y - cy) ** 2);
+        if (dist < r - 4) {
+          const op = parseFloat((0.07 + 0.4 * (1 - dist / r)).toFixed(2));
+          items.push(<circle key={`${row}-${col}`} cx={x} cy={y} r="1.8" fill="currentColor" opacity={op} />);
+        }
+      }
+    }
+    return items;
+  }, []);
+  const latOffsets = [-130, -85, -40, 10, 60, 110];
+  return (
+    <svg viewBox="0 0 600 400" className="h-auto w-full text-primary">
+      <defs>
+        <radialGradient id="gGrad" cx="40%" cy="35%" r="60%">
+          <stop offset="0%" stopColor="currentColor" stopOpacity="0.13" />
+          <stop offset="100%" stopColor="currentColor" stopOpacity="0.03" />
+        </radialGradient>
+        <clipPath id="gClip"><circle cx={cx} cy={cy} r={r} /></clipPath>
+      </defs>
+      <circle cx={cx} cy={cy} r={r} fill="url(#gGrad)" />
+      {dots}
+      {latOffsets.map((off, i) => {
+        const ly = cy + off;
+        const rx = Math.sqrt(Math.max(0, r * r - off * off));
+        return <ellipse key={i} cx={cx} cy={ly} rx={rx * 0.92} ry={rx * 0.14} fill="none" stroke="currentColor" strokeWidth="0.6" opacity="0.18" clipPath="url(#gClip)" />;
+      })}
+      <path d="M 155 315 Q 265 90 445 210" fill="none" stroke="currentColor" strokeWidth="1.5" opacity="0.6" />
+      <path d="M 190 340 Q 305 125 455 235" fill="none" stroke="currentColor" strokeWidth="1.5" opacity="0.6" />
+      <path d="M 168 250 Q 248 125 388 160" fill="none" stroke="currentColor" strokeWidth="1.5" opacity="0.6" />
+      {([[155, 315], [445, 210], [190, 340], [455, 235], [168, 250], [388, 160], [300, 78]] as [number, number][]).map(([x, y], i) => (
+        <circle key={i} cx={x} cy={y} r="5" fill="currentColor" opacity="0.85" />
+      ))}
+    </svg>
+  );
+}
+
+function PaymentGateways() {
+  return (
+    <section className="relative overflow-hidden bg-background py-20 md:py-28">
+      <div className="pointer-events-none absolute -left-32 top-1/2 h-72 w-72 rounded-full border-2 border-border bg-tint-lilac shadow-vibe opacity-60" />
+      <div className="pointer-events-none absolute right-10 top-20 h-20 w-20 rotate-12 rounded-lg border-2 border-border bg-tint-peach shadow-vibe-sm opacity-60" />
+      
+      <div className="container-page relative animate-fade-in-up" style={{ animationDelay: '300ms' }}>
+        <div className="mx-auto max-w-3xl text-center">
+          <h2 className="font-display text-4xl font-black leading-tight md:text-5xl">
+            Local payments that <br className="hidden sm:block" /> <span className="text-primary">actually work</span>
+          </h2>
+          <div className="mx-auto mt-6 h-2 w-20 rounded-full border-2 border-border bg-tint-rose shadow-vibe-sm" />
+          <p className="mt-6 text-[16px] font-medium leading-relaxed text-foreground/80 md:text-lg">
+            We support Paystack, Flutterwave, and all major debit cards so your customers never struggle to check out. Get settled instantly in Naira.
+          </p>
+        </div>
+
+        <div className="mx-auto mt-16 grid max-w-5xl grid-cols-2 gap-6 sm:grid-cols-3 md:grid-cols-5">
+          {gateways.map((g) => (
+            <div
+              key={g.key}
+              className="grid h-24 place-items-center rounded-[1.5rem] border-2 border-border bg-white px-3 shadow-vibe-sm transition-transform hover:-translate-y-1 hover:shadow-vibe"
+            >
+              {g.node}
+            </div>
+          ))}
+        </div>
+
+        <div className="mx-auto mt-20 max-w-3xl rounded-[3rem] border-2 border-border bg-white p-8 shadow-vibe">
+          <GlobeViz />
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ---------- Sales tools ---------- */
+function SalesTools() {
+  const tools = [
+    { Icon: Zap, title: "Instant Payouts", body: "Get paid automatically to your Nigerian bank account as soon as you make a sale.", tint: "bg-gold" },
+    { Icon: LayoutTemplate, title: "Custom Storefronts", body: "Build high-converting landing pages for your products without writing any code.", tint: "bg-tint-rose" },
+    { Icon: MailCheck, title: "Automated Follow-ups", body: "Recover abandoned carts and follow up with buyers automatically.", tint: "bg-tint-mint" },
+  ];
+  return (
+    <section className="relative overflow-hidden bg-background py-20 md:py-28 border-y-2 border-border">
+      <div className="pointer-events-none absolute -left-20 top-10 h-40 w-40 rounded-full border-2 border-border bg-tint-peach shadow-vibe opacity-80" />
+      <div className="pointer-events-none absolute right-10 bottom-10 h-40 w-40 rounded-full border-2 border-border bg-tint-mint shadow-vibe opacity-80" />
+      <div className="container-page relative animate-fade-in-up" style={{ animationDelay: '400ms' }}>
+        <h2 className="text-center font-display text-4xl font-black md:text-5xl">
+          Built to drive <span className="text-primary">conversions</span>
+        </h2>
+        <div className="mt-16 grid gap-8 md:grid-cols-3">
+          {tools.map((t) => (
+            <article key={t.title} className={`relative rounded-[2rem] border-2 border-border ${t.tint} p-8 shadow-vibe hover:-translate-y-1 transition-transform`}>
+              <div className="grid h-16 w-16 place-items-center rounded-full border-2 border-border bg-white shadow-vibe-sm">
+                <t.Icon className="h-8 w-8 text-foreground" />
+              </div>
+              <h3 className="mt-8 text-2xl font-black text-foreground">{t.title}</h3>
+              <p className="mt-3 text-[16px] font-medium leading-relaxed text-foreground/80">{t.body}</p>
+            </article>
+          ))}
+        </div>
+        <div className="mt-16 flex justify-center">
+          <PrimaryButton to="/features">
+            See all features <ArrowRight className="h-5 w-5" />
+          </PrimaryButton>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ---------- Core Features ---------- */
+function Integrations() {
+  const features = [
+    { Icon: CreditCard, title: "Paystack payments", body: "Accept naira payments instantly", tint: "bg-tint-lilac" },
+    { Icon: Zap, title: "Automatic delivery", body: "Files sent automatically after payment", tint: "bg-tint-peach" },
+    { Icon: LayoutDashboard, title: "Creator dashboard", body: "Track sales and withdraw earnings", tint: "bg-tint-mint" },
+  ];
+  return (
+    <section className="relative overflow-hidden bg-background py-20 md:py-28 border-t-2 border-border">
+      <div className="pointer-events-none absolute -left-20 top-0 h-40 w-40 rounded-full border-2 border-border bg-tint-rose shadow-vibe opacity-60" />
+      <div className="pointer-events-none absolute right-10 top-10 h-24 w-24 rotate-45 rounded-lg border-2 border-border bg-gold shadow-vibe-sm opacity-60" />
+      
+      <div className="container-page relative animate-fade-in-up" style={{ animationDelay: '500ms' }}>
+        <div className="mx-auto grid max-w-5xl grid-cols-1 gap-8 sm:grid-cols-3">
+          {features.map((f, i) => (
+            <div key={i} className={`rounded-[2rem] border-2 border-border ${f.tint} p-8 shadow-vibe text-center hover:-translate-y-1 transition-transform`}>
+              <div className="mx-auto mb-8 grid h-16 w-16 place-items-center rounded-full border-2 border-border bg-white shadow-vibe-sm">
+                <f.Icon className="h-8 w-8 text-foreground" />
+              </div>
+              <h3 className="text-2xl font-black text-foreground">{f.title}</h3>
+              <p className="mt-3 text-[16px] font-medium leading-relaxed text-foreground/80">{f.body}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ---------- Join Creators ---------- */
+function Testimonials() {
+  return (
+    <section className="relative overflow-hidden bg-background py-20 md:py-28">
+      <div className="container-page relative text-center animate-fade-in-up" style={{ animationDelay: '600ms' }}>
+        <div className="relative mx-auto max-w-5xl overflow-hidden rounded-[4rem] border-[4px] border-border bg-tint-peach px-6 py-24 shadow-vibe md:px-16">
+          <div className="pointer-events-none absolute -left-16 -top-16 h-64 w-64 rounded-full border-[3px] border-border bg-tint-mint shadow-vibe opacity-50" />
+          <div className="pointer-events-none absolute -right-20 -bottom-20 h-80 w-80 rounded-full border-[3px] border-border bg-white shadow-vibe opacity-50" />
+          
+          <h2 className="relative z-10 font-display text-5xl font-black md:text-7xl text-foreground">Join our first creators</h2>
+          <p className="relative z-10 mx-auto mt-6 max-w-2xl text-[16px] font-medium leading-relaxed text-foreground/80 md:text-lg">
+            Be among the first Nigerian creators to sell on CETOH. Early creators get 0% commission for 3 months.
+          </p>
+          <div className="relative z-10 mt-10 flex justify-center">
+            <PrimaryButton to="/signup">Start selling free</PrimaryButton>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ---------- Ebook CTA ---------- */
+function EbookCTA() {
+  return (
+    <section className="relative overflow-hidden bg-background py-20 md:py-28 border-y-2 border-border">
+      <div className="pointer-events-none absolute left-10 top-10 h-24 w-24 rotate-[25deg] rounded-lg border-2 border-border bg-tint-mint shadow-vibe-sm opacity-40" />
+      <div className="pointer-events-none absolute right-10 bottom-10 h-32 w-32 rounded-full border-2 border-border bg-tint-lilac shadow-vibe opacity-40" />
+      
+      <div className="container-page relative animate-fade-in-up" style={{ animationDelay: '700ms' }}>
+        <div className="grid items-center gap-12 lg:grid-cols-2">
+          <div>
+            <h2 className="font-display text-4xl font-black leading-tight md:text-5xl">
+              Learn how to sell <br className="hidden sm:block" /> digital products
+            </h2>
+            <p className="mt-6 max-w-lg text-[16px] font-medium leading-relaxed text-foreground/80 md:text-lg">
+              We asked 12 top creators how they built their businesses, and compiled their strategies into one guide. Download our free manual to learn how to package your knowledge, set up your store, and get your first 100 sales.
+            </p>
+            <div className="mt-10">
+              <PrimaryButton to="/signup">Get free ebook <ArrowRight className="h-5 w-5" /></PrimaryButton>
+            </div>
+          </div>
+          <div className="flex justify-center relative">
+            <div className="absolute inset-0 top-10 bg-tint-rose rounded-[3rem] border-2 border-border shadow-vibe -rotate-3 transform scale-90" />
+            <img src={ebookCover} alt="The Ultimate Digital Product Manual ebook" width={1024} height={1024} loading="lazy" className="relative w-full max-w-[20rem] rotate-3 rounded-2xl border-2 border-border shadow-vibe bg-white z-10" />
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ---------- Stats & Final CTA ---------- */
+function PressAndFinalCTA() {
+  const stats = [
+    { value: "10 min", label: "Time to set up your store" },
+    { value: "90%", label: "Of every sale goes to you" },
+    { value: "₦0", label: "Cost to get started" },
+  ];
+  return (
+    <section id="start" className="relative overflow-hidden bg-background py-20 md:py-28">
+      <div className="container-page relative animate-fade-in-up" style={{ animationDelay: '800ms' }}>
+        <div className="mx-auto grid max-w-4xl grid-cols-1 gap-8 sm:grid-cols-3">
+          {stats.map((s, i) => (
+            <div key={i} className="text-center">
+              <h3 className="font-display text-5xl font-black text-primary md:text-6xl">{s.value}</h3>
+              <p className="mt-3 text-lg font-bold text-foreground/80">{s.label}</p>
+            </div>
+          ))}
+        </div>
+
+        <div className="relative mt-24 mx-auto max-w-4xl overflow-hidden rounded-[4rem] border-[4px] border-border bg-tint-mint px-6 py-24 text-center shadow-vibe md:px-16">
+          <div className="pointer-events-none absolute -right-12 -top-16 h-64 w-64 rounded-full border-[3px] border-border bg-tint-rose shadow-vibe-sm opacity-50" />
+          
+          <h3 className="relative z-10 mx-auto max-w-md font-display text-5xl font-black text-foreground leading-tight md:text-6xl">
+            Start Selling on Cetoh
+          </h3>
+          <p className="relative z-10 mx-auto mt-6 max-w-sm text-xl font-medium text-foreground/80">
+            Create a free account in less than 5 minutes and start selling!
+          </p>
+          
+          <div className="relative z-10 mt-10 flex flex-col items-center justify-center gap-6 sm:flex-row">
+            <Link 
+              to="/signup" 
+              className="inline-flex items-center justify-center gap-2 rounded-full border-[3px] border-border bg-primary px-10 py-5 text-xl font-black text-white shadow-vibe shadow-vibe-hover"
+            >
+              Get started for free <ArrowRight className="h-6 w-6" />
+            </Link>
+            <Link 
+              to="/marketplace" 
+              className="inline-flex items-center justify-center rounded-full border-[3px] border-border bg-white px-10 py-5 text-xl font-black text-foreground shadow-vibe shadow-vibe-hover"
+            >
+              See a live demo
+            </Link>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+export default function HomeSections() {
+  return (
+    <>
+      <MarketplaceExplore />
+      <SellableTypes />
+      <SetupSteps />
+      <PaymentGateways />
+      <SalesTools />
+      <Integrations />
+      <Testimonials />
+      <EbookCTA />
+      <PressAndFinalCTA />
+    </>
+  );
+}
