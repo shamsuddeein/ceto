@@ -357,8 +357,29 @@ function PaymentGateways() {
           ))}
         </div>
 
-        <div className="mx-auto mt-20 max-w-3xl rounded-[3rem] border-2 border-border bg-white p-8 shadow-vibe">
-          <GlobeViz />
+        <div className="relative mx-auto mt-20 max-w-4xl overflow-hidden rounded-[3rem] border-[3px] border-border bg-white p-8 shadow-vibe md:p-12 flex flex-col items-center">
+          {/* Floating Badges */}
+          <div className="absolute top-8 left-8 z-10 rotate-[-6deg] rounded-full border-[3px] border-border bg-tint-mint px-4 py-2 text-sm font-black text-foreground shadow-vibe-sm hidden sm:block">
+            🌍 Global Reach
+          </div>
+          <div className="absolute bottom-12 left-10 z-10 rotate-[4deg] rounded-full border-[3px] border-border bg-tint-peach px-4 py-2 text-sm font-black text-foreground shadow-vibe-sm hidden sm:block">
+            💸 Local Settlements
+          </div>
+          <div className="absolute top-1/3 right-8 z-10 rotate-[-2deg] rounded-2xl border-[3px] border-border bg-white p-3 shadow-vibe flex flex-col items-center hidden md:flex">
+             <span className="font-display font-black text-3xl text-foreground">100+</span>
+             <span className="text-xs font-bold text-foreground/70 uppercase">Countries</span>
+          </div>
+
+          <div className="relative w-full max-w-md">
+            <GlobeViz />
+          </div>
+
+          <div className="relative z-10 mt-4 text-center max-w-md">
+             <h3 className="font-display text-2xl font-black text-foreground">Sell to the World</h3>
+             <p className="mt-2 text-[15px] font-medium leading-relaxed text-foreground/80">
+               Your digital products are available globally. We handle the cross-border payments and currency conversions automatically.
+             </p>
+          </div>
         </div>
       </div>
     </section>
