@@ -41,7 +41,7 @@ function Dashboard() {
                 <span className="rounded-full border-[3px] border-border bg-tint-cream px-3 py-1 text-xs font-black shadow-vibe-sm">{s.change}</span>
               </div>
               <p className="mt-6 font-display text-4xl font-black text-foreground">{s.value}</p>
-              <p className="mt-2 text-base font-bold text-foreground/70">{s.label}</p>
+              <p className="mt-1 text-sm font-semibold text-foreground/60">{s.label}</p>
             </div>
           );
         })}
@@ -50,15 +50,59 @@ function Dashboard() {
       <div className="mt-10 grid gap-8 lg:grid-cols-3">
         <div className="rounded-[2.5rem] border-[4px] border-border bg-white p-8 shadow-vibe lg:col-span-2">
           <div className="flex items-center justify-between">
-            <h2 className="font-display text-2xl font-black text-foreground">Sales this month</h2>
+            <h2 className="font-display text-2xl font-black text-foreground">Sales this year</h2>
             <Link to="/earnings" className="text-sm font-black text-foreground hover:underline">View earnings →</Link>
           </div>
-          <div className="mt-8 flex h-56 items-end gap-3">
-            {(hasData ? [40, 65, 50, 80, 45, 70, 90, 60, 75, 95, 70, 88] : Array(12).fill(0)).map((h, i) => (
-              <div key={i} className="flex-1 rounded-t-xl border-[3px] border-b-0 border-border bg-tint-mint" style={{ height: `${Math.max(h, 2)}%` }}>
-                <div className="h-full w-full rounded-t-lg bg-white/40" style={{ height: `${hasData ? h * 0.7 : 0}%` }} />
+          <div className="mt-8 flex h-64 w-full gap-2 sm:gap-4">
+            {/* Y-axis */}
+            <div className="flex flex-col justify-between text-xs font-bold text-foreground/50 pb-6 w-8 sm:w-10 text-right">
+              <span>100k</span>
+              <span>75k</span>
+              <span>50k</span>
+              <span>25k</span>
+              <span>0</span>
+            </div>
+            <div className="flex-1 flex flex-col">
+              {/* Chart Area */}
+              <div className="flex-1 flex items-end gap-1 sm:gap-3 border-b-[3px] border-border pb-0 relative">
+                {/* Horizontal Grid Lines */}
+                <div className="absolute inset-0 flex flex-col justify-between pointer-events-none">
+                  <div className="w-full border-b-2 border-dashed border-border/10"></div>
+                  <div className="w-full border-b-2 border-dashed border-border/10"></div>
+                  <div className="w-full border-b-2 border-dashed border-border/10"></div>
+                  <div className="w-full border-b-2 border-dashed border-border/10"></div>
+                  <div className="w-full"></div>
+                </div>
+                {/* Bars */}
+                {(hasData ? [40, 65, 50, 80, 45, 70, 90, 60, 75, 95, 70, 88] : Array(12).fill(0)).map((h, i) => {
+                  const amount = h > 0 ? (h * 1000).toLocaleString() : "0";
+                  return (
+                    <div key={i} className="group relative flex-1 flex flex-col items-center justify-end h-full z-10">
+                      {/* Tooltip */}
+                      <div className="absolute -top-12 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none flex flex-col items-center z-20">
+                        <div className="rounded-xl border-[3px] border-border bg-foreground px-3 py-1.5 text-xs font-black text-background shadow-vibe-sm whitespace-nowrap">
+                          ₦{amount}
+                        </div>
+                        <div className="h-2 w-2 border-r-[3px] border-b-[3px] border-border bg-foreground rotate-45 -mt-1"></div>
+                      </div>
+                      <div className="w-full rounded-t-md sm:rounded-t-xl border-[3px] border-b-0 border-border bg-tint-mint transition-colors hover:bg-tint-peach cursor-pointer" style={{ height: `${Math.max(h, 2)}%` }}>
+                        <div className="h-full w-full rounded-t-sm sm:rounded-t-lg bg-white/40" style={{ height: `${hasData ? h * 0.7 : 0}%` }} />
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
-            ))}
+              {/* X-axis */}
+              <div className="flex justify-between mt-2 text-[10px] sm:text-xs font-bold text-foreground/50">
+                 {["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"].map((m, i) => (
+                   <span key={i} className="hidden sm:block flex-1 text-center">{m}</span>
+                 ))}
+                 {/* Mobile X-axis */}
+                 <span className="sm:hidden block w-full text-left">Jan</span>
+                 <span className="sm:hidden block w-full text-center">Jun</span>
+                 <span className="sm:hidden block w-full text-right">Dec</span>
+              </div>
+            </div>
           </div>
         </div>
         <div className="rounded-[2.5rem] border-[4px] border-border bg-white p-8 shadow-vibe flex flex-col">

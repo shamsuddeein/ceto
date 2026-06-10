@@ -24,11 +24,10 @@ const categories = [
     tint: "bg-tint-lilac",
     items: [
       "Digital downloads (PDFs, ZIPs, videos, audio)",
-      "Online courses with unlimited students & storage",
+      "Online courses",
       "Templates & software files",
       "Event tickets & masterclass access",
       "Coaching & consulting sessions",
-      "Physical goods with order management",
     ],
   },
   {
@@ -80,9 +79,6 @@ const categories = [
     tint: "bg-gold",
     items: [
       "Mailchimp - sync buyers to email lists",
-      "ConvertKit / Kit - automate email funnels",
-      "Zapier - connect to 5,000+ apps",
-      "Kartra - advanced marketing automation",
       "Facebook Pixel - track conversions",
       "Webhook support for custom integrations",
     ],
@@ -120,8 +116,8 @@ const highlights = [
   },
   {
     icon: GraduationCap,
-    title: "Host courses with zero limits",
-    body: "Unlimited videos, files, and students on every paid plan. No extra hosting fees. Full progress tracking for your students included.",
+    title: "Host courses securely",
+    body: "Full progress tracking for your students included.",
     tag: "Courses",
     tint: "bg-tint-peach"
   },
@@ -232,7 +228,6 @@ function FeaturesPage() {
                 { Icon: GraduationCap, label: "Courses & Tutorials", tint: "bg-tint-mint" },
                 { Icon: Ticket, label: "Event Tickets", tint: "bg-tint-rose" },
                 { Icon: Star, label: "Services & Coaching", tint: "bg-gold" },
-                { Icon: Package, label: "Physical Goods", tint: "bg-tint-cream" },
               ].map(({ Icon, label, tint }) => (
                 <div key={label} className="flex items-center gap-4 rounded-2xl border-[3px] border-border bg-white px-5 py-4 shadow-vibe-sm transition-transform hover:-translate-y-1">
                   <div className={`grid h-12 w-12 shrink-0 place-items-center rounded-xl border-2 border-border ${tint} shadow-vibe-sm`}>

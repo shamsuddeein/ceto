@@ -28,21 +28,11 @@ import {
   LayoutDashboard,
 } from "lucide-react";
 import {
-  SiPaypal,
-  SiStripe,
   SiMastercard,
   SiVisa,
-  SiAmericanexpress,
-  SiGooglepay,
-  SiAirtel,
-  SiMailchimp,
-  SiZapier,
-  SiKit,
   SiFacebook,
   SiInstagram,
   SiX,
-  SiYoutube,
-  SiTheguardian,
 } from "@icons-pack/react-simple-icons";
 import setupPerson from "@/assets/setup-person-cartoon.png";
 import marketplacePreview from "@/assets/marketplace-preview.png";
@@ -77,41 +67,6 @@ function GhostButton({
   return <button className={cn} {...rest}>{children}</button>;
 }
 /* ---------- Brand wordmarks (no SVG available) ---------- */
-const MpesaMark = () => (
-  <span className="inline-flex items-center font-extrabold tracking-tight text-[#1a8f3f]">
-    M<span className="mx-px inline-block h-4 w-2 rounded-sm bg-[#e30613]" />PESA
-  </span>
-);
-const MtnMark = () => (
-  <span className="grid h-9 w-14 place-items-center rounded-full bg-[#ffcb05] text-xs font-extrabold tracking-wider text-[#003e7e]">
-    MTN
-  </span>
-);
-const TigoMark = () => (
-  <span className="font-bold italic text-[#005ea8]">tig<span className="text-[#005ea8]">o</span></span>
-);
-const VerveMark = () => (
-  <span className="inline-flex items-center gap-1 font-extrabold text-[#1a1a1a]">
-    <span className="grid h-5 w-5 place-items-center rounded-full bg-[#e30613] text-[10px] text-white">V</span>
-    erve
-  </span>
-);
-const OpenAiMark = () => (
-  <span className="inline-flex items-center gap-1.5 font-semibold text-foreground">
-    <svg viewBox="0 0 24 24" className="h-5 w-5" fill="currentColor" aria-hidden>
-      <path d="M22.2819 9.8211a5.9847 5.9847 0 0 0-.5157-4.9108 6.0462 6.0462 0 0 0-6.5098-2.9A6.0651 6.0651 0 0 0 4.9807 4.1818a5.9847 5.9847 0 0 0-3.9977 2.9 6.0462 6.0462 0 0 0 .7427 7.0966 5.98 5.98 0 0 0 .511 4.9107 6.051 6.051 0 0 0 6.5146 2.9001A5.9847 5.9847 0 0 0 13.2599 24a6.0557 6.0557 0 0 0 5.7718-4.2058 5.9894 5.9894 0 0 0 3.9977-2.9001 6.0557 6.0557 0 0 0-.7475-7.0729zm-9.022 12.6081a4.4755 4.4755 0 0 1-2.8764-1.0408l.1419-.0804 4.7783-2.7582a.7948.7948 0 0 0 .3927-.6813v-6.7369l2.02 1.1686a.071.071 0 0 1 .038.052v5.5826a4.504 4.504 0 0 1-4.4945 4.4944zm-9.6607-4.1254a4.4708 4.4708 0 0 1-.5346-3.0137l.142.0852 4.783 2.7582a.7712.7712 0 0 0 .7806 0l5.8428-3.3685v2.3324a.0804.0804 0 0 1-.0332.0615L9.74 19.9502a4.4992 4.4992 0 0 1-6.1408-1.6464zM2.3408 7.8956a4.485 4.485 0 0 1 2.3655-1.9728V11.6a.7664.7664 0 0 0 .3879.6765l5.8144 3.3543-2.0201 1.1685a.0757.0757 0 0 1-.071 0l-4.8303-2.7865A4.504 4.504 0 0 1 2.3408 7.872zm16.5963 3.8558L13.1038 8.364 15.1192 7.2a.0757.0757 0 0 1 .071 0l4.8303 2.7913a4.4944 4.4944 0 0 1-.6765 8.1042v-5.6772a.79.79 0 0 0-.407-.667zm2.0107-3.0231l-.142-.0852-4.7735-2.7818a.7759.7759 0 0 0-.7854 0L9.409 9.2297V6.8974a.0662.0662 0 0 1 .0284-.0615l4.8303-2.7866a4.4992 4.4992 0 0 1 6.6802 4.66zM8.3065 12.863l-2.02-1.1638a.0804.0804 0 0 1-.038-.0567V6.0742a4.4992 4.4992 0 0 1 7.3757-3.4537l-.142.0805L8.704 5.459a.7948.7948 0 0 0-.3927.6813zm1.0976-2.3654l2.602-1.4998 2.6069 1.4998v2.9994l-2.5974 1.4997-2.6067-1.4997Z" />
-    </svg>
-    OpenAI
-  </span>
-);
-
-/* Press wordmarks (small publications) */
-const PressMark = ({ name, color }: { name: string; color: string }) => (
-  <span className="font-display text-xl font-bold tracking-tight" style={{ color }}>
-    {name}
-  </span>
-);
-
 /* ---------- Marketplace explore ---------- */
 const products = [
   { tint: "bg-tint-lilac", title: "Milk and Honey by Rupi Kaur [eBook]", price: "₦4,500.00", Icon: BookOpen },
@@ -202,10 +157,9 @@ function MarketplaceExplore() {
 const sellTypes = [
   { Icon: Monitor, title: "Digital Products", body: "Sell digital downloads, software, templates, and content packs instantly." },
   { Icon: BookOpen, title: "Ebooks", body: "Sell PDFs, EPUBs, and audiobooks securely with automatic delivery." },
-  { Icon: GraduationCap, title: "Courses & Memberships", body: "Host video courses and private communities with built-in content protection." },
+  { Icon: GraduationCap, title: "Courses & Tutorials", body: "Host video courses and private communities with built-in content protection." },
   { Icon: Ticket, title: "Event Tickets", body: "Sell access to webinars, workshops, and physical events." },
   { Icon: Star, title: "Services", body: "Book 1-on-1 coaching, consultations, or freelance design services." },
-  { Icon: Package, title: "Physical Goods", body: "Ship physical merchandise alongside your digital products from one dashboard." },
 ];
 
 function SellableTypes() {
@@ -328,9 +282,6 @@ type Gate = { node: React.ReactNode; key: string };
 const gateways: Gate[] = [
   { key: "paystack", node: <PaystackMark /> },
   { key: "flutterwave", node: <FlutterwaveMark /> },
-  { key: "verve", node: <VerveMark /> },
-  { key: "mastercard", node: <span className="inline-flex items-center gap-1.5"><SiMastercard color="#EB001B" className="h-7 w-7" /><span className="text-xs font-bold text-foreground/80">mastercard</span></span> },
-  { key: "visa", node: <SiVisa color="#1A1F71" className="h-7" /> },
 ];
 
 function GlobeViz() {
@@ -391,7 +342,7 @@ function PaymentGateways() {
           </h2>
           <div className="mx-auto mt-6 h-2 w-20 rounded-full border-2 border-border bg-tint-rose shadow-vibe-sm" />
           <p className="mt-6 text-[16px] font-medium leading-relaxed text-foreground/80 md:text-lg">
-            We support Paystack, Flutterwave, and all major debit cards so your customers never struggle to check out. Get settled instantly in Naira.
+            We support Paystack and Flutterwave so your customers never struggle to check out. Get settled instantly in Naira.
           </p>
         </div>
 
@@ -479,58 +430,6 @@ function Integrations() {
   );
 }
 
-/* ---------- Join Creators ---------- */
-function Testimonials() {
-  return (
-    <section className="relative overflow-hidden bg-background py-20 md:py-28">
-      <div className="container-page relative text-center animate-fade-in-up" style={{ animationDelay: '600ms' }}>
-        <div className="relative mx-auto max-w-5xl overflow-hidden rounded-[4rem] border-[4px] border-border bg-tint-peach px-6 py-24 shadow-vibe md:px-16">
-          <div className="pointer-events-none absolute -left-16 -top-16 h-64 w-64 rounded-full border-[3px] border-border bg-tint-mint shadow-vibe opacity-50" />
-          <div className="pointer-events-none absolute -right-20 -bottom-20 h-80 w-80 rounded-full border-[3px] border-border bg-white shadow-vibe opacity-50" />
-          
-          <h2 className="relative z-10 font-display text-5xl font-black md:text-7xl text-foreground">Join our first creators</h2>
-          <p className="relative z-10 mx-auto mt-6 max-w-2xl text-[16px] font-medium leading-relaxed text-foreground/80 md:text-lg">
-            Be among the first Nigerian creators to sell on CETOH. Early creators get 0% commission for 3 months.
-          </p>
-          <div className="relative z-10 mt-10 flex justify-center">
-            <PrimaryButton to="/signup">Start selling free</PrimaryButton>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-/* ---------- Ebook CTA ---------- */
-function EbookCTA() {
-  return (
-    <section className="relative overflow-hidden bg-background py-20 md:py-28 border-y-2 border-border">
-      <div className="pointer-events-none absolute left-10 top-10 h-24 w-24 rotate-[25deg] rounded-lg border-2 border-border bg-tint-mint shadow-vibe-sm opacity-40" />
-      <div className="pointer-events-none absolute right-10 bottom-10 h-32 w-32 rounded-full border-2 border-border bg-tint-lilac shadow-vibe opacity-40" />
-      
-      <div className="container-page relative animate-fade-in-up" style={{ animationDelay: '700ms' }}>
-        <div className="grid items-center gap-12 lg:grid-cols-2">
-          <div>
-            <h2 className="font-display text-4xl font-black leading-tight md:text-5xl">
-              Learn how to sell <br className="hidden sm:block" /> digital products
-            </h2>
-            <p className="mt-6 max-w-lg text-[16px] font-medium leading-relaxed text-foreground/80 md:text-lg">
-              We asked 12 top creators how they built their businesses, and compiled their strategies into one guide. Download our free manual to learn how to package your knowledge, set up your store, and get your first 100 sales.
-            </p>
-            <div className="mt-10">
-              <PrimaryButton to="/signup">Get free ebook <ArrowRight className="h-5 w-5" /></PrimaryButton>
-            </div>
-          </div>
-          <div className="flex justify-center relative">
-            <div className="absolute inset-0 top-10 bg-tint-rose rounded-[3rem] border-2 border-border shadow-vibe -rotate-3 transform scale-90" />
-            <img src={ebookCover} alt="The Ultimate Digital Product Manual ebook" width={1024} height={1024} loading="lazy" className="relative w-full max-w-[20rem] rotate-3 rounded-2xl border-2 border-border shadow-vibe bg-white z-10" />
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
-
 /* ---------- Stats & Final CTA ---------- */
 function PressAndFinalCTA() {
   const stats = [
@@ -544,7 +443,7 @@ function PressAndFinalCTA() {
         <div className="mx-auto grid max-w-4xl grid-cols-1 gap-8 sm:grid-cols-3">
           {stats.map((s, i) => (
             <div key={i} className="text-center">
-              <h3 className="font-display text-5xl font-black text-primary md:text-6xl">{s.value}</h3>
+               <h3 className="font-display text-5xl font-black text-primary md:text-6xl">{s.value}</h3>
               <p className="mt-3 text-lg font-bold text-foreground/80">{s.label}</p>
             </div>
           ))}
@@ -589,8 +488,6 @@ export default function HomeSections() {
       <PaymentGateways />
       <SalesTools />
       <Integrations />
-      <Testimonials />
-      <EbookCTA />
       <PressAndFinalCTA />
     </>
   );

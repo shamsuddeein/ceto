@@ -15,7 +15,7 @@ export const Route = createFileRoute("/faq")({
 const FAQS = [
   { cat: "Getting Started", q: "How do I create an account?", a: "Click Start Selling, enter your name, email and a password. You'll be set up in under 30 seconds - no credit card required." },
   { cat: "Getting Started", q: "What can I sell on Cetoh?", a: "eBooks, online courses, templates, software, design assets, services, audio, and almost any digital good." },
-  { cat: "Payments", q: "When do I get paid?", a: "Funds clear within 24 hours of a sale and can be withdrawn to bank or PayPal. Bank payouts arrive in 1–3 business days." },
+  { cat: "Payments", q: "When do I get paid?", a: "Funds clear within 24 hours of a sale and can be withdrawn to your local bank account. Bank payouts arrive in 1–3 business days." },
   { cat: "Payments", q: "What currencies do you support?", a: "Buyers can pay in 30+ currencies. Creators are paid in USD, EUR, GBP, NGN, KES, GHS, ZAR or local equivalent." },
   { cat: "Payments", q: "What fees do you charge?", a: "Early creators get 0% commission for the first 3 months. After that: 5% + ₦100 per sale. No setup fees, no monthly minimums." },
   { cat: "Products", q: "Is there a file-size limit?", a: "Up to 2GB per file on Starter, 10GB on Pro, and unlimited on Business." },

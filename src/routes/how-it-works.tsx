@@ -15,7 +15,7 @@ const STEPS = [
   { icon: UserPlus, t: "Create your account", d: "Sign up in 30 seconds. No credit card required, no setup fees." },
   { icon: Package, t: "Upload your product", d: "eBooks, courses, templates, and services. We host the files and deliver them instantly." },
   { icon: Share2, t: "Share your link", d: "Drop your Cetoh link anywhere - Twitter, IG, your bio. We handle the checkout, taxes and delivery." },
-  { icon: Wallet, t: "Get paid", d: "Withdraw earnings to your bank or PayPal in 1–3 business days. Lowest fees in the industry." },
+  { icon: Wallet, t: "Get paid", d: "Withdraw earnings to your bank account in 1–3 business days. Lowest fees in the industry." },
 ];
 
 function HowItWorks() {

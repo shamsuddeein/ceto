@@ -98,7 +98,7 @@ function PayoutsTab() {
   return (
     <SaveCard title="Payout method">
       <Field label="Method">
-        <select className="w-full rounded-2xl border-[3px] border-border bg-background px-4 py-3 font-bold text-foreground outline-none shadow-vibe-sm transition-all focus:translate-x-[2px] focus:translate-y-[2px] focus:shadow-none appearance-none cursor-pointer"><option>Bank transfer</option><option>PayPal</option><option>Mobile money</option></select>
+        <select className="w-full rounded-2xl border-[3px] border-border bg-background px-4 py-3 font-bold text-foreground outline-none shadow-vibe-sm transition-all focus:translate-x-[2px] focus:translate-y-[2px] focus:shadow-none appearance-none cursor-pointer"><option>Bank transfer</option><option>Mobile money</option></select>
       </Field>
       <Field label="Account holder"><input defaultValue="Creator Name" className="w-full rounded-2xl border-[3px] border-border bg-background px-4 py-3 font-bold text-foreground outline-none shadow-vibe-sm transition-all focus:translate-x-[2px] focus:translate-y-[2px] focus:shadow-none" /></Field>
       <Field label="Bank account number"><input defaultValue="0123456789" className="w-full rounded-2xl border-[3px] border-border bg-background px-4 py-3 font-bold text-foreground outline-none shadow-vibe-sm transition-all focus:translate-x-[2px] focus:translate-y-[2px] focus:shadow-none" /></Field>
