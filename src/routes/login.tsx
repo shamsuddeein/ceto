@@ -4,7 +4,7 @@ import { Eye, EyeOff, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { AuthHeader } from "@/components/auth-header";
 import { SocialAuthButton } from "@/components/social-auth-button";
-import loginIllustration from "@/assets/login-illustration.png";
+
 
 export const Route = createFileRoute("/login")({
   head: () => ({
@@ -73,16 +73,33 @@ function LoginPage() {
         <div className="pointer-events-none absolute -left-32 top-40 h-80 w-80 rounded-full border-[3px] border-border bg-tint-rose shadow-vibe-sm opacity-40" />
 
         <div className="container-page relative grid min-h-[calc(100vh-4rem)] items-center gap-8 py-8 md:py-12 lg:grid-cols-2 lg:gap-10">
-          {/* Illustration */}
-          <div className="order-2 flex items-end justify-center lg:order-1">
-            <img
-              src={loginIllustration}
-              alt="Hand holding phone with shopping cart"
-              width={640}
-              height={640}
-              loading="lazy"
-              className="w-3/4 max-w-md sm:w-2/3 lg:w-full"
-            />
+          {/* Marketing / Testimonial Block */}
+          <div className="order-2 flex flex-col justify-between rounded-[2.5rem] border-[4px] border-border bg-tint-mint p-8 shadow-vibe lg:order-1 relative overflow-hidden h-full min-h-[400px]">
+            <div className="relative z-10">
+               <div className="inline-flex items-center rounded-full border-[3px] border-border bg-white px-4 py-1.5 text-sm font-bold text-foreground shadow-vibe-sm mb-6">
+                 Join 10,000+ Creators
+               </div>
+               <h2 className="font-display text-4xl font-black leading-[1.1] text-foreground md:text-5xl">
+                 "Cetoh has completely transformed how I sell my digital products. The instant payouts are a game-changer."
+               </h2>
+            </div>
+            
+            <div className="relative z-10 mt-12 flex items-center gap-4">
+              <div className="h-14 w-14 rounded-full border-[3px] border-border bg-tint-peach shadow-vibe-sm flex items-center justify-center font-display text-2xl font-black text-foreground">
+                 SO
+              </div>
+              <div>
+                <p className="font-black text-foreground text-lg leading-tight">Sarah O.</p>
+                <p className="font-bold text-foreground/70 text-sm">Digital Artist & Course Creator</p>
+              </div>
+            </div>
+
+            {/* Abstract Decorative Elements */}
+            <div className="absolute right-[-10%] top-[10%] h-64 w-64 rounded-full border-[4px] border-border bg-tint-peach opacity-50 blur-xl"></div>
+            <div className="absolute left-[-10%] bottom-[-10%] h-64 w-64 rounded-full border-[4px] border-border bg-primary opacity-20 blur-2xl"></div>
+            
+            {/* Grid background pattern */}
+            <div className="absolute inset-0 z-0 bg-[radial-gradient(#00000033_2px,transparent_2px)] [background-size:24px_24px] opacity-20"></div>
           </div>
 
           {/* Card */}

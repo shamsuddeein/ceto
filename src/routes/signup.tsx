@@ -9,7 +9,6 @@ import { toast } from "sonner";
 import { AuthHeader } from "@/components/auth-header";
 import { SocialAuthButton } from "@/components/social-auth-button";
 import signupBook from "@/assets/signup-book.png";
-import signupIllustration from "@/assets/signup-illustration.png";
 import logoImg from "@/assets/logo.png";
 
 export const Route = createFileRoute("/signup")({
@@ -214,14 +213,49 @@ function SignupPage() {
               </div>
             </div>
 
-            <img
-              src={signupIllustration}
-              alt="Creator workspace illustration"
-              width={640}
-              height={640}
-              loading="lazy"
-              className="w-full rounded-[2.5rem] border-[4px] border-border bg-white shadow-vibe"
-            />
+            <div className="rounded-[2.5rem] border-[4px] border-border bg-white p-6 shadow-vibe md:p-8">
+              {/* top bar */}
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <img src={logoImg} alt="Cetoh" className="h-7 w-auto" />
+                <div className="flex flex-1 items-center gap-2 rounded-lg bg-muted px-3 py-2 text-xs text-foreground/60 md:max-w-sm">
+                  <Search className="h-4 w-4" /> Search for a product
+                </div>
+                <div className="flex items-center gap-2">
+                  <button className="inline-flex items-center gap-1 rounded-md border border-border bg-background px-2.5 py-1.5 text-xs font-semibold">
+                    <span className="h-3 w-3 rounded-sm bg-primary" /> NGN <ChevronDown className="h-3 w-3" />
+                  </button>
+                  <button className="relative inline-flex items-center gap-1 text-xs font-semibold text-foreground">
+                    <ShoppingCart className="h-4 w-4" /> Cart
+                    <span className="absolute -right-2 -top-1 grid h-4 w-4 place-items-center rounded-full bg-primary text-[10px] font-bold text-primary-foreground">3</span>
+                  </button>
+                </div>
+              </div>
+
+              <div className="mt-6 grid gap-5 md:grid-cols-[180px_1fr]">
+                {/* sidebar */}
+                <div>
+                  <div className="grid h-16 w-16 place-items-center rounded-full bg-primary text-primary-foreground font-display text-xl">Cetoh</div>
+                  <p className="mt-3 font-display text-lg font-bold text-primary">Demo Store</p>
+                  <p className="mt-1 text-xs text-foreground/70">You can sell anything and everything with Cetoh</p>
+                  <div className="mt-3 flex items-center gap-3 text-primary">
+                    <Instagram className="h-4 w-4" aria-hidden />
+                    <XIcon />
+                    <Facebook className="h-4 w-4" aria-hidden />
+                    <Youtube className="h-4 w-4" aria-hidden />
+                  </div>
+                </div>
+
+                {/* product grid */}
+                <div className="grid grid-cols-2 gap-3 md:grid-cols-3">
+                  <ProductCard tint="bg-muted" icon={<BookOpen className="h-7 w-7" />} title="Milk and Honey by Rupi Kaur [eBook]" price="₦4,500.00" />
+                  <ProductCard tint="bg-tint-peach" icon={<GraduationCap className="h-7 w-7" />} title="Course" price="₦30,000.00" />
+                  <ProductCard tint="bg-muted" icon={<Crown className="h-7 w-7" />} title="Subscription" price="₦42,000.00" />
+                  <ProductCard tint="bg-muted" icon={<Star className="h-7 w-7" />} title="Coaching Service" />
+                  <ProductCard tint="bg-tint-peach" icon={<Shirt className="h-7 w-7" />} title="Good Vibes Tee" />
+                  <ProductCard tint="bg-muted" icon={<Ticket className="h-7 w-7" />} title="Event Ticket" />
+                </div>
+              </div>
+            </div>
 
             {/* bottom floating cards */}
             <div className="relative mt-8 flex flex-wrap items-center justify-between gap-4">
