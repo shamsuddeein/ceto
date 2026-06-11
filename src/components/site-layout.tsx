@@ -78,25 +78,26 @@ export function SiteHeader() {
         </div>
         <button
           onClick={() => setOpen((v) => !v)}
-          className="rounded-full border-[3px] border-border p-2 text-foreground shadow-vibe-sm lg:hidden hover:bg-tint-mint transition-colors"
-          aria-label="Open menu"
+          className="inline-flex h-11 w-11 items-center justify-center rounded-full border-[3px] border-border text-foreground shadow-vibe-sm lg:hidden hover:bg-tint-mint transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+          aria-label={open ? "Close menu" : "Open menu"}
+          aria-expanded={open}
+          aria-controls="site-layout-mobile-menu"
         >
           {open ? <XClose className="h-6 w-6 stroke-[3px]" /> : <Menu className="h-6 w-6 stroke-[3px]" />}
         </button>
       </div>
       {open && (
-        <div className="mx-auto mt-4 max-w-7xl overflow-hidden rounded-[2rem] border-[3px] border-border bg-white shadow-vibe lg:hidden">
+        <div id="site-layout-mobile-menu" className="mx-auto mt-4 max-w-7xl overflow-hidden rounded-[2rem] border-[3px] border-border bg-white shadow-vibe lg:hidden">
           <div className="flex flex-col gap-2 p-6">
             {NAV.map((n) => (
-              <Link
+              <a
                 key={n.label}
-                to={n.href}
-                preload="intent"
-                className="py-2 text-lg font-black text-foreground"
+                href={n.href}
+                className="rounded-xl px-2 py-2 text-lg font-black text-foreground hover:bg-tint-mint focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
                 onClick={() => setOpen(false)}
               >
                 {n.label}
-              </Link>
+              </a>
             ))}
             <div className="mt-4 flex flex-col gap-4">
               <Link
