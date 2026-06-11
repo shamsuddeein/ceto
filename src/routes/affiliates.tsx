@@ -10,7 +10,7 @@ function AffiliatesPage() {
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <SiteHeader />
-      <main className="flex-1">
+      <main id="main-content" className="flex-1">
       {/* Hero Section */}
       <section className="relative overflow-hidden pt-24 pb-32">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-primary/15 via-background to-background" />
@@ -43,7 +43,7 @@ function AffiliatesPage() {
             <div className="mb-6 inline-flex rounded-2xl bg-primary/10 p-4 text-primary ring-1 ring-primary/20">
               <DollarSign className="h-8 w-8" />
             </div>
-            <h3 className="mb-3 text-2xl font-bold">High Commissions</h3>
+            <h2 className="mb-3 text-2xl font-bold">High Commissions</h2>
             <p className="text-foreground/70 leading-relaxed">
               Earn anywhere from 20% to 75% on every successful referral. Our creators set the rates, but our network enforces high conversion standards.
             </p>
@@ -53,7 +53,7 @@ function AffiliatesPage() {
             <div className="mb-6 inline-flex rounded-2xl bg-blue-500/10 p-4 text-blue-500 ring-1 ring-blue-500/20">
               <TrendingUp className="h-8 w-8" />
             </div>
-            <h3 className="mb-3 text-2xl font-bold">High Conversion Rates</h3>
+            <h2 className="mb-3 text-2xl font-bold">High Conversion Rates</h2>
             <p className="text-foreground/70 leading-relaxed">
               Cetoh's highly optimized checkout flows mean your traffic actually converts. Stop sending your hard-earned traffic to leaky funnels.
             </p>
@@ -63,7 +63,7 @@ function AffiliatesPage() {
             <div className="mb-6 inline-flex rounded-2xl bg-purple-500/10 p-4 text-purple-500 ring-1 ring-purple-500/20">
               <Users className="h-8 w-8" />
             </div>
-            <h3 className="mb-3 text-2xl font-bold">Real-time Analytics</h3>
+            <h2 className="mb-3 text-2xl font-bold">Real-time Analytics</h2>
             <p className="text-foreground/70 leading-relaxed">
               Track your clicks, conversions, and payouts in real-time. Our pro dashboard gives you the crystal clear data you need to scale your campaigns.
             </p>
@@ -95,7 +95,7 @@ function AffiliatesPage() {
                     {i + 1}
                   </div>
                 </div>
-                <h4 className="mb-3 text-2xl font-bold">{step.title}</h4>
+                <h3 className="mb-3 text-2xl font-bold">{step.title}</h3>
                 <p className="text-foreground/70 leading-relaxed max-w-sm">{step.desc}</p>
               </div>
             ))}

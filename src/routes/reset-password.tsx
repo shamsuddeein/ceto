@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { toast } from "sonner";
 import { Loader2, CheckCircle2, Eye, EyeOff } from "lucide-react";
-import { AuthHeader } from "@/components/auth-header";
+import { SiteHeader } from "@/components/site-layout";
 
 export const Route = createFileRoute("/reset-password")({
   head: () => ({ meta: [{ title: "Reset Password | Cetoh" }] }),
@@ -34,8 +34,8 @@ function ResetPassword() {
   }
   return (
     <div className="min-h-screen bg-background">
-      <AuthHeader />
-      <main className="container-page flex min-h-[calc(100vh-4rem)] items-center justify-center py-10">
+      <SiteHeader />
+      <main id="main-content" className="container-page flex min-h-[calc(100vh-4rem)] items-center justify-center py-10">
         <div className="w-full max-w-md rounded-2xl bg-card p-8 shadow-[0_10px_40px_-10px_rgba(0,0,0,0.08)] sm:p-10">
           {done ? (
             <div className="text-center">

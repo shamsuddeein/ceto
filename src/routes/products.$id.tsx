@@ -1,6 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { SiteHeader } from "@/components/site-header";
-import { SiteFooter } from "@/components/site-footer";
+import { SiteHeader, SiteFooter } from "@/components/site-layout";
 import { ProductCard } from "@/components/product-card";
 import { MOCK_PRODUCTS, tintClass, getProductIcon } from "@/lib/mock-products";
 import { Star, Check, Shield, Download, Share2 } from "lucide-react";
@@ -25,6 +24,7 @@ function ProductDetails() {
   return (
     <div className="min-h-screen bg-background">
       <SiteHeader />
+      <main id="main-content">
       <section className="container-page py-10">
         <nav className="mb-6 text-sm text-foreground/60">
           <Link to="/marketplace" className="hover:text-primary">Marketplace</Link>
@@ -77,6 +77,7 @@ function ProductDetails() {
           </div>
         </div>
       </section>
+      </main>
       <SiteFooter />
     </div>
   );

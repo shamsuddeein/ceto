@@ -1,7 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { UserPlus, Package, Share2, Wallet } from "lucide-react";
-import { SiteHeader } from "@/components/site-header";
-import { SiteFooter } from "@/components/site-footer";
+import { SiteHeader, SiteFooter } from "@/components/site-layout";
 
 export const Route = createFileRoute("/how-it-works")({
   head: () => ({ meta: [
@@ -22,6 +21,7 @@ function HowItWorks() {
   return (
     <div className="min-h-screen bg-background">
       <SiteHeader />
+      <main id="main-content">
       <section className="container-page py-16 md:py-24 text-center">
         <p className="text-base font-black uppercase tracking-widest text-primary">How it works</p>
         <h1 className="mt-4 font-display text-5xl font-black text-foreground md:text-7xl">Start selling in minutes.</h1>
@@ -63,6 +63,7 @@ function HowItWorks() {
           </div>
         </div>
       </section>
+      </main>
       <SiteFooter />
     </div>
   );

@@ -1,7 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { CheckCircle2, Download, Mail } from "lucide-react";
-import { SiteHeader } from "@/components/site-header";
-import { SiteFooter } from "@/components/site-footer";
+import { SiteHeader, SiteFooter } from "@/components/site-layout";
 
 export const Route = createFileRoute("/payment-success")({
   head: () => ({ meta: [{ title: "Payment Successful | Cetoh" }] }),
@@ -13,6 +12,7 @@ function PaymentSuccess() {
   return (
     <div className="min-h-screen bg-background">
       <SiteHeader />
+      <main id="main-content">
       <section className="container-page py-16">
         <div className="mx-auto max-w-xl rounded-3xl border border-border bg-card p-10 text-center shadow-sm">
           <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-primary-soft">
@@ -31,6 +31,7 @@ function PaymentSuccess() {
           </div>
         </div>
       </section>
+      </main>
       <SiteFooter />
     </div>
   );

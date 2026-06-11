@@ -1,7 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowLeft, Calendar, Clock, Share2 } from "lucide-react";
-import { SiteHeader } from "@/components/site-header";
-import { SiteFooter } from "@/components/site-footer";
+import { SiteHeader, SiteFooter } from "@/components/site-layout";
 import { POSTS, getBlogIcon } from "./blog";
 import { tintClass } from "@/lib/mock-products";
 
@@ -24,6 +23,7 @@ function BlogArticle() {
   return (
     <div className="min-h-screen bg-background">
       <SiteHeader />
+      <main id="main-content">
       <article className="container-page max-w-4xl py-12 md:py-16">
         <Link to="/blog" className="inline-flex items-center gap-2 text-base font-black text-foreground hover:text-primary transition-colors">
           <ArrowLeft className="h-5 w-5 stroke-[3px]" /> All articles
@@ -71,6 +71,7 @@ function BlogArticle() {
           ))}
         </div>
       </section>
+      </main>
       <SiteFooter />
     </div>
   );

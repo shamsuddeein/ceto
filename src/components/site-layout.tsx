@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "@tanstack/react-router";
-import { ChevronDown, Globe, Menu, X as XClose } from "lucide-react";
+import { ChevronDown, Globe, Menu, X as XClose, Search, ShoppingCart } from "lucide-react";
 import { SiInstagram, SiX, SiFacebook, SiYoutube } from "@icons-pack/react-simple-icons";
 import logoImg from "@/assets/logo.png";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
@@ -18,10 +18,17 @@ export function Logo({ className = "", light = false }: { className?: string; li
 
 /* ---------- Site Header ---------- */
 const NAV = [
-  { label: "How it Works", href: "/#how" },
+  { label: "Marketplace", href: "/marketplace" },
+  { label: "Categories", href: "/categories" },
   { label: "Pricing", href: "/pricing" },
-  { label: "Features", href: "/features", caret: true, items: [{label: "Digital Downloads", href: "/features"}, {label: "Online Courses", href: "/features"}, {label: "Community", href: "/features"}] },
-  { label: "Learn", href: "/#learn", caret: true, items: [{label: "Creator Academy", href: "/faq"}, {label: "Helpdesk", href: "/contact"}, {label: "Blog", href: "/blog"}] },
+  { label: "How it Works", href: "/how-it-works" },
+  { label: "Blog", href: "/blog" },
+];
+
+const SECONDARY = [
+  { label: "About", href: "/about" },
+  { label: "FAQ", href: "/faq" },
+  { label: "Contact", href: "/contact" },
 ];
 
 export function SiteHeader() {
@@ -32,36 +39,25 @@ export function SiteHeader() {
         <Link to="/" aria-label="Cetoh home">
           <Logo />
         </Link>
-        <nav className="hidden items-center gap-8 lg:flex">
+        <nav className="hidden items-center gap-6 xl:gap-8 lg:flex">
           {NAV.map((n) => (
-            n.caret ? (
-              <DropdownMenu key={n.label}>
-                <DropdownMenuTrigger className="inline-flex items-center gap-1 text-base font-bold text-foreground/80 transition hover:text-foreground focus:outline-none data-[state=open]:text-foreground">
-                  {n.label}
-                  <ChevronDown className="h-4 w-4 stroke-[3px]" />
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="start" className="w-48 rounded-2xl border-2 border-border shadow-vibe p-2 font-bold text-foreground">
-                  {n.items?.map((item) => (
-                    <DropdownMenuItem key={item.label} asChild className="rounded-xl focus:bg-tint-mint focus:text-foreground">
-                      <Link to={item.href} preload="intent" className="w-full cursor-pointer">
-                        {item.label}
-                      </Link>
-                    </DropdownMenuItem>
-                  ))}
-                </DropdownMenuContent>
-              </DropdownMenu>
-            ) : (
-              <a
-                key={n.label}
-                href={n.href}
-                className="inline-flex items-center gap-1 text-base font-bold text-foreground/80 transition hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded"
-              >
-                {n.label}
-              </a>
-            )
+            <Link
+              key={n.label}
+              to={n.href as any}
+              preload="intent"
+              className="inline-flex items-center gap-1 text-base font-bold text-foreground/80 transition hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded"
+            >
+              {n.label}
+            </Link>
           ))}
         </nav>
-        <div className="hidden items-center gap-4 lg:flex">
+        <div className="hidden items-center gap-2 xl:gap-4 lg:flex">
+          <Link to="/search" aria-label="Search products" className="inline-flex h-11 w-11 items-center justify-center rounded-full text-foreground/70 hover:bg-tint-mint focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+            <Search className="h-5 w-5 stroke-[2.5]" />
+          </Link>
+          <Link to="/checkout" aria-label="View cart" className="inline-flex h-11 w-11 items-center justify-center rounded-full text-foreground/70 hover:bg-tint-mint focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+            <ShoppingCart className="h-5 w-5 stroke-[2.5]" />
+          </Link>
           <Link
             to="/login"
             className="inline-flex items-center justify-center gap-2 rounded-full border-[3px] border-border bg-white px-6 py-2.5 text-base font-black text-foreground shadow-vibe shadow-vibe-hover"
@@ -88,15 +84,34 @@ export function SiteHeader() {
       {open && (
         <div id="site-layout-mobile-menu" className="mx-auto mt-4 max-w-7xl overflow-hidden rounded-[2rem] border-[3px] border-border bg-white shadow-vibe lg:hidden">
           <div className="flex flex-col gap-2 p-6">
+            <div className="mb-2 flex items-center gap-2">
+              <Link to="/search" onClick={() => setOpen(false)} className="flex-1 inline-flex h-12 items-center justify-center gap-2 rounded-xl border-2 border-border text-base font-bold hover:bg-tint-mint">
+                <Search className="h-5 w-5 stroke-[2.5]" /> Search
+              </Link>
+              <Link to="/checkout" onClick={() => setOpen(false)} aria-label="View cart" className="inline-flex h-12 w-12 items-center justify-center rounded-xl border-2 border-border hover:bg-tint-mint">
+                <ShoppingCart className="h-5 w-5 stroke-[2.5]" />
+              </Link>
+            </div>
             {NAV.map((n) => (
-              <a
+              <Link
                 key={n.label}
-                href={n.href}
-                className="rounded-xl px-2 py-2 text-lg font-black text-foreground hover:bg-tint-mint focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                to={n.href as any}
+                className="rounded-xl px-3 py-2 text-lg font-black text-foreground hover:bg-tint-mint focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
                 onClick={() => setOpen(false)}
               >
                 {n.label}
-              </a>
+              </Link>
+            ))}
+            <div className="my-2 border-t-2 border-border" />
+            {SECONDARY.map((n) => (
+              <Link
+                key={n.label}
+                to={n.href as any}
+                className="rounded-xl px-3 py-2 text-base font-bold text-foreground/70 hover:bg-tint-mint focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                onClick={() => setOpen(false)}
+              >
+                {n.label}
+              </Link>
             ))}
             <div className="mt-4 flex flex-col gap-4">
               <Link
@@ -173,7 +188,7 @@ export function SiteFooter() {
         </div>
         {FOOTER_COLS.map((c) => (
           <div key={c.title}>
-            <h4 className="text-xl font-black text-foreground">{c.title}</h4>
+            <h3 className="text-xl font-black text-foreground">{c.title}</h3>
             <ul className="mt-6 space-y-4">
               {c.links.map((l) => (
                 <li key={l.label}>

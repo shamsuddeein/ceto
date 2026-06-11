@@ -1,7 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Calendar, Clock, ArrowRight, Target, DollarSign, Megaphone, PenTool, Wrench, FileText } from "lucide-react";
-import { SiteHeader } from "@/components/site-header";
-import { SiteFooter } from "@/components/site-footer";
+import { SiteHeader, SiteFooter } from "@/components/site-layout";
 import { tintClass } from "@/lib/mock-products";
 
 export const Route = createFileRoute("/blog")({
@@ -37,6 +36,7 @@ function BlogHome() {
   return (
     <div className="min-h-screen bg-background">
       <SiteHeader />
+      <main id="main-content">
       <section className="container-page py-16 md:py-24">
         <p className="text-base font-black uppercase tracking-widest text-primary">The Cetoh Blog</p>
         <h1 className="mt-4 font-display text-5xl font-black text-foreground md:text-7xl">Build, sell, grow.</h1>
@@ -82,6 +82,7 @@ function BlogHome() {
           ))}
         </div>
       </section>
+      </main>
       <SiteFooter />
     </div>
   );

@@ -1,7 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Globe, Users, TrendingUp, Heart } from "lucide-react";
-import { SiteHeader } from "@/components/site-header";
-import { SiteFooter } from "@/components/site-footer";
+import { SiteHeader, SiteFooter } from "@/components/site-layout";
 
 export const Route = createFileRoute("/about")({
   head: () => ({ meta: [
@@ -24,7 +23,8 @@ function About() {
   return (
     <div className="min-h-screen bg-background">
       <SiteHeader />
-      <section className="container-page py-16 md:py-24 text-center">
+      <main id="main-content">
+        <section className="container-page py-16 md:py-24 text-center">
         <p className="text-base font-black uppercase tracking-widest text-primary">Our story</p>
         <h1 className="mt-4 font-display text-5xl font-black text-foreground md:text-7xl">Empowering Nigerian creators.</h1>
         <p className="mx-auto mt-6 max-w-2xl text-lg font-medium text-foreground/80">Cetoh started in 2022 with a simple belief: anyone with knowledge to share should be able to build a business from it - without paying gatekeepers a fortune.</p>
@@ -61,6 +61,7 @@ function About() {
           <Link to="/signup" className="relative z-10 mt-10 inline-flex rounded-full border-[3px] border-border bg-primary px-10 py-5 text-xl font-black text-white shadow-vibe shadow-vibe-hover">Start selling free</Link>
         </div>
       </section>
+      </main>
       <SiteFooter />
     </div>
   );

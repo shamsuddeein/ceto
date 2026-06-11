@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
 import { toast } from "sonner";
-import { AuthHeader } from "@/components/auth-header";
+import { SiteHeader } from "@/components/site-layout";
 import { SocialAuthButton } from "@/components/social-auth-button";
 import loginIllustration from "@/assets/setup-person-cartoon.png";
 export const Route = createFileRoute("/login")({
@@ -64,8 +64,8 @@ function LoginPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <AuthHeader />
-      <main className="relative overflow-hidden">
+      <SiteHeader />
+      <main id="main-content" className="relative overflow-hidden">
         {/* decorative shapes */}
         <div className="pointer-events-none absolute left-10 top-24 h-24 w-24 rounded-full border-[3px] border-border bg-tint-mint shadow-vibe opacity-80" />
         <div className="pointer-events-none absolute right-10 bottom-24 h-32 w-32 rotate-12 rounded-lg border-[3px] border-border bg-tint-peach shadow-vibe opacity-80" />

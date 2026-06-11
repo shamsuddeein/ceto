@@ -1,8 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { Plus, Minus } from "lucide-react";
-import { SiteHeader } from "@/components/site-header";
-import { SiteFooter } from "@/components/site-footer";
+import { SiteHeader, SiteFooter } from "@/components/site-layout";
 
 export const Route = createFileRoute("/faq")({
   head: () => ({ meta: [
@@ -30,6 +29,7 @@ function FAQ() {
   return (
     <div className="min-h-screen bg-background">
       <SiteHeader />
+      <main id="main-content">
       <section className="container-page py-12 md:py-16">
         <p className="text-base font-black uppercase tracking-widest text-primary">Support</p>
         <h1 className="mt-4 font-display text-4xl font-black text-foreground md:text-6xl">Frequently asked questions</h1>
@@ -60,6 +60,7 @@ function FAQ() {
           </div>
         </div>
       </section>
+      </main>
       <SiteFooter />
     </div>
   );

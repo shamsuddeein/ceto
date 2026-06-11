@@ -2,8 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { toast } from "sonner";
 import { Loader2, Mail, MessageCircle, MapPin } from "lucide-react";
-import { SiteHeader } from "@/components/site-header";
-import { SiteFooter } from "@/components/site-footer";
+import { SiteHeader, SiteFooter } from "@/components/site-layout";
 
 export const Route = createFileRoute("/contact")({
   head: () => ({ meta: [
@@ -26,6 +25,7 @@ function Contact() {
   return (
     <div className="min-h-screen bg-background">
       <SiteHeader />
+      <main id="main-content">
       <section className="container-page py-12 md:py-16">
         <div className="grid gap-10 lg:grid-cols-[1fr_1.2fr]">
           <div>
@@ -60,6 +60,7 @@ function Contact() {
           </form>
         </div>
       </section>
+      </main>
       <SiteFooter />
     </div>
   );

@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { toast } from "sonner";
 import { MailCheck, RefreshCw, Loader2 } from "lucide-react";
-import { AuthHeader } from "@/components/auth-header";
+import { SiteHeader } from "@/components/site-layout";
 
 export const Route = createFileRoute("/verify-email")({
   head: () => ({ meta: [{ title: "Verify Email | Cetoh" }] }),
@@ -36,8 +36,8 @@ function VerifyEmail() {
   }
   return (
     <div className="min-h-screen bg-background">
-      <AuthHeader />
-      <main className="container-page flex min-h-[calc(100vh-4rem)] items-center justify-center py-10">
+      <SiteHeader />
+      <main id="main-content" className="container-page flex min-h-[calc(100vh-4rem)] items-center justify-center py-10">
         <div className="w-full max-w-md rounded-2xl bg-card p-8 text-center shadow-[0_10px_40px_-10px_rgba(0,0,0,0.08)] sm:p-10">
           <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-primary-soft">
             <MailCheck className="h-7 w-7 text-primary" />

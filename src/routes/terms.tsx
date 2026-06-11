@@ -1,6 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { SiteHeader } from "@/components/site-header";
-import { SiteFooter } from "@/components/site-footer";
+import { SiteHeader, SiteFooter } from "@/components/site-layout";
 
 export const Route = createFileRoute("/terms")({
   head: () => ({ meta: [
@@ -27,6 +26,7 @@ export function LegalPage({ title, updated, sections }: { title: string; updated
   return (
     <div className="min-h-screen bg-background">
       <SiteHeader />
+      <main id="main-content">
       <article className="container-page max-w-3xl py-12 md:py-16">
         <h1 className="font-display text-4xl font-bold text-primary">{title}</h1>
         <p className="mt-2 text-sm text-foreground/60">Last updated: {updated}</p>
@@ -39,6 +39,7 @@ export function LegalPage({ title, updated, sections }: { title: string; updated
           ))}
         </div>
       </article>
+      </main>
       <SiteFooter />
     </div>
   );

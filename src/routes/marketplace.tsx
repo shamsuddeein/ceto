@@ -1,6 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { SiteHeader } from "@/components/site-header";
-import { SiteFooter } from "@/components/site-footer";
+import { SiteHeader, SiteFooter } from "@/components/site-layout";
 import { ProductCard } from "@/components/product-card";
 import { MOCK_PRODUCTS, CATEGORIES } from "@/lib/mock-products";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
@@ -55,7 +54,8 @@ function Marketplace() {
   return (
     <div className="min-h-screen bg-background">
       <SiteHeader />
-      <section className="relative overflow-hidden border-b-[4px] border-border bg-tint-peach">
+      <main id="main-content">
+        <section className="relative overflow-hidden border-b-[4px] border-border bg-tint-peach">
         <div className="pointer-events-none absolute -right-20 -top-20 h-64 w-64 rounded-full border-[3px] border-border bg-tint-mint shadow-vibe opacity-60" />
         <div className="container-page relative z-10 py-16 md:py-24">
           <h1 className="font-display text-4xl font-black text-foreground sm:text-5xl md:text-7xl">Discover digital products</h1>
@@ -89,7 +89,8 @@ function Marketplace() {
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {filteredProducts.map((p) => <ProductCard key={p.id} p={p} />)}
         </div>
-      </section>
+        </section>
+      </main>
       <SiteFooter />
     </div>
   );

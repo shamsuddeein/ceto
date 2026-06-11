@@ -20,7 +20,7 @@ function NotFoundComponent() {
   return (
     <div className="flex min-h-screen flex-col bg-surface">
       <SiteHeader />
-      <main className="flex flex-1 items-center justify-center p-6">
+      <main id="main-content" className="flex flex-1 items-center justify-center p-6">
         <div className="relative w-full max-w-2xl overflow-hidden rounded-3xl border border-border/50 bg-background/50 p-10 text-center shadow-2xl backdrop-blur-xl sm:p-16">
           <div className="pointer-events-none absolute -left-20 -top-20 h-64 w-64 rounded-full bg-primary/10 blur-3xl" />
           <div className="pointer-events-none absolute -bottom-20 -right-20 h-64 w-64 rounded-full bg-blue-500/10 blur-3xl" />
@@ -196,9 +196,7 @@ function RootComponent() {
       <RouteBenchmark />
       {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
       <Profiler id="AppOutlet" onRender={onRenderProfile}>
-        <div id="main-content">
-          <Outlet />
-        </div>
+        <Outlet />
       </Profiler>
       <Toaster position="top-right" richColors closeButton />
     </QueryClientProvider>

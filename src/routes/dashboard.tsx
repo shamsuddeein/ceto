@@ -55,7 +55,7 @@ function Dashboard() {
           </div>
           <div className="mt-8 flex h-64 w-full gap-2 sm:gap-4">
             {/* Y-axis */}
-            <div className="flex flex-col justify-between text-xs font-bold text-foreground/50 pb-6 w-8 sm:w-10 text-right">
+            <div className="flex flex-col justify-between text-xs font-bold text-foreground/70 pb-6 w-8 sm:w-10 text-right">
               <span>100k</span>
               <span>75k</span>
               <span>50k</span>
@@ -93,7 +93,7 @@ function Dashboard() {
                 })}
               </div>
               {/* X-axis */}
-              <div className="flex justify-between mt-2 text-[10px] sm:text-xs font-bold text-foreground/50">
+              <div className="flex justify-between mt-2 text-[10px] sm:text-xs font-bold text-foreground/70">
                  {["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"].map((m, i) => (
                    <span key={i} className="hidden sm:block flex-1 text-center">{m}</span>
                  ))}

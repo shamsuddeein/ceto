@@ -34,14 +34,14 @@ export function DashboardLayout({ title, children }: { title: string; children: 
   return (
     <div className="min-h-screen bg-surface">
       <div className="grid lg:grid-cols-[260px_1fr]">
-        <aside className="hidden border-r-[4px] border-border bg-white lg:flex lg:min-h-screen lg:flex-col">
+        <aside aria-label="Sidebar" className="hidden border-r-[4px] border-border bg-white lg:flex lg:min-h-screen lg:flex-col">
           <Link to="/" className="flex h-20 items-center px-8 border-b-[4px] border-border">
             <img src={logoImg} alt="Cetoh" className="h-10 w-auto" />
           </Link>
           <nav aria-label="Main Navigation" className="flex flex-col gap-6 p-6">
             {NAV_GROUPS.map((group) => (
               <div key={group.title} className="flex flex-col gap-2">
-                <h4 className="px-4 text-xs font-black uppercase tracking-wider text-foreground/50">{group.title}</h4>
+                <h4 className="px-4 text-xs font-black uppercase tracking-wider text-foreground/70">{group.title}</h4>
                 {group.items.map((n) => (
                   <Link 
                     key={n.label} 
@@ -69,7 +69,7 @@ export function DashboardLayout({ title, children }: { title: string; children: 
             </div>
           </nav>
         </aside>
-        <main className="min-h-screen min-w-0 flex-1">
+        <main id="main-content" className="min-h-screen min-w-0 flex-1">
           <div className="sticky top-0 z-30 border-b-[4px] border-border bg-white">
             <div className="flex h-20 items-center justify-between px-6 md:px-10">
               <h1 className="font-display text-2xl font-black text-foreground sm:text-3xl truncate pr-2">{title}</h1>

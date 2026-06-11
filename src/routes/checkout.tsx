@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { toast } from "sonner";
 import { Lock, CreditCard, Loader2, ShieldCheck } from "lucide-react";
-import { SiteHeader } from "@/components/site-header";
+import { SiteHeader } from "@/components/site-layout";
 import { MOCK_PRODUCTS, tintClass, getProductIcon } from "@/lib/mock-products";
 
 export const Route = createFileRoute("/checkout")({
@@ -26,6 +26,7 @@ function Checkout() {
   return (
     <div className="min-h-screen bg-surface">
       <SiteHeader />
+      <main id="main-content">
       <section className="container-page py-10">
         <h1 className="font-display text-3xl font-bold text-primary">Checkout</h1>
         <div className="mt-8 grid gap-8 lg:grid-cols-[1fr_400px]">
@@ -94,6 +95,7 @@ function Checkout() {
           </aside>
         </div>
       </section>
+      </main>
       <style>{`.input{width:100%;border:1px solid var(--color-border);background:var(--color-card);border-radius:0.5rem;padding:0.625rem 0.75rem;font-size:0.875rem;outline:none}.input:focus{border-color:var(--color-primary);box-shadow:0 0 0 2px color-mix(in oklab, var(--color-primary) 20%, transparent)}`}</style>
     </div>
   );

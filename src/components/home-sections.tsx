@@ -35,8 +35,6 @@ import {
   SiX,
 } from "@icons-pack/react-simple-icons";
 import setupPerson from "@/assets/setup-person-cartoon.png";
-import marketplacePreview from "@/assets/marketplace-preview.png";
-import ebookCover from "@/assets/ebook-cover.jpg";
 import avatarImg from "@/assets/avatar.png";
 import avatar2 from "@/assets/avatar-2.jpg";
 import avatar3 from "@/assets/avatar-3.jpg";
@@ -90,7 +88,7 @@ function MarketplaceExplore() {
               <div className="h-3 w-3 rounded-full border-[2.5px] border-border bg-gold"></div>
               <div className="h-3 w-3 rounded-full border-[2.5px] border-border bg-tint-mint"></div>
             </div>
-            <div className="flex h-8 w-1/2 max-w-xs items-center justify-center rounded-full border-[3px] border-border bg-white text-xs font-bold text-foreground/50">
+            <div className="flex h-8 w-1/2 max-w-xs items-center justify-center rounded-full border-[3px] border-border bg-white text-xs font-bold text-foreground/70">
               cetoh.com/demo
             </div>
             <div className="w-12"></div>
@@ -98,8 +96,8 @@ function MarketplaceExplore() {
           {/* Browser Content */}
           <div className="flex flex-col md:flex-row">
             <div className="hidden md:block w-64 border-r-[4px] border-border bg-white p-8">
-              <img src={avatarImg} alt="Creator Profile" className="h-20 w-20 rounded-full border-[4px] border-border object-cover shadow-vibe-sm mb-6 bg-white" />
-              <h3 className="font-display text-2xl font-black">Cetoh Market</h3>
+              <img src={avatarImg} alt="Creator Profile" loading="lazy" className="h-20 w-20 rounded-full border-[4px] border-border object-cover shadow-vibe-sm mb-6 bg-white" />
+              <h2 className="font-display text-2xl font-black">Cetoh Market</h2>
               <p className="mt-4 text-sm font-bold text-foreground/70 leading-relaxed">
                 Turn what you know into income. We handle payments, delivery, and everything else.
               </p>
@@ -115,7 +113,7 @@ function MarketplaceExplore() {
               <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-8">
                 <div className="flex w-full max-w-md items-center gap-2 rounded-xl border-[3px] border-border bg-white px-4 py-2.5 shadow-vibe-sm">
                   <Search className="h-4 w-4 stroke-[3px] text-foreground/40" />
-                  <span className="text-sm font-bold text-foreground/40">Search products...</span>
+                  <span className="text-sm font-bold text-foreground/70">Search products...</span>
                 </div>
                 <div className="flex items-center gap-4 w-full sm:w-auto">
                   <div className="flex-1 sm:flex-none rounded-xl border-[3px] border-border bg-white px-4 py-2.5 text-center text-sm font-black shadow-vibe-sm cursor-pointer hover:bg-muted/50">
@@ -140,7 +138,7 @@ function MarketplaceExplore() {
                     <div className="flex h-28 items-center justify-center rounded-xl border-[3px] border-border bg-white">
                       <item.Icon className="h-10 w-10 stroke-[2.5] text-foreground" />
                     </div>
-                    <h4 className="mt-4 font-black">{item.title}</h4>
+                    <h3 className="mt-4 font-black">{item.title}</h3>
                     <p className="mt-1 text-sm font-bold text-foreground/70">{item.price}</p>
                   </div>
                 ))}
@@ -263,14 +261,14 @@ function SetupSteps() {
 
 /* ---------- Payment gateways ---------- */
 const PaystackMark = () => (
-  <span className="inline-flex items-center gap-1.5 font-extrabold text-[#00c3f7]">
-    <span className="grid h-6 w-6 place-items-center rounded-full bg-[#00c3f7] text-xs font-black text-white">P</span>
+  <span className="inline-flex items-center gap-1.5 font-extrabold text-foreground">
+    <span className="grid h-6 w-6 place-items-center rounded-full bg-[#00c3f7] text-xs font-black text-white" aria-hidden="true">P</span>
     Paystack
   </span>
 );
 const FlutterwaveMark = () => (
-  <span className="inline-flex items-center gap-1.5 font-extrabold text-[#f5a623]">
-    <svg viewBox="0 0 32 32" className="h-6 w-6" aria-hidden>
+  <span className="inline-flex items-center gap-1.5 font-extrabold text-foreground">
+    <svg viewBox="0 0 32 32" className="h-6 w-6" aria-hidden="true">
       <circle cx="16" cy="16" r="16" fill="#f5a623" />
       <path d="M8 20 Q12 10 16 16 Q20 22 24 12" stroke="white" strokeWidth="2.5" fill="none" strokeLinecap="round" />
     </svg>

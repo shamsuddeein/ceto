@@ -24,7 +24,7 @@ function AnalyticsComponent() {
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
           <div className="rounded-[2rem] border-[4px] border-border bg-white p-6 shadow-vibe transition-transform hover:-translate-y-1">
             <div className="flex flex-row items-center justify-between pb-2">
-              <h3 className="font-display text-lg font-black text-foreground">Total Revenue</h3>
+              <h2 className="font-display text-lg font-black text-foreground">Total Revenue</h2>
               <div className="rounded-xl border-[3px] border-border bg-tint-mint p-2 shadow-vibe-sm">
                 <CreditCard className="h-5 w-5 stroke-[2.5]" />
               </div>
@@ -38,7 +38,7 @@ function AnalyticsComponent() {
           </div>
           <div className="rounded-[2rem] border-[4px] border-border bg-white p-6 shadow-vibe transition-transform hover:-translate-y-1">
             <div className="flex flex-row items-center justify-between pb-2">
-              <h3 className="font-display text-lg font-black text-foreground">Page Views</h3>
+              <h2 className="font-display text-lg font-black text-foreground">Page Views</h2>
               <div className="rounded-xl border-[3px] border-border bg-tint-peach p-2 shadow-vibe-sm">
                 <Eye className="h-5 w-5 stroke-[2.5]" />
               </div>
@@ -52,7 +52,7 @@ function AnalyticsComponent() {
           </div>
           <div className="rounded-[2rem] border-[4px] border-border bg-white p-6 shadow-vibe transition-transform hover:-translate-y-1">
             <div className="flex flex-row items-center justify-between pb-2">
-              <h3 className="font-display text-lg font-black text-foreground">Conversion Rate</h3>
+              <h2 className="font-display text-lg font-black text-foreground">Conversion Rate</h2>
               <div className="rounded-xl border-[3px] border-border bg-tint-lilac p-2 shadow-vibe-sm">
                 <Activity className="h-5 w-5 stroke-[2.5]" />
               </div>
@@ -66,7 +66,7 @@ function AnalyticsComponent() {
           </div>
           <div className="rounded-[2rem] border-[4px] border-border bg-white p-6 shadow-vibe transition-transform hover:-translate-y-1">
             <div className="flex flex-row items-center justify-between pb-2">
-              <h3 className="font-display text-lg font-black text-foreground">New Customers</h3>
+              <h2 className="font-display text-lg font-black text-foreground">New Customers</h2>
               <div className="rounded-xl border-[3px] border-border bg-tint-rose p-2 shadow-vibe-sm">
                 <Users className="h-5 w-5 stroke-[2.5]" />
               </div>

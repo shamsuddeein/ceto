@@ -75,7 +75,7 @@ function CreatorProfile() {
       </aside>
 
       {/* Right Content */}
-      <main className="flex-1 bg-[#FAFAFA] px-4 py-8 sm:px-8 md:px-12 md:py-10">
+      <main id="main-content" className="flex-1 bg-[#FAFAFA] px-4 py-8 sm:px-8 md:px-12 md:py-10">
         {/* Top bar */}
         <div className="mb-10 flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
           <div className="relative flex-1 max-w-xl">

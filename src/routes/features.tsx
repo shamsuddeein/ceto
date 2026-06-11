@@ -127,7 +127,7 @@ function FeaturesPage() {
   return (
     <div className="min-h-screen bg-background">
       <SiteHeader />
-      <main>
+      <main id="main-content">
         {/* Hero */}
         <section className="relative overflow-hidden bg-background py-20 text-center md:py-32 border-b-[4px] border-border">
           <div className="pointer-events-none absolute -left-16 top-20 h-64 w-64 rounded-full border-[3px] border-border bg-tint-mint shadow-vibe opacity-60" />

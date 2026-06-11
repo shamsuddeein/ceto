@@ -6,7 +6,7 @@ import {
   Instagram, Facebook, Youtube, Loader2,
 } from "lucide-react";
 import { toast } from "sonner";
-import { AuthHeader } from "@/components/auth-header";
+import { SiteHeader } from "@/components/site-layout";
 import { SocialAuthButton } from "@/components/social-auth-button";
 import signupBook from "@/assets/signup-book.png";
 import logoImg from "@/assets/logo.png";
@@ -77,7 +77,7 @@ function SignupPage() {
   return (
     <div className="min-h-screen bg-background">
       {/* Top banner */}
-      <div className="relative overflow-hidden bg-primary text-primary-foreground">
+      <aside aria-label="Announcement" className="relative overflow-hidden bg-primary text-primary-foreground">
         <div className="container-page flex flex-col items-center justify-center gap-3 py-6 text-center md:flex-row md:gap-8 md:py-5">
           <img src={signupBook} alt="" width={96} height={96} className="hidden h-20 w-auto -mb-10 md:block" loading="lazy" />
           <div className="md:text-center">
@@ -88,13 +88,13 @@ function SignupPage() {
             </p>
           </div>
         </div>
-      </div>
+      </aside>
 
       <div className="pt-6">
-        <AuthHeader />
+        <SiteHeader />
       </div>
 
-      <main className="grid gap-0 lg:grid-cols-2">
+      <main id="main-content" className="grid gap-0 lg:grid-cols-2">
         {/* Left: signup form */}
         <section className="px-4 py-8 sm:px-6 md:px-12 md:py-10 lg:py-16">
           <div className="mx-auto w-full max-w-md">

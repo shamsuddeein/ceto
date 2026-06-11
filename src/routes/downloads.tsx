@@ -1,7 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Download } from "lucide-react";
-import { SiteHeader } from "@/components/site-header";
-import { SiteFooter } from "@/components/site-footer";
+import { SiteHeader, SiteFooter } from "@/components/site-layout";
 import { MOCK_PRODUCTS, tintClass, getProductIcon } from "@/lib/mock-products";
 import { toast } from "sonner";
 
@@ -15,6 +14,7 @@ function Downloads() {
   return (
     <div className="min-h-screen bg-background">
       <SiteHeader />
+      <main id="main-content">
       <section className="container-page py-12">
         <h1 className="font-display text-3xl font-bold text-primary">My Downloads</h1>
         <p className="mt-2 text-foreground/70">All your purchases in one place. Re-download anytime.</p>
@@ -38,6 +38,7 @@ function Downloads() {
           ))}
         </ul>
       </section>
+      </main>
       <SiteFooter />
     </div>
   );

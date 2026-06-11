@@ -1,6 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { SiteHeader } from "@/components/site-header";
-import { SiteFooter } from "@/components/site-footer";
+import { SiteHeader, SiteFooter } from "@/components/site-layout";
 import { CATEGORIES, tintClass } from "@/lib/mock-products";
 import { ArrowRight } from "lucide-react";
 
@@ -16,6 +15,7 @@ function Categories() {
   return (
     <div className="min-h-screen bg-background">
       <SiteHeader />
+      <main id="main-content">
       <section className="container-page py-12 md:py-16">
         <h1 className="font-display text-3xl font-bold text-primary sm:text-4xl">Browse Categories</h1>
         <p className="mt-3 max-w-2xl text-foreground/70">Find exactly what you need from our growing catalog of creator products.</p>
@@ -33,6 +33,7 @@ function Categories() {
           ))}
         </div>
       </section>
+      </main>
       <SiteFooter />
     </div>
   );

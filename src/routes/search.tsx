@@ -1,8 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { Search as SearchIcon } from "lucide-react";
-import { SiteHeader } from "@/components/site-header";
-import { SiteFooter } from "@/components/site-footer";
+import { SiteHeader, SiteFooter } from "@/components/site-layout";
 import { ProductCard } from "@/components/product-card";
 import { MOCK_PRODUCTS } from "@/lib/mock-products";
 
@@ -19,6 +18,7 @@ function SearchPage() {
   return (
     <div className="min-h-screen bg-background">
       <SiteHeader />
+      <main id="main-content">
       <section className="border-b border-border bg-surface">
         <div className="container-page py-10">
           <h1 className="font-display text-3xl font-bold text-primary">Search</h1>
@@ -46,6 +46,7 @@ function SearchPage() {
           </div>
         )}
       </section>
+      </main>
       <SiteFooter />
     </div>
   );
