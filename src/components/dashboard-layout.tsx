@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { LayoutDashboard, Package, Plus, ShoppingBag, Wallet, ArrowDownToLine, Settings, Download, Users, AreaChart, Loader2 } from "lucide-react";
+import { LayoutDashboard, Package, Plus, ShoppingBag, Wallet, ArrowDownToLine, Settings, Download, Users, AreaChart, Loader2, LogOut } from "lucide-react";
 import logoImg from "@/assets/logo.png";
 import avatarImg from "@/assets/avatar.png";
 import { api } from "@/lib/axios";
@@ -42,6 +42,16 @@ export function DashboardLayout({ title, children }: { title: string; children: 
     retry: false,
   });
 
+  async function handleLogout() {
+    try {
+      await api.post("/auth/logout/");
+      window.location.href = "/login";
+    } catch (err) {
+      console.error(err);
+      window.location.href = "/login"; // Force redirect anyway
+    }
+  }
+
   return (
     <div className="min-h-screen bg-surface">
       <div className="grid lg:grid-cols-[260px_1fr]">
@@ -77,6 +87,13 @@ export function DashboardLayout({ title, children }: { title: string; children: 
                 <Settings className="h-5 w-5 stroke-[2.5]" />
                 Settings
               </Link>
+              <button 
+                onClick={handleLogout}
+                className="flex w-full items-center gap-4 rounded-xl border-[3px] border-transparent px-4 py-3 text-[15px] font-bold text-red-500/80 outline-none transition-all hover:bg-red-50 hover:border-red-200 hover:shadow-vibe-sm hover:-translate-y-1 hover:text-red-600 focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2"
+              >
+                <LogOut className="h-5 w-5 stroke-[2.5]" />
+                Log out
+              </button>
             </div>
           </nav>
         </aside>
@@ -115,6 +132,12 @@ export function DashboardLayout({ title, children }: { title: string; children: 
                   {n.label}
                 </Link>
               ))}
+              <button
+                onClick={handleLogout}
+                className="snap-start whitespace-nowrap rounded-xl border-[3px] border-transparent px-4 py-2 text-sm font-bold text-red-500/80 outline-none transition-all hover:bg-red-50 hover:border-red-200 hover:shadow-vibe-sm focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2"
+              >
+                Log out
+              </button>
             </nav>
           </div>
           <div className="p-6 md:p-10 animate-fade-in-up">{children}</div>
