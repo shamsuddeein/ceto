@@ -50,7 +50,7 @@ function Settings() {
         {tab === "profile" && <ProfileTab user={user} />}
         {tab === "account" && <AccountTab user={user} />}
         {tab === "payouts" && <PayoutsTab user={user} />}
-        {tab === "notifications" && <NotificationsTab />}
+        {tab === "notifications" && <NotificationsTab user={user} />}
       </div>
 
     </DashboardLayout>
@@ -230,23 +230,58 @@ function PayoutsTab({ user }: { user: any }) {
     </form>
   );
 }
-function NotificationsTab() {
-  const items = [
-    ["New sale", "Get notified instantly when someone buys."],
-    ["Weekly digest", "A summary of your sales every Monday."],
-    ["Product reviews", "When a buyer leaves a review."],
-    ["Cetoh news", "Product updates & creator stories."],
-  ];
+function NotificationsTab({ user }: { user: any }) {
+  const queryClient = useQueryClient();
+  const prefs = user?.profile?.notification_preferences || {};
+  
+  const [items, setItems] = useState([
+    { id: "new_sale", label: "New sale", desc: "Get notified instantly when someone buys.", checked: prefs.new_sale ?? true },
+    { id: "weekly_digest", label: "Weekly digest", desc: "A summary of your sales every Monday.", checked: prefs.weekly_digest ?? true },
+    { id: "product_reviews", label: "Product reviews", desc: "When a buyer leaves a review.", checked: prefs.product_reviews ?? true },
+    { id: "news", label: "Cetoh news", desc: "Product updates & creator stories.", checked: prefs.news ?? true },
+  ]);
+  const [loading, setLoading] = useState(false);
+
+  function toggle(id: string) {
+    setItems(items.map(it => it.id === id ? { ...it, checked: !it.checked } : it));
+  }
+
+  async function handleSave(e: React.FormEvent) {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      const preferences = items.reduce((acc, item) => {
+        acc[item.id] = item.checked;
+        return acc;
+      }, {} as any);
+
+      await api.patch("/users/profile/", {
+        "profile.notification_preferences": preferences
+      });
+      queryClient.invalidateQueries({ queryKey: ["profile"] });
+      toast.success("Notification preferences saved!");
+    } catch (err: any) {
+      console.error(err);
+      toast.error("Failed to save preferences");
+    } finally {
+      setLoading(false);
+    }
+  }
+
   return (
-    <SaveCard title="Email notifications">
-      <div className="flex flex-col gap-4">
-        {items.map(([t, d]) => (
-          <label key={t} className="flex items-center justify-between gap-4 rounded-[1.5rem] border-[3px] border-border bg-tint-cream p-4 shadow-vibe-sm cursor-pointer transition-transform hover:-translate-y-1">
-            <div><p className="text-base font-black text-foreground">{t}</p><p className="mt-1 text-sm font-bold text-foreground/70">{d}</p></div>
-            <input type="checkbox" defaultChecked className="h-6 w-6 accent-[color:var(--color-primary)] cursor-pointer" />
+    <form onSubmit={handleSave} className="rounded-[2.5rem] border-[4px] border-border bg-white p-6 sm:p-8 shadow-vibe">
+      <h2 className="font-display text-xl sm:text-2xl font-black text-foreground">Email notifications</h2>
+      <div className="mt-8 flex flex-col gap-4">
+        {items.map((it) => (
+          <label key={it.id} className="flex items-center justify-between gap-4 rounded-[1.5rem] border-[3px] border-border bg-tint-cream p-4 shadow-vibe-sm cursor-pointer transition-transform hover:-translate-y-1">
+            <div><p className="text-base font-black text-foreground">{it.label}</p><p className="mt-1 text-sm font-bold text-foreground/70">{it.desc}</p></div>
+            <input type="checkbox" checked={it.checked} onChange={() => toggle(it.id)} className="h-6 w-6 accent-[color:var(--color-primary)] cursor-pointer" />
           </label>
         ))}
       </div>
-    </SaveCard>
+      <button type="submit" disabled={loading} className="mt-10 inline-flex items-center justify-center gap-2 rounded-full border-[3px] border-border bg-primary px-8 py-4 text-base font-black text-white shadow-vibe hover:-translate-y-1 hover:shadow-vibe-hover disabled:opacity-70 transition-transform">
+        {loading && <Loader2 className="h-5 w-5 animate-spin stroke-[3px]" />} {loading ? "Saving..." : "Save changes"}
+      </button>
+    </form>
   );
 }
