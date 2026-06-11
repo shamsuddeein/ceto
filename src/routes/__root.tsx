@@ -187,10 +187,18 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-md focus:bg-primary focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-primary-foreground focus:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-foreground"
+      >
+        Skip to main content
+      </a>
       <RouteBenchmark />
       {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
       <Profiler id="AppOutlet" onRender={onRenderProfile}>
-        <Outlet />
+        <div id="main-content">
+          <Outlet />
+        </div>
       </Profiler>
       <Toaster position="top-right" richColors closeButton />
     </QueryClientProvider>

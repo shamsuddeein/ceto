@@ -85,12 +85,12 @@ export function DashboardLayout({ title, children }: { title: string; children: 
               </div>
             </div>
             <nav aria-label="Mobile Navigation" className="flex snap-x snap-mandatory gap-2 overflow-x-auto px-6 pb-4 pt-2 lg:hidden [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
-              {NAV_GROUPS.flatMap((group) => group.items).concat([{ label: "Settings", to: "/settings", icon: Settings }]).map((n) => (
-                <Link 
-                  key={n.label} 
-                  to={n.to} 
-                  preload="intent" 
-                  className="snap-start whitespace-nowrap rounded-xl border-[3px] border-transparent px-4 py-2 text-sm font-bold text-foreground/80 outline-none transition-all hover:bg-tint-cream hover:border-border hover:shadow-vibe-sm"
+              {(NAV_GROUPS.flatMap((group) => group.items.map((it) => ({ label: it.label, to: it.to as string }))).concat([{ label: "Settings", to: "/settings" }])).map((n) => (
+                <Link
+                  key={n.label}
+                  to={n.to}
+                  preload="intent"
+                  className="snap-start whitespace-nowrap rounded-xl border-[3px] border-transparent px-4 py-2 text-sm font-bold text-foreground/80 outline-none transition-all hover:bg-tint-cream hover:border-border hover:shadow-vibe-sm focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
                   activeProps={{ className: "bg-tint-mint border-[3px] border-border text-foreground font-black shadow-vibe-sm" }}
                 >
                   {n.label}
