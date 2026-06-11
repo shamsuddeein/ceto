@@ -115,8 +115,10 @@ function ProfileTab({ user }: { user: any }) {
       });
       queryClient.invalidateQueries({ queryKey: ["profile"] });
       toast.success("Profile updated successfully!");
-    } catch (err) {
-      toast.error("Failed to update profile");
+    } catch (err: any) {
+      console.error(err);
+      const msg = err.response?.data ? JSON.stringify(err.response.data) : err.message;
+      toast.error("Failed to update profile: " + msg);
     } finally {
       setLoading(false);
     }
@@ -172,16 +174,60 @@ function AccountTab({ user }: { user: any }) {
   );
 }
 function PayoutsTab({ user }: { user: any }) {
+  const queryClient = useQueryClient();
   const bankDetails = user?.profile?.bank_details || {};
+  const [method, setMethod] = useState(bankDetails.method || "Bank transfer");
+  const [accountName, setAccountName] = useState(bankDetails.account_name || "");
+  const [accountNumber, setAccountNumber] = useState(bankDetails.account_number || "");
+  const [bankName, setBankName] = useState(bankDetails.bank_name || "");
+  const [loading, setLoading] = useState(false);
+
+  async function handleSave(e: React.FormEvent) {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      await api.patch("/users/profile/", {
+        "profile.bank_details": {
+          method,
+          account_name: accountName,
+          account_number: accountNumber,
+          bank_name: bankName,
+        }
+      });
+      queryClient.invalidateQueries({ queryKey: ["profile"] });
+      toast.success("Payout method saved successfully!");
+    } catch (err: any) {
+      console.error(err);
+      toast.error("Failed to save payout method");
+    } finally {
+      setLoading(false);
+    }
+  }
+
   return (
-    <SaveCard title="Payout method">
-      <Field label="Method">
-        <select defaultValue={bankDetails.method || "Bank transfer"} className="w-full rounded-2xl border-[3px] border-border bg-background px-4 py-3 font-bold text-foreground outline-none shadow-vibe-sm transition-all focus:translate-x-[2px] focus:translate-y-[2px] focus:shadow-none appearance-none cursor-pointer"><option>Bank transfer</option><option>Mobile money</option></select>
-      </Field>
-      <Field label="Account holder"><input defaultValue={bankDetails.account_name || ""} className="w-full rounded-2xl border-[3px] border-border bg-background px-4 py-3 font-bold text-foreground outline-none shadow-vibe-sm transition-all focus:translate-x-[2px] focus:translate-y-[2px] focus:shadow-none" /></Field>
-      <Field label="Bank account number"><input defaultValue={bankDetails.account_number || ""} className="w-full rounded-2xl border-[3px] border-border bg-background px-4 py-3 font-bold text-foreground outline-none shadow-vibe-sm transition-all focus:translate-x-[2px] focus:translate-y-[2px] focus:shadow-none" /></Field>
-      <Field label="Bank name"><input defaultValue={bankDetails.bank_name || ""} className="w-full rounded-2xl border-[3px] border-border bg-background px-4 py-3 font-bold text-foreground outline-none shadow-vibe-sm transition-all focus:translate-x-[2px] focus:translate-y-[2px] focus:shadow-none" /></Field>
-    </SaveCard>
+    <form onSubmit={handleSave} className="rounded-[2.5rem] border-[4px] border-border bg-white p-6 sm:p-8 shadow-vibe">
+      <h2 className="font-display text-xl sm:text-2xl font-black text-foreground">Payout method</h2>
+      <div className="mt-8 space-y-6">
+        <Field label="Method">
+          <select value={method} onChange={(e) => setMethod(e.target.value)} className="w-full rounded-2xl border-[3px] border-border bg-background px-4 py-3 font-bold text-foreground outline-none shadow-vibe-sm transition-all focus:translate-x-[2px] focus:translate-y-[2px] focus:shadow-none appearance-none cursor-pointer">
+            <option>Bank transfer</option>
+            <option>Mobile money</option>
+          </select>
+        </Field>
+        <Field label="Account holder">
+          <input value={accountName} onChange={(e) => setAccountName(e.target.value)} className="w-full rounded-2xl border-[3px] border-border bg-background px-4 py-3 font-bold text-foreground outline-none shadow-vibe-sm transition-all focus:translate-x-[2px] focus:translate-y-[2px] focus:shadow-none" />
+        </Field>
+        <Field label="Bank account number">
+          <input value={accountNumber} onChange={(e) => setAccountNumber(e.target.value)} className="w-full rounded-2xl border-[3px] border-border bg-background px-4 py-3 font-bold text-foreground outline-none shadow-vibe-sm transition-all focus:translate-x-[2px] focus:translate-y-[2px] focus:shadow-none" />
+        </Field>
+        <Field label="Bank name">
+          <input value={bankName} onChange={(e) => setBankName(e.target.value)} className="w-full rounded-2xl border-[3px] border-border bg-background px-4 py-3 font-bold text-foreground outline-none shadow-vibe-sm transition-all focus:translate-x-[2px] focus:translate-y-[2px] focus:shadow-none" />
+        </Field>
+      </div>
+      <button type="submit" disabled={loading} className="mt-10 inline-flex items-center justify-center gap-2 rounded-full border-[3px] border-border bg-primary px-8 py-4 text-base font-black text-white shadow-vibe hover:-translate-y-1 hover:shadow-vibe-hover disabled:opacity-70 transition-transform">
+        {loading && <Loader2 className="h-5 w-5 animate-spin stroke-[3px]" />} {loading ? "Saving..." : "Save changes"}
+      </button>
+    </form>
   );
 }
 function NotificationsTab() {
