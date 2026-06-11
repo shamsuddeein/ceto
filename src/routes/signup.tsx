@@ -8,6 +8,7 @@ import {
 import { toast } from "sonner";
 import { SiteHeader } from "@/components/site-layout";
 import { SocialAuthButton } from "@/components/social-auth-button";
+import { api } from "@/lib/axios";
 import signupBook from "@/assets/signup-book.png";
 import logoImg from "@/assets/logo.png";
 
@@ -46,17 +47,16 @@ function SignupPage() {
     if (!agree) return toast.error("Please agree to the Terms of Service and Privacy Policy.");
     setLoading(true);
     try {
-      // TODO: Replace with real registration API call
-      // const res = await fetch("/api/auth/register", {
-      //   method: "POST",
-      //   headers: { "Content-Type": "application/json" },
-      //   body: JSON.stringify({ firstName, lastName, email, password }),
-      // });
-      // if (!res.ok) throw new Error(await res.text());
-      await new Promise((r) => setTimeout(r, 1000));
-      toast.success("Account created! Check your email to verify.");
-    } catch {
-      toast.error("Couldn't create your account. Please try again.");
+      const username = `${firstName.toLowerCase().replace(/\s+/g, '')}${lastName.toLowerCase().replace(/\s+/g, '')}${Math.floor(Math.random() * 1000)}`;
+      await api.post("/auth/register/", { 
+        email, 
+        password, 
+        username 
+      });
+      toast.success("Account created! You can now log in.");
+    } catch (err: any) {
+      const errorMsg = err.response?.data?.email?.[0] || err.response?.data?.username?.[0] || "Couldn't create your account. Please try again.";
+      toast.error(errorMsg);
     } finally {
       setLoading(false);
     }

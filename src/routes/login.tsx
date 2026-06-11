@@ -4,6 +4,7 @@ import { Eye, EyeOff, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { SiteHeader } from "@/components/site-layout";
 import { SocialAuthButton } from "@/components/social-auth-button";
+import { api } from "@/lib/axios";
 import loginIllustration from "@/assets/setup-person-cartoon.png";
 export const Route = createFileRoute("/login")({
   head: () => ({
@@ -34,17 +35,15 @@ function LoginPage() {
     }
     setLoading(true);
     try {
-      // TODO: Replace with real auth API call
-      // const res = await fetch("/api/auth/login", {
-      //   method: "POST",
-      //   headers: { "Content-Type": "application/json" },
-      //   body: JSON.stringify({ identifier, password }),
-      // });
-      // if (!res.ok) throw new Error(await res.text());
-      await new Promise((r) => setTimeout(r, 900));
+      await api.post("/auth/login/", { 
+        email: identifier, 
+        password 
+      });
       toast.success("Welcome back! Redirecting...");
-    } catch {
-      toast.error("Invalid credentials. Please try again.");
+      // Simulate redirect to dashboard
+      setTimeout(() => window.location.href = "/dashboard", 1000);
+    } catch (err: any) {
+      toast.error(err.response?.data?.detail || "Invalid credentials. Please try again.");
     } finally {
       setLoading(false);
     }
