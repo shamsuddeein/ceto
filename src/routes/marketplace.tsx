@@ -1,7 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { SiteHeader, SiteFooter } from "@/components/site-layout";
 import { ProductCard } from "@/components/product-card";
-import { MOCK_PRODUCTS, CATEGORIES } from "@/lib/mock-products";
+import { ProductCard } from "@/components/product-card";
+import { api } from "@/lib/axios";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 import { Filter, SlidersHorizontal, Loader2, Search } from "lucide-react";
 import { useState, useMemo } from "react";
@@ -10,9 +11,14 @@ import { useDebounce } from "@/hooks/use-debounce";
 const marketplaceQueryOptions = queryOptions({
   queryKey: ["marketplace-products"],
   queryFn: async () => {
-    // Simulate real API fetching for future replacement
-    await new Promise((r) => setTimeout(r, 400));
-    return { products: MOCK_PRODUCTS, categories: CATEGORIES };
+    const [productsRes, categoriesRes] = await Promise.all([
+      api.get("/catalog/products/"),
+      api.get("/catalog/categories/")
+    ]);
+    return { 
+      products: productsRes.data, 
+      categories: categoriesRes.data 
+    };
   },
   staleTime: 1000 * 60 * 15, // Aggressive 15-minute cache
 });
@@ -47,7 +53,8 @@ function Marketplace() {
     if (!debouncedSearch.trim()) return data.products;
     const lower = debouncedSearch.toLowerCase();
     return data.products.filter(
-      (p) => p.title.toLowerCase().includes(lower) || p.creator.toLowerCase().includes(lower)
+      (p: any) => p.title.toLowerCase().includes(lower) || 
+      (p.creator?.username && p.creator.username.toLowerCase().includes(lower))
     );
   }, [debouncedSearch, data.products]);
 
