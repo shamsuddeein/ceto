@@ -159,12 +159,45 @@ function ProfileTab({ user }: { user: any }) {
   );
 }
 function AccountTab({ user }: { user: any }) {
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  async function handleSave(e: React.FormEvent) {
+    e.preventDefault();
+    if (!password) {
+      toast.error("Please enter a new password");
+      return;
+    }
+    setLoading(true);
+    try {
+      await api.patch("/users/profile/", { password });
+      toast.success("Password updated successfully!");
+      setPassword("");
+    } catch (err: any) {
+      console.error(err);
+      const msg = err.response?.data ? JSON.stringify(err.response.data) : err.message;
+      toast.error("Failed to update password: " + msg);
+    } finally {
+      setLoading(false);
+    }
+  }
+
   return (
     <div className="space-y-6">
-      <SaveCard title="Login & email">
-        <Field label="Email"><input type="email" disabled defaultValue={user?.email || ""} className="w-full rounded-2xl border-[3px] border-border bg-muted px-4 py-3 font-bold text-foreground/60 outline-none cursor-not-allowed" /></Field>
-        <Field label="New password"><input type="password" placeholder="••••••••" className="w-full rounded-2xl border-[3px] border-border bg-background px-4 py-3 font-bold text-foreground outline-none shadow-vibe-sm transition-all focus:translate-x-[2px] focus:translate-y-[2px] focus:shadow-none" /></Field>
-      </SaveCard>
+      <form onSubmit={handleSave} className="rounded-[2.5rem] border-[4px] border-border bg-white p-6 sm:p-8 shadow-vibe">
+        <h2 className="font-display text-xl sm:text-2xl font-black text-foreground">Login & email</h2>
+        <div className="mt-8 space-y-6">
+          <Field label="Email">
+            <input type="email" disabled value={user?.email || ""} className="w-full rounded-2xl border-[3px] border-border bg-muted px-4 py-3 font-bold text-foreground/60 outline-none cursor-not-allowed" />
+          </Field>
+          <Field label="New password">
+            <input type="password" placeholder="••••••••" value={password} onChange={(e) => setPassword(e.target.value)} className="w-full rounded-2xl border-[3px] border-border bg-background px-4 py-3 font-bold text-foreground outline-none shadow-vibe-sm transition-all focus:translate-x-[2px] focus:translate-y-[2px] focus:shadow-none" />
+          </Field>
+        </div>
+        <button type="submit" disabled={loading} className="mt-10 inline-flex items-center justify-center gap-2 rounded-full border-[3px] border-border bg-primary px-8 py-4 text-base font-black text-white shadow-vibe hover:-translate-y-1 hover:shadow-vibe-hover disabled:opacity-70 transition-transform">
+          {loading && <Loader2 className="h-5 w-5 animate-spin stroke-[3px]" />} {loading ? "Saving..." : "Save changes"}
+        </button>
+      </form>
       <div className="rounded-[2.5rem] border-[4px] border-border bg-tint-rose p-8 shadow-vibe">
         <h2 className="font-display text-2xl font-black text-foreground">Danger zone</h2>
         <p className="mt-2 text-base font-bold text-foreground/80">Closing your account is permanent. Any pending balance will be paid out first.</p>
