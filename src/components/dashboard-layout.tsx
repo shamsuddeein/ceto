@@ -85,7 +85,7 @@ export function DashboardLayout({ title, children }: { title: string; children: 
               </div>
             </div>
             <nav aria-label="Mobile Navigation" className="flex snap-x snap-mandatory gap-2 overflow-x-auto px-6 pb-4 pt-2 lg:hidden [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
-              {[...NAV_GROUPS.flatMap((group) => group.items), { label: "Settings", to: "/settings" as const, icon: Settings }].map((n) => (
+              {NAV_GROUPS.flatMap((group) => group.items.map((it) => ({ label: it.label, to: it.to }))).concat([{ label: "Settings", to: "/settings" }]).map((n) => (
                 <Link
                   key={n.label}
                   to={n.to}
