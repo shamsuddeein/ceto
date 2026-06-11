@@ -51,14 +51,13 @@ export function SiteHeader() {
                 </DropdownMenuContent>
               </DropdownMenu>
             ) : (
-              <Link
+              <a
                 key={n.label}
-                to={n.href}
-                preload="intent"
-                className="inline-flex items-center gap-1 text-base font-bold text-foreground/80 transition hover:text-foreground"
+                href={n.href}
+                className="inline-flex items-center gap-1 text-base font-bold text-foreground/80 transition hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded"
               >
                 {n.label}
-              </Link>
+              </a>
             )
           ))}
         </nav>
