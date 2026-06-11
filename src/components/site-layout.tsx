@@ -177,9 +177,9 @@ export function SiteFooter() {
             <ul className="mt-6 space-y-4">
               {c.links.map((l) => (
                 <li key={l.label}>
-                  <Link to={l.href} preload="intent" className="text-[16px] font-bold text-foreground/80 transition hover:text-foreground hover:underline decoration-2 underline-offset-4">
+                  <a href={l.href} className="text-[16px] font-bold text-foreground/80 transition hover:text-foreground hover:underline decoration-2 underline-offset-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded">
                     {l.label}
-                  </Link>
+                  </a>
                 </li>
               ))}
             </ul>
