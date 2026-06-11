@@ -1,9 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { toast } from "sonner";
-import { Loader2, Camera } from "lucide-react";
+import { Loader2, Camera, User } from "lucide-react";
 import { DashboardLayout } from "@/components/dashboard-layout";
-import avatarImg from "@/assets/avatar.png";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { api } from "@/lib/axios";
 
 export const Route = createFileRoute("/settings")({
   head: () => ({ meta: [{ title: "Account Settings | Cetoh" }] }),
@@ -11,6 +12,15 @@ export const Route = createFileRoute("/settings")({
 });
 
 function Settings() {
+  const { data: user, isLoading } = useQuery({
+    queryKey: ["profile"],
+    queryFn: async () => {
+      const res = await api.get("/users/profile/");
+      return res.data;
+    },
+    retry: false,
+  });
+
   const [tab, setTab] = useState<"profile" | "account" | "payouts" | "notifications">("profile");
   const tabs = [
     { id: "profile", label: "Profile" },
@@ -18,6 +28,15 @@ function Settings() {
     { id: "payouts", label: "Payouts" },
     { id: "notifications", label: "Notifications" },
   ] as const;
+
+  if (isLoading) {
+    return (
+      <DashboardLayout title="Settings">
+        <div className="flex justify-center p-10"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>
+      </DashboardLayout>
+    );
+  }
+
   return (
     <DashboardLayout title="Settings">
       <div className="flex gap-2 overflow-x-auto pb-4 mb-4 sm:gap-4 sm:mb-8 sm:pb-0 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
@@ -28,9 +47,9 @@ function Settings() {
         ))}
       </div>
       <div className="mt-6 max-w-3xl">
-        {tab === "profile" && <ProfileTab />}
-        {tab === "account" && <AccountTab />}
-        {tab === "payouts" && <PayoutsTab />}
+        {tab === "profile" && <ProfileTab user={user} />}
+        {tab === "account" && <AccountTab user={user} />}
+        {tab === "payouts" && <PayoutsTab user={user} />}
         {tab === "notifications" && <NotificationsTab />}
       </div>
 
@@ -61,29 +80,87 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
   return <label className="block"><span className="mb-2 block text-base font-black text-foreground">{label}</span>{children}</label>;
 }
 
-function ProfileTab() {
+function ProfileTab({ user }: { user: any }) {
+  const queryClient = useQueryClient();
+  const [avatarPreview, setAvatarPreview] = useState<string | null>(user?.profile?.avatar || null);
+  const [avatarFile, setAvatarFile] = useState<File | null>(null);
+  const [username, setUsername] = useState(user?.profile?.username || "");
+  const [bio, setBio] = useState(user?.profile?.bio || "");
+  const [website, setWebsite] = useState(user?.profile?.website || "");
+  const [loading, setLoading] = useState(false);
+
+  function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (file) {
+      setAvatarFile(file);
+      setAvatarPreview(URL.createObjectURL(file));
+    }
+  }
+
+  async function handleSave(e: React.FormEvent) {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      const formData = new FormData();
+      formData.append("profile.username", username);
+      formData.append("profile.bio", bio);
+      if (website) formData.append("profile.website", website); // Assuming we added website to backend, wait, no website field in backend! Let's ignore website for now or send it if it exists.
+      
+      if (avatarFile) {
+        formData.append("profile.avatar", avatarFile);
+      }
+
+      await api.patch("/users/profile/", formData, {
+        headers: { "Content-Type": "multipart/form-data" }
+      });
+      queryClient.invalidateQueries({ queryKey: ["profile"] });
+      toast.success("Profile updated successfully!");
+    } catch (err) {
+      toast.error("Failed to update profile");
+    } finally {
+      setLoading(false);
+    }
+  }
+
   return (
-    <SaveCard title="Public profile">
-      <div className="flex items-center gap-4">
-        <div className="flex h-24 w-24 overflow-hidden rounded-full border-[4px] border-border bg-tint-peach shadow-vibe-sm relative group cursor-pointer">
-          <img src={avatarImg} alt="Creator" className="h-full w-full object-cover" />
+    <form onSubmit={handleSave} className="rounded-[2.5rem] border-[4px] border-border bg-white p-6 sm:p-8 shadow-vibe">
+      <h2 className="font-display text-xl sm:text-2xl font-black text-foreground">Public profile</h2>
+      <div className="mt-8 space-y-6">
+        <div className="flex items-center gap-4">
+          <div className="flex h-24 w-24 items-center justify-center overflow-hidden rounded-full border-[4px] border-border bg-tint-peach shadow-vibe-sm relative group">
+            {avatarPreview ? (
+              <img src={avatarPreview} alt="Creator" className="h-full w-full object-cover" />
+            ) : (
+              <span className="font-display text-4xl font-black text-primary uppercase">
+                {username?.[0] || user?.email?.[0] || "?"}
+              </span>
+            )}
+          </div>
+          <label className="inline-flex cursor-pointer items-center gap-2 rounded-xl border-[3px] border-border bg-white px-4 py-3 text-sm font-black shadow-vibe-sm transition-transform hover:-translate-y-1">
+            <Camera className="h-5 w-5 stroke-[2.5]" /> Change photo
+            <input type="file" accept="image/*" className="hidden" onChange={handleFileChange} />
+          </label>
         </div>
-        <button type="button" className="inline-flex items-center gap-2 rounded-xl border-[3px] border-border bg-white px-4 py-3 text-sm font-black shadow-vibe-sm transition-transform hover:-translate-y-1"><Camera className="h-5 w-5 stroke-[2.5]" /> Change photo</button>
+        <div className="grid gap-6 sm:grid-cols-2">
+          <Field label="Username">
+            <input value={username} onChange={(e) => setUsername(e.target.value)} className="w-full rounded-2xl border-[3px] border-border bg-background px-4 py-3 font-bold text-foreground outline-none shadow-vibe-sm transition-all focus:translate-x-[2px] focus:translate-y-[2px] focus:shadow-none" />
+          </Field>
+        </div>
+        <Field label="Bio">
+          <textarea rows={3} value={bio} onChange={(e) => setBio(e.target.value)} className="w-full rounded-2xl border-[3px] border-border bg-background px-4 py-3 font-bold text-foreground outline-none shadow-vibe-sm transition-all focus:translate-x-[2px] focus:translate-y-[2px] focus:shadow-none resize-none" />
+        </Field>
       </div>
-      <div className="grid gap-6 sm:grid-cols-2">
-        <Field label="Display name"><input defaultValue="Creator Name" className="w-full rounded-2xl border-[3px] border-border bg-background px-4 py-3 font-bold text-foreground outline-none shadow-vibe-sm transition-all focus:translate-x-[2px] focus:translate-y-[2px] focus:shadow-none" /></Field>
-        <Field label="Username"><input defaultValue="creator" className="w-full rounded-2xl border-[3px] border-border bg-background px-4 py-3 font-bold text-foreground outline-none shadow-vibe-sm transition-all focus:translate-x-[2px] focus:translate-y-[2px] focus:shadow-none" /></Field>
-      </div>
-      <Field label="Bio"><textarea rows={3} defaultValue="Helping founders ship better digital products." className="w-full rounded-2xl border-[3px] border-border bg-background px-4 py-3 font-bold text-foreground outline-none shadow-vibe-sm transition-all focus:translate-x-[2px] focus:translate-y-[2px] focus:shadow-none resize-none" /></Field>
-      <Field label="Website"><input defaultValue="https://" className="w-full rounded-2xl border-[3px] border-border bg-background px-4 py-3 font-bold text-foreground outline-none shadow-vibe-sm transition-all focus:translate-x-[2px] focus:translate-y-[2px] focus:shadow-none" /></Field>
-    </SaveCard>
+      <button type="submit" disabled={loading} className="mt-10 inline-flex items-center justify-center gap-2 rounded-full border-[3px] border-border bg-primary px-8 py-4 text-base font-black text-white shadow-vibe hover:-translate-y-1 hover:shadow-vibe-hover disabled:opacity-70 transition-transform">
+        {loading && <Loader2 className="h-5 w-5 animate-spin stroke-[3px]" />} {loading ? "Saving..." : "Save changes"}
+      </button>
+    </form>
   );
 }
-function AccountTab() {
+function AccountTab({ user }: { user: any }) {
   return (
     <div className="space-y-6">
       <SaveCard title="Login & email">
-        <Field label="Email"><input type="email" defaultValue="me@example.com" className="w-full rounded-2xl border-[3px] border-border bg-background px-4 py-3 font-bold text-foreground outline-none shadow-vibe-sm transition-all focus:translate-x-[2px] focus:translate-y-[2px] focus:shadow-none" /></Field>
+        <Field label="Email"><input type="email" disabled defaultValue={user?.email || ""} className="w-full rounded-2xl border-[3px] border-border bg-muted px-4 py-3 font-bold text-foreground/60 outline-none cursor-not-allowed" /></Field>
         <Field label="New password"><input type="password" placeholder="••••••••" className="w-full rounded-2xl border-[3px] border-border bg-background px-4 py-3 font-bold text-foreground outline-none shadow-vibe-sm transition-all focus:translate-x-[2px] focus:translate-y-[2px] focus:shadow-none" /></Field>
       </SaveCard>
       <div className="rounded-[2.5rem] border-[4px] border-border bg-tint-rose p-8 shadow-vibe">
@@ -94,15 +171,16 @@ function AccountTab() {
     </div>
   );
 }
-function PayoutsTab() {
+function PayoutsTab({ user }: { user: any }) {
+  const bankDetails = user?.profile?.bank_details || {};
   return (
     <SaveCard title="Payout method">
       <Field label="Method">
-        <select className="w-full rounded-2xl border-[3px] border-border bg-background px-4 py-3 font-bold text-foreground outline-none shadow-vibe-sm transition-all focus:translate-x-[2px] focus:translate-y-[2px] focus:shadow-none appearance-none cursor-pointer"><option>Bank transfer</option><option>Mobile money</option></select>
+        <select defaultValue={bankDetails.method || "Bank transfer"} className="w-full rounded-2xl border-[3px] border-border bg-background px-4 py-3 font-bold text-foreground outline-none shadow-vibe-sm transition-all focus:translate-x-[2px] focus:translate-y-[2px] focus:shadow-none appearance-none cursor-pointer"><option>Bank transfer</option><option>Mobile money</option></select>
       </Field>
-      <Field label="Account holder"><input defaultValue="Creator Name" className="w-full rounded-2xl border-[3px] border-border bg-background px-4 py-3 font-bold text-foreground outline-none shadow-vibe-sm transition-all focus:translate-x-[2px] focus:translate-y-[2px] focus:shadow-none" /></Field>
-      <Field label="Bank account number"><input defaultValue="0123456789" className="w-full rounded-2xl border-[3px] border-border bg-background px-4 py-3 font-bold text-foreground outline-none shadow-vibe-sm transition-all focus:translate-x-[2px] focus:translate-y-[2px] focus:shadow-none" /></Field>
-      <Field label="Bank name"><input defaultValue="Stanbic Bank" className="w-full rounded-2xl border-[3px] border-border bg-background px-4 py-3 font-bold text-foreground outline-none shadow-vibe-sm transition-all focus:translate-x-[2px] focus:translate-y-[2px] focus:shadow-none" /></Field>
+      <Field label="Account holder"><input defaultValue={bankDetails.account_name || ""} className="w-full rounded-2xl border-[3px] border-border bg-background px-4 py-3 font-bold text-foreground outline-none shadow-vibe-sm transition-all focus:translate-x-[2px] focus:translate-y-[2px] focus:shadow-none" /></Field>
+      <Field label="Bank account number"><input defaultValue={bankDetails.account_number || ""} className="w-full rounded-2xl border-[3px] border-border bg-background px-4 py-3 font-bold text-foreground outline-none shadow-vibe-sm transition-all focus:translate-x-[2px] focus:translate-y-[2px] focus:shadow-none" /></Field>
+      <Field label="Bank name"><input defaultValue={bankDetails.bank_name || ""} className="w-full rounded-2xl border-[3px] border-border bg-background px-4 py-3 font-bold text-foreground outline-none shadow-vibe-sm transition-all focus:translate-x-[2px] focus:translate-y-[2px] focus:shadow-none" /></Field>
     </SaveCard>
   );
 }

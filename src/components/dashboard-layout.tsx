@@ -1,7 +1,9 @@
 import { Link } from "@tanstack/react-router";
-import { LayoutDashboard, Package, Plus, ShoppingBag, Wallet, ArrowDownToLine, Settings, Download, Users, AreaChart } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import { LayoutDashboard, Package, Plus, ShoppingBag, Wallet, ArrowDownToLine, Settings, Download, Users, AreaChart, Loader2 } from "lucide-react";
 import logoImg from "@/assets/logo.png";
 import avatarImg from "@/assets/avatar.png";
+import { api } from "@/lib/axios";
 
 const NAV_GROUPS = [
   {
@@ -31,6 +33,15 @@ const NAV_GROUPS = [
 ];
 
 export function DashboardLayout({ title, children }: { title: string; children: React.ReactNode }) {
+  const { data: user, isLoading } = useQuery({
+    queryKey: ["profile"],
+    queryFn: async () => {
+      const res = await api.get("/users/profile/");
+      return res.data;
+    },
+    retry: false,
+  });
+
   return (
     <div className="min-h-screen bg-surface">
       <div className="grid lg:grid-cols-[260px_1fr]">
@@ -79,8 +90,16 @@ export function DashboardLayout({ title, children }: { title: string; children: 
                   <span className="sm:hidden">+ New</span>
                   <span className="hidden sm:inline">+ New Product</span>
                 </Link>
-                <Link to="/settings" className="ml-2 h-12 w-12 overflow-hidden rounded-full border-[3px] border-border bg-tint-peach shadow-vibe-sm transition-transform hover:-translate-y-1">
-                  <img src={avatarImg} alt="Creator Profile" className="h-full w-full object-cover" />
+                <Link to="/settings" className="ml-2 flex items-center justify-center h-12 w-12 overflow-hidden rounded-full border-[3px] border-border bg-tint-peach shadow-vibe-sm transition-transform hover:-translate-y-1">
+                  {isLoading ? (
+                    <Loader2 className="h-5 w-5 animate-spin" />
+                  ) : user?.profile?.avatar ? (
+                    <img src={user.profile.avatar} alt="Profile" className="h-full w-full object-cover" />
+                  ) : (
+                    <span className="font-display font-black text-lg text-primary uppercase">
+                      {user?.profile?.username?.[0] || user?.email?.[0] || "?"}
+                    </span>
+                  )}
                 </Link>
               </div>
             </div>
