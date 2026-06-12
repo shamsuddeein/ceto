@@ -1,15 +1,16 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteHeader, SiteFooter } from "@/components/site-layout";
 import { ProductCard } from "@/components/product-card";
-import { MOCK_PRODUCTS, tintClass, getProductIcon } from "@/lib/mock-products";
-import { Star, Check, Shield, Download, Share2 } from "lucide-react";
+import { tintClass, getProductIcon } from "@/lib/mock-products";
+import { Star, Check, Shield, Download, Share2, Loader2 } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import { api } from "@/lib/axios";
 
 export const Route = createFileRoute("/products/$id")({
-  head: ({ params }) => {
-    const p = MOCK_PRODUCTS.find((x) => x.id === params.id);
+  head: () => {
     return { meta: [
-      { title: p ? `${p.title} | Cetoh` : "Product | Cetoh" },
-      { name: "description", content: p?.title ?? "Digital product on Cetoh" },
+      { title: "Product | Cetoh" },
+      { name: "description", content: "Digital product on Cetoh" },
     ] };
   },
   component: ProductDetails,
@@ -18,9 +19,47 @@ export const Route = createFileRoute("/products/$id")({
 
 function ProductDetails() {
   const { id } = Route.useParams();
-  const p = MOCK_PRODUCTS.find((x) => x.id === id);
-  if (!p) return <div className="p-10 text-center">Product not found.</div>;
-  const related = MOCK_PRODUCTS.filter((x) => x.id !== p.id).slice(0, 4);
+  
+  const { data: p, isLoading, error } = useQuery({
+    queryKey: ["product", id],
+    queryFn: async () => {
+      const res = await api.get(`/catalog/products/${id}/`);
+      return res.data;
+    }
+  });
+
+  const { data: allProducts } = useQuery({
+    queryKey: ["products"],
+    queryFn: async () => {
+      const res = await api.get("/catalog/products/");
+      return res.data;
+    }
+  });
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-background">
+        <SiteHeader />
+        <main className="flex justify-center py-32"><Loader2 className="h-8 w-8 animate-spin text-primary" /></main>
+        <SiteFooter />
+      </div>
+    );
+  }
+
+  if (error || !p) {
+    return (
+      <div className="min-h-screen bg-background">
+        <SiteHeader />
+        <main className="flex flex-col items-center justify-center py-32">
+          <h1 className="font-display text-2xl font-black">Product not found</h1>
+          <Link to="/marketplace" className="mt-4 text-primary hover:underline">Back to Marketplace</Link>
+        </main>
+        <SiteFooter />
+      </div>
+    );
+  }
+
+  const related = allProducts ? allProducts.filter((x: any) => String(x.id) !== String(p.id)).slice(0, 4) : [];
   return (
     <div className="min-h-screen bg-background">
       <SiteHeader />
@@ -32,21 +71,21 @@ function ProductDetails() {
           <span>{p.category}</span>
         </nav>
         <div className="grid gap-10 lg:grid-cols-[1.2fr_1fr]">
-          <div className={`flex aspect-[4/3] items-center justify-center rounded-3xl p-10 ${tintClass(p.tint)}`}>
+          <div className={`flex aspect-[4/3] items-center justify-center rounded-3xl p-10 ${tintClass("mint")}`}>
             {(() => {
-              const Icon = getProductIcon(p.type);
+              const Icon = getProductIcon(p.product_type || "ebook");
               return <Icon className="h-40 w-40 text-primary stroke-[1.5]" />;
             })()}
           </div>
           <div className="flex flex-col">
-            <span className="rounded-full bg-primary-soft px-3 py-1 text-xs font-semibold text-primary self-start">{p.category}</span>
+            <span className="rounded-full bg-primary-soft px-3 py-1 text-xs font-semibold text-primary self-start">{p.category_details?.name || "Uncategorized"}</span>
             <h1 className="mt-3 font-display text-3xl font-bold text-primary md:text-4xl">{p.title}</h1>
             <div className="mt-3 flex items-center gap-3 text-sm text-foreground/70">
-              <span className="flex items-center gap-1"><Star className="h-4 w-4 fill-gold text-gold" />{p.rating.toFixed(1)}</span>
+              <span className="flex items-center gap-1"><Star className="h-4 w-4 fill-gold text-gold" />5.0</span>
               <span>·</span>
-              <span>{p.sales} sold</span>
+              <span>10 sold</span>
               <span>·</span>
-              <span>by <Link to="/creators/$username" params={{ username: p.creatorHandle.replace("@","") }} className="font-semibold text-primary hover:underline">{p.creator}</Link></span>
+              <span>by <Link to="/creators/$username" params={{ username: p.creator_details?.username || "creator" }} className="font-semibold text-primary hover:underline">@{p.creator_details?.username || "creator"}</Link></span>
             </div>
             <p className="mt-5 text-base leading-relaxed text-foreground/80">
               A high-quality digital product crafted to help you level up. Get instant access after purchase, with lifetime updates included.
@@ -59,9 +98,9 @@ function ProductDetails() {
             <div className="mt-8 flex items-end justify-between rounded-2xl border border-border bg-card p-5">
               <div>
                 <p className="text-xs uppercase tracking-wider text-foreground/60">Price</p>
-                <p className="font-display text-4xl font-bold text-primary">₦{p.price.toLocaleString('en-US')}</p>
+                <p className="font-display text-4xl font-bold text-primary">₦{Number(p.price).toLocaleString('en-US')}</p>
               </div>
-              <Link to="/checkout" className="rounded-md bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground hover:bg-primary/90">Buy now</Link>
+              <Link to="/checkout" search={{ product: p.id }} className="rounded-md bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground hover:bg-primary/90">Buy now</Link>
             </div>
             <div className="mt-4 flex items-center justify-between text-xs text-foreground/60">
               <span className="flex items-center gap-1"><Shield className="h-4 w-4" /> Secure checkout</span>
