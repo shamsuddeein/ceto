@@ -164,6 +164,7 @@ function Dashboard() {
               </tbody>
             </table>
           </div>
+        ) : (
           <div className="mt-10 mb-6 flex flex-col items-center justify-center text-center">
             <div className="grid h-24 w-24 place-items-center rounded-2xl border-[4px] border-border bg-tint-lilac shadow-vibe-sm">
               <ShoppingBag className="h-10 w-10 text-foreground stroke-[2.5]" />
