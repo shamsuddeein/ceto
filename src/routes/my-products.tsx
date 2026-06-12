@@ -24,13 +24,13 @@ function MyProducts() {
     }
   });
 
-  const list = myProducts.filter((p: any) => p.title.toLowerCase().includes(q.toLowerCase()))
+  const list = Array.isArray(myProducts) ? myProducts.filter((p: any) => (p.title || "").toLowerCase().includes(q.toLowerCase()))
     .filter((p: any) => {
       if (status === "all") return true;
       if (status === "live") return p.is_published;
       if (status === "draft") return !p.is_published;
       return true;
-    });
+    }) : [];
   return (
     <DashboardLayout title="My Products">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-8">
@@ -77,10 +77,10 @@ function MyProducts() {
                 <span className="text-foreground">{p.currency} 0</span>
               </div>
               <div className="mt-6 flex gap-3">
-                <Link to="/edit-product/$id" params={{ id: p.id }} className="flex-1 inline-flex items-center justify-center gap-2 rounded-xl border-[3px] border-border bg-white py-2.5 text-sm font-black shadow-vibe-sm transition-transform hover:-translate-y-1 hover:bg-tint-cream">
+                <Link to="/edit-product/$id" params={{ id: String(p.id) }} className="flex-1 inline-flex items-center justify-center gap-2 rounded-xl border-[3px] border-border bg-white py-2.5 text-sm font-black shadow-vibe-sm transition-transform hover:-translate-y-1 hover:bg-tint-cream">
                   <Edit className="h-4 w-4 stroke-[3px]" /> Edit
                 </Link>
-                <Link to="/products/$id" params={{ id: p.id }} className="flex-1 inline-flex items-center justify-center gap-2 rounded-xl border-[3px] border-border bg-white py-2.5 text-sm font-black shadow-vibe-sm transition-transform hover:-translate-y-1 hover:bg-tint-cream">
+                <Link to="/products/$id" params={{ id: String(p.id) }} className="flex-1 inline-flex items-center justify-center gap-2 rounded-xl border-[3px] border-border bg-white py-2.5 text-sm font-black shadow-vibe-sm transition-transform hover:-translate-y-1 hover:bg-tint-cream">
                   <Eye className="h-4 w-4 stroke-[3px]" /> View
                 </Link>
                 <button onClick={() => toast.error("Delete is disabled in demo")} className="rounded-xl border-[3px] border-border bg-tint-rose p-2.5 text-foreground shadow-vibe-sm transition-transform hover:-translate-y-1" aria-label="Delete">
