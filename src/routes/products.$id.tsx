@@ -71,11 +71,15 @@ function ProductDetails() {
           <span>{p.category?.name || "Uncategorized"}</span>
         </nav>
         <div className="grid gap-10 lg:grid-cols-[1.2fr_1fr]">
-          <div className={`flex aspect-[4/3] items-center justify-center rounded-3xl p-10 ${tintClass("mint")}`}>
-            {(() => {
-              const Icon = getProductIcon(p.product_type || "ebook");
-              return <Icon className="h-40 w-40 text-primary stroke-[1.5]" />;
-            })()}
+          <div className={`flex aspect-[4/3] items-center justify-center rounded-3xl p-10 ${tintClass("mint")} overflow-hidden relative`}>
+            {p.cover_image ? (
+              <img src={p.cover_image} alt={p.title} className="absolute inset-0 w-full h-full object-cover" />
+            ) : (
+              (() => {
+                const Icon = getProductIcon(p.product_type || "ebook");
+                return <Icon className="h-40 w-40 text-primary stroke-[1.5] relative z-10" />;
+              })()
+            )}
           </div>
           <div className="flex flex-col">
             <span className="rounded-full bg-primary-soft px-3 py-1 text-xs font-semibold text-primary self-start">{p.category?.name || "Uncategorized"}</span>
