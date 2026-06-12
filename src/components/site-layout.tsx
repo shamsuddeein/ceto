@@ -1,9 +1,11 @@
 import { useState } from "react";
-import { Link } from "@tanstack/react-router";
-import { ChevronDown, Globe, Menu, X as XClose, Search, ShoppingCart } from "lucide-react";
+import { Link, useNavigate } from "@tanstack/react-router";
+import { ChevronDown, Globe, Menu, X as XClose, Search, ShoppingCart, LogOut, LayoutDashboard } from "lucide-react";
 import { SiInstagram, SiX, SiFacebook, SiYoutube } from "@icons-pack/react-simple-icons";
 import logoImg from "@/assets/logo.png";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { useQuery } from "@tanstack/react-query";
+import { api } from "@/lib/axios";
 
 /* ---------- Logo ---------- */
 export function Logo({ className = "", light = false }: { className?: string; light?: boolean }) {
@@ -33,6 +35,26 @@ const SECONDARY = [
 
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
+
+  const { data: user, isLoading } = useQuery({
+    queryKey: ["profile"],
+    queryFn: async () => {
+      const res = await api.get("/users/profile/");
+      return res.data;
+    },
+    retry: false,
+  });
+
+  async function handleLogout() {
+    try {
+      await api.post("/auth/logout/");
+      window.location.href = "/login";
+    } catch (err) {
+      console.error(err);
+      window.location.href = "/login";
+    }
+  }
   return (
     <header className="sticky top-6 z-50 px-4 md:px-8">
       <div className="mx-auto max-w-7xl flex h-20 items-center justify-between gap-6 rounded-full border-[3px] border-border bg-white px-6 shadow-vibe md:px-8">
@@ -58,18 +80,37 @@ export function SiteHeader() {
           <Link to="/checkout" aria-label="View cart" className="inline-flex h-11 w-11 items-center justify-center rounded-full text-foreground/70 hover:bg-tint-mint focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">
             <ShoppingCart className="h-5 w-5 stroke-[2.5]" />
           </Link>
-          <Link
-            to="/login"
-            className="inline-flex items-center justify-center gap-2 rounded-full border-[3px] border-border bg-white px-6 py-2.5 text-base font-black text-foreground shadow-vibe shadow-vibe-hover"
-          >
-            Log In
-          </Link>
-          <Link
-            to="/signup"
-            className="inline-flex items-center justify-center gap-2 rounded-full border-[3px] border-border bg-primary px-6 py-2.5 text-base font-black text-white shadow-vibe shadow-vibe-hover"
-          >
-            Start Selling
-          </Link>
+          {user ? (
+            <>
+              <Link
+                to="/dashboard"
+                className="inline-flex items-center justify-center gap-2 rounded-full border-[3px] border-border bg-white px-6 py-2.5 text-base font-black text-foreground shadow-vibe shadow-vibe-hover"
+              >
+                <LayoutDashboard className="h-5 w-5" /> Dashboard
+              </Link>
+              <button
+                onClick={handleLogout}
+                className="inline-flex items-center justify-center gap-2 rounded-full border-[3px] border-border bg-tint-peach px-6 py-2.5 text-base font-black text-foreground shadow-vibe shadow-vibe-hover transition-all hover:bg-red-50 hover:text-red-600"
+              >
+                <LogOut className="h-5 w-5" /> Logout
+              </button>
+            </>
+          ) : (
+            <>
+              <Link
+                to="/login"
+                className="inline-flex items-center justify-center gap-2 rounded-full border-[3px] border-border bg-white px-6 py-2.5 text-base font-black text-foreground shadow-vibe shadow-vibe-hover"
+              >
+                Log In
+              </Link>
+              <Link
+                to="/signup"
+                className="inline-flex items-center justify-center gap-2 rounded-full border-[3px] border-border bg-primary px-6 py-2.5 text-base font-black text-white shadow-vibe shadow-vibe-hover"
+              >
+                Start Selling
+              </Link>
+            </>
+          )}
         </div>
         <button
           onClick={() => setOpen((v) => !v)}
@@ -114,20 +155,40 @@ export function SiteHeader() {
               </Link>
             ))}
             <div className="mt-4 flex flex-col gap-4">
-              <Link
-                to="/login"
-                onClick={() => setOpen(false)}
-                className="rounded-full border-[3px] border-border px-5 py-3 text-center text-lg font-black shadow-vibe shadow-vibe-hover"
-              >
-                Log In
-              </Link>
-              <Link
-                to="/signup"
-                onClick={() => setOpen(false)}
-                className="rounded-full border-[3px] border-border bg-primary px-5 py-3 text-center text-lg font-black text-white shadow-vibe shadow-vibe-hover"
-              >
-                Start Selling
-              </Link>
+              {user ? (
+                <>
+                  <Link
+                    to="/dashboard"
+                    onClick={() => setOpen(false)}
+                    className="flex items-center justify-center gap-2 rounded-full border-[3px] border-border px-5 py-3 text-center text-lg font-black shadow-vibe shadow-vibe-hover"
+                  >
+                    <LayoutDashboard className="h-5 w-5" /> Dashboard
+                  </Link>
+                  <button
+                    onClick={() => { setOpen(false); handleLogout(); }}
+                    className="flex items-center justify-center gap-2 rounded-full border-[3px] border-border bg-tint-peach px-5 py-3 text-center text-lg font-black shadow-vibe shadow-vibe-hover"
+                  >
+                    <LogOut className="h-5 w-5" /> Logout
+                  </button>
+                </>
+              ) : (
+                <>
+                  <Link
+                    to="/login"
+                    onClick={() => setOpen(false)}
+                    className="rounded-full border-[3px] border-border px-5 py-3 text-center text-lg font-black shadow-vibe shadow-vibe-hover"
+                  >
+                    Log In
+                  </Link>
+                  <Link
+                    to="/signup"
+                    onClick={() => setOpen(false)}
+                    className="rounded-full border-[3px] border-border bg-primary px-5 py-3 text-center text-lg font-black text-white shadow-vibe shadow-vibe-hover"
+                  >
+                    Start Selling
+                  </Link>
+                </>
+              )}
             </div>
           </div>
         </div>

@@ -21,6 +21,7 @@ function LoginPage() {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
   const [socialLoading, setSocialLoading] = useState<string | null>(null);
 
   async function handleSubmit(e: React.FormEvent) {
@@ -34,16 +35,18 @@ function LoginPage() {
       return;
     }
     setLoading(true);
+    setErrorMsg("");
     try {
       await api.post("/auth/login/", { 
         email: identifier, 
         password 
       });
       toast.success("Welcome back! Redirecting...");
-      // Simulate redirect to dashboard
       setTimeout(() => window.location.href = "/dashboard", 1000);
     } catch (err: any) {
-      toast.error(err.response?.data?.detail || "Invalid credentials. Please try again.");
+      const msg = err.response?.data?.detail || "Invalid credentials. Please try again.";
+      setErrorMsg(msg);
+      toast.error(msg);
     } finally {
       setLoading(false);
     }
@@ -181,6 +184,12 @@ function LoginPage() {
                     </button>
                   </div>
                 </div>
+
+                {errorMsg && (
+                  <div className="rounded-xl border-[3px] border-border bg-tint-peach p-3 text-sm font-bold text-foreground shadow-vibe-sm">
+                    {errorMsg}
+                  </div>
+                )}
 
                 <button
                   type="submit"
