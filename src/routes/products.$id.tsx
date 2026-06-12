@@ -68,7 +68,7 @@ function ProductDetails() {
         <nav className="mb-6 text-sm text-foreground/60">
           <Link to="/marketplace" className="hover:text-primary">Marketplace</Link>
           <span className="mx-2">/</span>
-          <span>{p.category}</span>
+          <span>{p.category?.name || "Uncategorized"}</span>
         </nav>
         <div className="grid gap-10 lg:grid-cols-[1.2fr_1fr]">
           <div className={`flex aspect-[4/3] items-center justify-center rounded-3xl p-10 ${tintClass("mint")}`}>
@@ -78,20 +78,20 @@ function ProductDetails() {
             })()}
           </div>
           <div className="flex flex-col">
-            <span className="rounded-full bg-primary-soft px-3 py-1 text-xs font-semibold text-primary self-start">{p.category_details?.name || "Uncategorized"}</span>
+            <span className="rounded-full bg-primary-soft px-3 py-1 text-xs font-semibold text-primary self-start">{p.category?.name || "Uncategorized"}</span>
             <h1 className="mt-3 font-display text-3xl font-bold text-primary md:text-4xl">{p.title}</h1>
             <div className="mt-3 flex items-center gap-3 text-sm text-foreground/70">
-              <span className="flex items-center gap-1"><Star className="h-4 w-4 fill-gold text-gold" />5.0</span>
+              <span className="flex items-center gap-1"><Star className="h-4 w-4 fill-gold text-gold" />{p.rating || "0.0"}</span>
               <span>·</span>
-              <span>10 sold</span>
+              <span>{p.sales_count || 0} sold</span>
               <span>·</span>
-              <span>by <Link to="/creators/$username" params={{ username: p.creator_details?.username || "creator" }} className="font-semibold text-primary hover:underline">@{p.creator_details?.username || "creator"}</Link></span>
+              <span>by <Link to="/creators/$username" params={{ username: p.creator?.username || "creator" }} className="font-semibold text-primary hover:underline">@{p.creator?.username || "creator"}</Link></span>
             </div>
-            <p className="mt-5 text-base leading-relaxed text-foreground/80">
-              A high-quality digital product crafted to help you level up. Get instant access after purchase, with lifetime updates included.
+            <p className="mt-5 text-base leading-relaxed text-foreground/80 whitespace-pre-wrap">
+              {p.description || "No description provided."}
             </p>
             <ul className="mt-5 space-y-2 text-sm text-foreground/80">
-              {["Instant download after purchase","Lifetime updates","Money-back guarantee","Direct support from creator"].map((f) => (
+              {(p.features || ["Instant download after purchase","Lifetime updates","Direct support from creator"]).map((f: string) => (
                 <li key={f} className="flex items-center gap-2"><Check className="h-4 w-4 text-primary" />{f}</li>
               ))}
             </ul>
