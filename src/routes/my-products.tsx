@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { toast } from "sonner";
-import { Plus, Search, MoreHorizontal, Edit, Eye, Trash2 } from "lucide-react";
+import { Plus, Search, MoreHorizontal, Edit, Eye, Trash2, Loader2 } from "lucide-react";
 import { DashboardLayout } from "@/components/dashboard-layout";
 import { api } from "@/lib/axios";
 import { useQuery } from "@tanstack/react-query";
