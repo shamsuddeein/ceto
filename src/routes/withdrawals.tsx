@@ -3,6 +3,8 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { DashboardLayout } from "@/components/dashboard-layout";
 import { Loader2, Building2 } from "lucide-react";
+import { api } from "@/lib/axios";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/withdrawals")({
   head: () => ({ meta: [{ title: "Withdraw Funds | Cetoh" }] }),
@@ -11,25 +13,67 @@ export const Route = createFileRoute("/withdrawals")({
 
 function Withdrawals() {
   const [amount, setAmount] = useState("");
-  const [loading, setLoading] = useState(false);
-  const balance = 384200;
-  const history = [
-    { id: "WD-2041", date: "Jun 5, 2026", method: "Bank • ****4521", amount: 120000, status: "Paid" },
-    { id: "WD-2017", date: "May 20, 2026", method: "Bank • ****4521", amount: 85000, status: "Paid" },
-    { id: "WD-1998", date: "May 4, 2026", method: "Bank • ****4521", amount: 42000, status: "Paid" },
-    { id: "WD-1980", date: "Apr 18, 2026", method: "Bank • ****4521", amount: 175000, status: "Paid" },
-  ];
+  const queryClient = useQueryClient();
+
+  const { data: wallet, isLoading: walletLoading } = useQuery({
+    queryKey: ["wallet"],
+    queryFn: async () => {
+      const res = await api.get("/finance/wallet/");
+      return res.data;
+    }
+  });
+
+  const { data: history = [], isLoading: historyLoading } = useQuery({
+    queryKey: ["withdrawals"],
+    queryFn: async () => {
+      const res = await api.get("/finance/withdrawals/");
+      return res.data;
+    }
+  });
+
+  const { data: profile } = useQuery({
+    queryKey: ["profile"],
+    queryFn: async () => {
+      const res = await api.get("/users/profile/");
+      return res.data;
+    }
+  });
+
+  const withdrawMutation = useMutation({
+    mutationFn: async (v: number) => {
+      const res = await api.post("/finance/withdrawals/", { amount: v });
+      return res.data;
+    },
+    onSuccess: (data) => {
+      toast.success(`Withdrawal of ₦${Number(data.amount).toLocaleString('en-US')} requested`);
+      setAmount("");
+      queryClient.invalidateQueries({ queryKey: ["wallet"] });
+      queryClient.invalidateQueries({ queryKey: ["withdrawals"] });
+    },
+    onError: (err: any) => {
+      toast.error(err.response?.data?.detail || "Withdrawal failed");
+    }
+  });
+
+  const balance = Number(wallet?.available_balance || 0);
+
+  if (walletLoading || historyLoading) {
+    return (
+      <DashboardLayout title="Withdraw Funds">
+        <div className="flex justify-center py-20"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>
+      </DashboardLayout>
+    );
+  }
+
   async function submit(e: React.FormEvent) {
     e.preventDefault();
     const v = parseFloat(amount);
     if (!v || v <= 0) return toast.error("Enter a valid amount");
-    if (v > balance) return toast.error("Amount exceeds balance");
-    setLoading(true);
-    await new Promise((r) => setTimeout(r, 900));
-    toast.success(`Withdrawal of ₦${v.toLocaleString('en-US')} requested`);
-    setAmount("");
-    setLoading(false);
+    if (v > balance) return toast.error("Amount exceeds available balance");
+    withdrawMutation.mutate(v);
   }
+
+  const bankDetails = profile?.bank_details || {};
   return (
     <DashboardLayout title="Withdraw Funds">
       <div className="grid gap-8 lg:grid-cols-[1fr_400px]">
@@ -54,16 +98,16 @@ function Withdrawals() {
                     <Building2 className="h-6 w-6 stroke-[2.5] text-foreground" />
                   </div>
                   <div className="flex-1">
-                    <p className="text-base font-black text-foreground">Bank account</p>
-                    <p className="text-sm font-bold text-foreground/70">Stanbic Bank •••• 4521</p>
+                    <p className="text-base font-black text-foreground">{bankDetails.method || "Bank account"}</p>
+                    <p className="text-sm font-bold text-foreground/70">{bankDetails.bank_name || "No bank"} • {bankDetails.account_number || "No account"}</p>
                   </div>
-                  <button type="button" className="rounded-xl border-[3px] border-border bg-white px-4 py-2 text-sm font-black shadow-vibe-sm hover:-translate-y-1 transition-transform">Change</button>
+                  <Link to="/settings" className="rounded-xl border-[3px] border-border bg-white px-4 py-2 text-sm font-black shadow-vibe-sm hover:-translate-y-1 transition-transform">Change</Link>
                 </div>
               </label>
             </div>
           </div>
-          <button type="submit" disabled={loading} className="mt-10 inline-flex w-full items-center justify-center gap-2 rounded-full border-[3px] border-border bg-primary py-4 text-lg font-black text-white shadow-vibe hover:-translate-y-1 hover:shadow-vibe-hover disabled:opacity-70 transition-all">
-            {loading && <Loader2 className="h-6 w-6 animate-spin stroke-[3px]" />} {loading ? "Submitting..." : "Request withdrawal"}
+          <button type="submit" disabled={withdrawMutation.isPending} className="mt-10 inline-flex w-full items-center justify-center gap-2 rounded-full border-[3px] border-border bg-primary py-4 text-lg font-black text-white shadow-vibe hover:-translate-y-1 hover:shadow-vibe-hover disabled:opacity-70 transition-all">
+            {withdrawMutation.isPending && <Loader2 className="h-6 w-6 animate-spin stroke-[3px]" />} {withdrawMutation.isPending ? "Submitting..." : "Request withdrawal"}
           </button>
         </form>
         <aside className="rounded-[2.5rem] border-[4px] border-border bg-tint-lilac p-6 sm:p-8 shadow-vibe flex flex-col justify-center text-center">
@@ -82,15 +126,17 @@ function Withdrawals() {
               <tr><th className="py-4">ID</th><th className="py-4">Date</th><th className="py-4">Method</th><th className="py-4">Amount</th><th className="py-4">Status</th></tr>
             </thead>
             <tbody className="divide-y-[3px] divide-border font-bold">
-              {history.map((h) => (
+              {history.length > 0 ? history.map((h: any) => (
                 <tr key={h.id} className="transition-colors hover:bg-muted/50">
-                  <td className="py-4 font-mono text-sm">{h.id}</td>
-                  <td className="py-4">{h.date}</td>
-                  <td className="py-4 text-foreground/70">{h.method}</td>
-                  <td className="py-4 font-black text-foreground">₦{h.amount.toLocaleString('en-US')}</td>
-                  <td className="py-4"><span className="rounded-full border-[3px] border-border bg-tint-mint px-3 py-1 text-xs font-black shadow-vibe-sm">{h.status}</span></td>
+                  <td className="py-4 font-mono text-sm">WD-{h.id}</td>
+                  <td className="py-4">{new Date(h.requested_at).toLocaleDateString()}</td>
+                  <td className="py-4 text-foreground/70">Bank Transfer</td>
+                  <td className="py-4 font-black text-foreground">₦{Number(h.amount).toLocaleString('en-US')}</td>
+                  <td className="py-4"><span className={`rounded-full border-[3px] border-border px-3 py-1 text-xs font-black shadow-vibe-sm ${h.status === 'paid' ? 'bg-tint-mint' : 'bg-tint-peach'}`}>{h.status}</span></td>
                 </tr>
-              ))}
+              )) : (
+                <tr><td colSpan={5} className="py-8 text-center text-foreground/60">No withdrawal history.</td></tr>
+              )}
             </tbody>
           </table>
         </div>

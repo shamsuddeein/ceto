@@ -2,7 +2,9 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { TrendingUp, Banknote, ShoppingBag, Eye, ArrowUpRight, PackageOpen } from "lucide-react";
 import { DashboardLayout } from "@/components/dashboard-layout";
-import { MOCK_PRODUCTS, tintClass, getProductIcon } from "@/lib/mock-products";
+import { api } from "@/lib/axios";
+import { useQuery } from "@tanstack/react-query";
+import { tintClass, getProductIcon } from "@/lib/mock-products";
 
 export const Route = createFileRoute("/dashboard")({
   head: () => ({ meta: [{ title: "Dashboard | Cetoh" }] }),
@@ -10,24 +12,32 @@ export const Route = createFileRoute("/dashboard")({
 });
 
 function Dashboard() {
-  const [hasData, setHasData] = useState(false);
+  const { data, isLoading } = useQuery({
+    queryKey: ["dashboard-stats"],
+    queryFn: async () => {
+      const res = await api.get("/analytics/dashboard/");
+      return res.data;
+    }
+  });
 
-  const stats = hasData ? [
-    { label: "Total earnings", value: "₦1,248,000", change: "+18%", icon: Banknote },
-    { label: "Sales (30d)", value: "284", change: "+12%", icon: ShoppingBag },
-    { label: "Page views", value: "9,142", change: "+24%", icon: Eye },
-    { label: "Conversion", value: "3.4%", change: "+0.6%", icon: TrendingUp },
+  const stats = data ? [
+    { label: "Total earnings", value: `₦${Number(data.total_revenue).toLocaleString('en-US')}`, change: "", icon: Banknote },
+    { label: "Sales (All time)", value: String(data.total_sales), change: "", icon: ShoppingBag },
+    { label: "Page views", value: "0", change: "", icon: Eye },
+    { label: "Conversion", value: "0%", change: "", icon: TrendingUp },
   ] : [
     { label: "Total earnings", value: "₦0.00", change: "0%", icon: Banknote },
-    { label: "Sales (30d)", value: "0", change: "0%", icon: ShoppingBag },
+    { label: "Sales (All time)", value: "0", change: "0%", icon: ShoppingBag },
     { label: "Page views", value: "0", change: "0%", icon: Eye },
     { label: "Conversion", value: "0%", change: "0%", icon: TrendingUp },
   ];
-  const products = hasData ? MOCK_PRODUCTS.slice(0, 5) : [];
+  
+  const recentOrders = data?.recent_orders || [];
+  const chartData = data?.chart_data || Array(7).fill({ name: '', sales: 0 });
   return (
     <DashboardLayout title="Overview">
       <div className="mb-6 flex justify-end">
-        <button onClick={() => setHasData(!hasData)} className="rounded-xl border-[3px] border-border bg-white px-5 py-2.5 text-sm font-black shadow-vibe-sm transition-transform hover:-translate-y-1">Toggle Demo Data</button>
+        {/* Toggle Demo Data button removed */}
       </div>
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
         {stats.map((s, i) => {
@@ -74,8 +84,10 @@ function Dashboard() {
                   <div className="w-full"></div>
                 </div>
                 {/* Bars */}
-                {(hasData ? [40, 65, 50, 80, 45, 70, 90, 60, 75, 95, 70, 88] : Array(12).fill(0)).map((h, i) => {
-                  const amount = h > 0 ? (h * 1000).toLocaleString() : "0";
+                {chartData.map((d: any, i: number) => {
+                  const amount = d.sales > 0 ? d.sales.toLocaleString() : "0";
+                  const maxSales = Math.max(...chartData.map((d: any) => d.sales), 1);
+                  const h = (d.sales / maxSales) * 100;
                   return (
                     <div key={i} className="group relative flex-1 flex flex-col items-center justify-end h-full z-10">
                       {/* Tooltip */}
@@ -86,7 +98,7 @@ function Dashboard() {
                         <div className="h-2 w-2 border-r-[3px] border-b-[3px] border-border bg-foreground rotate-45 -mt-1"></div>
                       </div>
                       <div className="w-full rounded-t-md sm:rounded-t-xl border-[3px] border-b-0 border-border bg-tint-mint transition-colors hover:bg-tint-peach cursor-pointer" style={{ height: `${Math.max(h, 2)}%` }}>
-                        <div className="h-full w-full rounded-t-sm sm:rounded-t-lg bg-white/40" style={{ height: `${hasData ? h * 0.7 : 0}%` }} />
+                        <div className="h-full w-full rounded-t-sm sm:rounded-t-lg bg-white/40" style={{ height: `${h * 0.7}%` }} />
                       </div>
                     </div>
                   );
@@ -94,8 +106,8 @@ function Dashboard() {
               </div>
               {/* X-axis */}
               <div className="flex justify-between mt-2 text-[10px] sm:text-xs font-bold text-foreground/70">
-                 {["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"].map((m, i) => (
-                   <span key={i} className="hidden sm:block flex-1 text-center">{m}</span>
+                 {chartData.map((d: any, i: number) => (
+                   <span key={i} className="hidden sm:block flex-1 text-center">{d.name}</span>
                  ))}
                  {/* Mobile X-axis */}
                  <span className="sm:hidden block w-full text-left">Jan</span>
@@ -123,46 +135,41 @@ function Dashboard() {
 
       <div className="mt-10 rounded-[2.5rem] border-[4px] border-border bg-white p-8 shadow-vibe">
         <div className="flex items-center justify-between">
-          <h2 className="font-display text-2xl font-black text-foreground">My products</h2>
-          <Link to="/add-product" className="rounded-xl border-[3px] border-border bg-primary px-4 py-2 text-sm font-black text-white shadow-vibe-sm transition-transform hover:-translate-y-1">+ New product</Link>
+          <h2 className="font-display text-2xl font-black text-foreground">Recent Orders</h2>
+          <Link to="/orders" className="rounded-xl border-[3px] border-border bg-primary px-4 py-2 text-sm font-black text-white shadow-vibe-sm transition-transform hover:-translate-y-1">View all</Link>
         </div>
-        {products.length > 0 ? (
+        {recentOrders.length > 0 ? (
           <div className="mt-6 overflow-x-auto">
             <table className="min-w-full text-base">
               <thead className="text-left text-sm font-black uppercase tracking-wider text-foreground/60 border-b-[3px] border-border">
-                <tr><th className="py-4">Product</th><th className="py-4">Price</th><th className="py-4">Sales</th><th className="py-4">Revenue</th><th className="py-4">Status</th></tr>
+                <tr><th className="py-4">Product</th><th className="py-4">Amount</th><th className="py-4">Buyer Email</th><th className="py-4">Date</th><th className="py-4">Status</th></tr>
               </thead>
               <tbody className="divide-y-[3px] divide-border font-bold">
-                {products.map((p) => (
-                  <tr key={p.id} className="transition-colors hover:bg-muted/50">
+                {recentOrders.map((o: any) => (
+                  <tr key={o.id} className="transition-colors hover:bg-muted/50">
                     <td className="py-4">
                       <div className="flex items-center gap-4">
-                        <div className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border-[3px] border-border shadow-vibe-sm ${tintClass(p.tint)}`}>
-                          {(() => {
-                            const Icon = getProductIcon(p.type);
-                            return <Icon className="h-6 w-6 stroke-[2.5]" />;
-                          })()}
+                        <div className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border-[3px] border-border shadow-vibe-sm bg-tint-mint`}>
+                          <PackageOpen className="h-6 w-6 stroke-[2.5]" />
                         </div>
-                        <span className="font-black line-clamp-1">{p.title}</span>
+                        <span className="font-black line-clamp-1">Order #{o.id}</span>
                       </div>
                     </td>
-                    <td>₦{p.price.toLocaleString('en-US')}</td>
-                    <td>{p.sales}</td>
-                    <td>₦{(p.price * p.sales).toLocaleString('en-US')}</td>
-                    <td><span className="rounded-full border-[3px] border-border bg-tint-mint px-3 py-1 text-xs font-black shadow-vibe-sm">Live</span></td>
+                    <td>₦{Number(o.amount).toLocaleString('en-US')}</td>
+                    <td>{o.buyer_email}</td>
+                    <td>{new Date(o.created_at).toLocaleDateString()}</td>
+                    <td><span className="rounded-full border-[3px] border-border bg-tint-peach px-3 py-1 text-xs font-black shadow-vibe-sm">{o.status}</span></td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
-        ) : (
           <div className="mt-10 mb-6 flex flex-col items-center justify-center text-center">
             <div className="grid h-24 w-24 place-items-center rounded-2xl border-[4px] border-border bg-tint-lilac shadow-vibe-sm">
-              <PackageOpen className="h-10 w-10 text-foreground stroke-[2.5]" />
+              <ShoppingBag className="h-10 w-10 text-foreground stroke-[2.5]" />
             </div>
-            <h3 className="mt-6 font-display text-2xl font-black text-foreground">No products yet</h3>
-            <p className="mt-4 max-w-sm text-lg font-bold text-foreground/70">Welcome to Cetoh! Your storefront is empty. Let's get your first digital product live and start earning.</p>
-            <Link to="/add-product" className="mt-8 rounded-full border-[3px] border-border bg-primary px-8 py-4 text-lg font-black text-white shadow-vibe transition-transform hover:-translate-y-1 hover:shadow-vibe-hover">+ Add your first product</Link>
+            <h3 className="mt-6 font-display text-2xl font-black text-foreground">No recent orders</h3>
+            <p className="mt-4 max-w-sm text-lg font-bold text-foreground/70">When customers buy your products, they will appear here.</p>
           </div>
         )}
       </div>
