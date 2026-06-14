@@ -26,6 +26,8 @@ export function Logo({ className = "", light = false }: { className?: string; li
     <img
       src={logoImg}
       alt="Cetoh"
+      width="160"
+      height="40"
       className={`h-10 w-auto object-contain ${light ? "brightness-0 invert" : ""} ${className}`}
     />
   );

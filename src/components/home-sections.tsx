@@ -163,6 +163,8 @@ function MarketplaceExplore() {
                 src={avatarImg}
                 alt="Creator Profile"
                 loading="lazy"
+                width="80"
+                height="80"
                 className="h-20 w-20 rounded-full border-[4px] border-border object-cover shadow-vibe-sm mb-6 bg-white"
               />
               <h2 className="font-display text-2xl font-black">Cetoh Market</h2>
@@ -211,6 +213,8 @@ function MarketplaceExplore() {
                           <img
                             src={item.cover_image}
                             alt={item.title}
+                            width="400"
+                            height="200"
                             className="absolute inset-0 w-full h-full object-cover"
                           />
                         ) : (
@@ -726,9 +730,7 @@ function PressAndFinalCTA() {
         <div className="mx-auto grid max-w-4xl grid-cols-1 gap-8 sm:grid-cols-3">
           {stats.map((s, i) => (
             <div key={i} className="text-center">
-              <h3 className="font-display text-5xl font-black text-primary md:text-6xl">
-                {s.value}
-              </h3>
+              <p className="font-display text-5xl font-black text-primary md:text-6xl">{s.value}</p>
               <p className="mt-3 text-lg font-bold text-foreground/80">{s.label}</p>
             </div>
           ))}
@@ -737,9 +739,9 @@ function PressAndFinalCTA() {
         <div className="relative mt-24 mx-auto max-w-4xl overflow-hidden rounded-[4rem] border-[4px] border-border bg-tint-mint px-6 py-24 text-center shadow-vibe md:px-16">
           <div className="pointer-events-none absolute -right-12 -top-16 h-64 w-64 rounded-full border-[3px] border-border bg-tint-rose shadow-vibe-sm opacity-50" />
 
-          <h3 className="relative z-10 mx-auto max-w-md font-display text-5xl font-black text-foreground leading-tight md:text-6xl">
+          <h2 className="relative z-10 mx-auto max-w-md font-display text-5xl font-black text-foreground leading-tight md:text-6xl">
             Start Selling on Cetoh
-          </h3>
+          </h2>
           <p className="relative z-10 mx-auto mt-6 max-w-sm text-xl font-medium text-foreground/80">
             Create a free account in less than 5 minutes and start selling!
           </p>
