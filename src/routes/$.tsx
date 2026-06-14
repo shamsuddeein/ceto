@@ -22,7 +22,8 @@ function NotFoundCatchAll() {
             Lost in the marketplace
           </h2>
           <p className="mx-auto mt-4 max-w-md text-base text-foreground/70">
-            We couldn't find the page you're looking for. It might be coming soon, or it never existed in the first place.
+            We couldn't find the page you're looking for. It might be coming soon, or it never
+            existed in the first place.
           </p>
 
           <div className="mx-auto mt-10 flex max-w-sm flex-col gap-3 sm:flex-row sm:justify-center">

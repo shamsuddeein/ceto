@@ -1,69 +1,82 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { ProductCard } from "@/components/product-card";
-import { MOCK_PRODUCTS } from "@/lib/mock-products";
-import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
+import { Product } from "@/types";
+import { products as mockProducts } from "@/lib/mock-data";
 import { Loader2, Search, ShoppingCart } from "lucide-react";
 import { SiInstagram, SiX, SiFacebook } from "@icons-pack/react-simple-icons";
 
-const creatorQueryOptions = (username: string) => queryOptions({
-  queryKey: ["creator", username],
-  queryFn: async () => {
-    // Simulate real API fetching for future replacement
-    await new Promise((r) => setTimeout(r, 400));
-    // For demo purposes, we treat 'cetoh' differently to match the screenshot
-    const isCetoh = username.toLowerCase() === "cetoh" || username.toLowerCase() === "demo";
-    const name = isCetoh ? "Cetoh Marketplace" : username.charAt(0).toUpperCase() + username.slice(1);
-    const displayAvatar = isCetoh ? "cetoh." : name.charAt(0).toUpperCase();
-    return { name, displayAvatar, products: MOCK_PRODUCTS.slice(0, 9) };
-  },
-  staleTime: 1000 * 60 * 15,
-});
-
 export const Route = createFileRoute("/creators/$username")({
-  head: ({ params }) => ({ meta: [
-    { title: `@${params.username} on Cetoh` },
-    { name: "description", content: `Browse digital products by @${params.username} on Cetoh.` },
-  ] }),
-  loader: ({ context, params }) => context.queryClient.ensureQueryData(creatorQueryOptions(params.username)),
-  pendingComponent: () => (
-    <div className="flex min-h-screen flex-col items-center justify-center gap-4 bg-background text-primary">
-      <Loader2 className="h-10 w-10 animate-spin" />
-      <p className="text-sm font-medium">Loading store...</p>
-    </div>
-  ),
+  head: ({ params }) => ({
+    meta: [
+      { title: `@${params.username} on Cetoh` },
+      { name: "description", content: `Browse digital products by @${params.username} on Cetoh.` },
+    ],
+  }),
   component: CreatorProfile,
 });
 
 function CreatorProfile() {
   const { username } = Route.useParams();
-  const { data } = useSuspenseQuery(creatorQueryOptions(username));
-  const { name, displayAvatar, products } = data;
+
+  const allProducts = mockProducts;
+  const isLoading = false;
+
+  const products = allProducts.filter(
+    (p: Product) => p.creator_details?.username === username || p.creator?.username === username,
+  );
+
+  // Derive creator details from the first product, or fallback to URL param
+  const profile =
+    products.length > 0 && (products[0].creator_details || products[0].creator)
+      ? products[0].creator_details || products[0].creator
+      : { username, bio: "Turn what you know into income.", avatar_url: null };
+
+  const name = profile.username.charAt(0).toUpperCase() + profile.username.slice(1);
+  const displayAvatar = profile.username.charAt(0).toUpperCase();
+
+  if (isLoading) {
+    return (
+      <div className="flex min-h-screen flex-col items-center justify-center gap-4 bg-background text-primary">
+        <Loader2 className="h-10 w-10 animate-spin" />
+        <p className="text-sm font-medium">Loading store...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="flex min-h-screen flex-col bg-background md:flex-row">
       {/* Left Sidebar */}
       <aside className="relative flex w-full flex-col border-r border-border/50 bg-background px-8 py-10 md:sticky md:top-0 md:h-screen md:w-80 lg:w-[400px] md:overflow-y-auto">
         {/* Logo */}
-        <a href="/" className="mb-12 font-display text-2xl font-bold text-primary">cetoh.</a>
-        
+        <a href="/" className="mb-12 font-display text-2xl font-bold text-primary">
+          cetoh.
+        </a>
+
         {/* Profile Avatar */}
-        <div className="flex h-24 w-24 shrink-0 items-center justify-center rounded-full bg-primary text-xl font-bold text-primary-foreground shadow-md">
-          {displayAvatar}
+        <div className="flex h-24 w-24 shrink-0 items-center justify-center rounded-full bg-primary text-xl font-bold text-primary-foreground shadow-md overflow-hidden">
+          {profile.avatar_url ? (
+            <img src={profile.avatar_url} alt={name} className="h-full w-full object-cover" />
+          ) : (
+            displayAvatar
+          )}
         </div>
-        
+
         <h1 className="mt-8 font-display text-3xl font-bold text-primary">{name}</h1>
-        
-        <div className="mt-6 space-y-2 text-[15px] leading-relaxed text-foreground/80">
-          <p>Turn what you know into income.</p>
-          <p>Upload your digital products.</p>
-          <p>We handle payments, delivery, and everything else.</p>
-          <p>You keep <span className="font-bold text-primary">90%</span> of every sale.</p>
+
+        <div className="mt-6 space-y-2 text-[15px] leading-relaxed text-foreground/80 whitespace-pre-wrap">
+          {profile.bio || "Turn what you know into income."}
         </div>
-        
+
         <div className="mt-10 flex gap-5 text-foreground/90">
-          <a href="#" className="hover:text-primary transition-colors"><SiInstagram className="h-5 w-5" /></a>
-          <a href="#" className="hover:text-primary transition-colors"><SiX className="h-5 w-5" /></a>
-          <a href="#" className="hover:text-primary transition-colors"><SiFacebook className="h-5 w-5" /></a>
+          <a href="#" className="hover:text-primary transition-colors">
+            <SiInstagram className="h-5 w-5" />
+          </a>
+          <a href="#" className="hover:text-primary transition-colors">
+            <SiX className="h-5 w-5" />
+          </a>
+          <a href="#" className="hover:text-primary transition-colors">
+            <SiFacebook className="h-5 w-5" />
+          </a>
         </div>
 
         {/* Decorative background vectors */}
@@ -90,7 +103,9 @@ function CreatorProfile() {
             <button className="flex items-center gap-2 font-display text-[15px] font-bold text-foreground">
               <div className="relative">
                 <ShoppingCart className="h-6 w-6 text-primary" />
-                <span className="absolute -right-2 -top-2 flex h-[18px] w-[18px] items-center justify-center rounded-full bg-primary text-[10px] font-bold text-white shadow-sm">3</span>
+                <span className="absolute -right-2 -top-2 flex h-[18px] w-[18px] items-center justify-center rounded-full bg-primary text-[10px] font-bold text-white shadow-sm">
+                  3
+                </span>
               </div>
               Cart
             </button>
@@ -98,8 +113,14 @@ function CreatorProfile() {
         </div>
 
         {/* Product Grid */}
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {products.map((p) => <ProductCard key={p.id} p={p} />)}
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {products.length > 0 ? (
+            products.map((p: Product) => <ProductCard key={p.id} p={p} />)
+          ) : (
+            <div className="col-span-full py-20 text-center text-foreground/60">
+              No products found for this creator.
+            </div>
+          )}
         </div>
       </main>
     </div>

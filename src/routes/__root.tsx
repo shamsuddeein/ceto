@@ -15,7 +15,6 @@ import { Search, Home, ArrowLeft } from "lucide-react";
 
 import appCss from "../styles.css?url";
 
-
 function NotFoundComponent() {
   return (
     <div className="flex min-h-screen flex-col bg-surface">
@@ -32,7 +31,8 @@ function NotFoundComponent() {
             Lost in the marketplace
           </h2>
           <p className="mx-auto mt-4 max-w-md text-base text-foreground/70">
-            We couldn't find the page you're looking for. It might have been moved, deleted, or never existed in the first place.
+            We couldn't find the page you're looking for. It might have been moved, deleted, or
+            never existed in the first place.
           </p>
 
           <div className="mx-auto mt-10 flex max-w-sm flex-col gap-3 sm:flex-row sm:justify-center">
@@ -100,10 +100,17 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { title: "Cetoh | The best way to sell your digital products online" },
-      { name: "description", content: "Cetoh is the simplest e-commerce store builder to sell any kind of digital product or service to anyone in Nigeria." },
+      {
+        name: "description",
+        content:
+          "Cetoh is the simplest e-commerce store builder to sell any kind of digital product or service to anyone in Nigeria.",
+      },
       { name: "author", content: "Cetoh" },
       { property: "og:title", content: "Cetoh | Sell digital products online" },
-      { property: "og:description", content: "The simplest platform to sell digital products and services in Nigeria." },
+      {
+        property: "og:description",
+        content: "The simplest platform to sell digital products and services in Nigeria.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:site", content: "@cetoh" },
@@ -158,7 +165,7 @@ function RouteBenchmark() {
       const duration = performance.now() - startTime;
       console.log(
         `%c[Benchmark] Loaded ${location.pathname} in ${duration.toFixed(2)}ms`,
-        "color: #10b981; font-weight: bold;"
+        "color: #10b981; font-weight: bold;",
       );
     }
   }, [isLoading, location.pathname]);
@@ -172,12 +179,12 @@ function onRenderProfile(
   actualDuration: number,
   baseDuration: number,
   startTime: number,
-  commitTime: number
+  commitTime: number,
 ) {
   if (actualDuration > 5) {
     console.log(
       `%c[Profiler] [${id}] ${phase} render took ${actualDuration.toFixed(2)}ms`,
-      "color: #3b82f6;"
+      "color: #3b82f6;",
     );
   }
 }

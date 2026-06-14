@@ -9,55 +9,47 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as WithdrawalsRouteImport } from './routes/withdrawals'
-import { Route as WithdrawalHistoryRouteImport } from './routes/withdrawal-history'
 import { Route as VerifyEmailRouteImport } from './routes/verify-email'
 import { Route as TermsRouteImport } from './routes/terms'
 import { Route as SignupRouteImport } from './routes/signup'
-import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as SearchRouteImport } from './routes/search'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as RefundPolicyRouteImport } from './routes/refund-policy'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as PricingRouteImport } from './routes/pricing'
 import { Route as PaymentSuccessRouteImport } from './routes/payment-success'
-import { Route as OrdersRouteImport } from './routes/orders'
-import { Route as MyProductsRouteImport } from './routes/my-products'
 import { Route as MarketplaceRouteImport } from './routes/marketplace'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as HowItWorksRouteImport } from './routes/how-it-works'
 import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
 import { Route as FeaturesRouteImport } from './routes/features'
 import { Route as FaqRouteImport } from './routes/faq'
-import { Route as EarningsRouteImport } from './routes/earnings'
 import { Route as DownloadsRouteImport } from './routes/downloads'
-import { Route as DashboardRouteImport } from './routes/dashboard'
-import { Route as CustomersRouteImport } from './routes/customers'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as CheckoutRouteImport } from './routes/checkout'
 import { Route as CategoriesRouteImport } from './routes/categories'
 import { Route as BlogRouteImport } from './routes/blog'
-import { Route as AnalyticsRouteImport } from './routes/analytics'
 import { Route as AffiliatesRouteImport } from './routes/affiliates'
-import { Route as AddProductRouteImport } from './routes/add-product'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as SplatRouteImport } from './routes/$'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as DashboardIndexRouteImport } from './routes/dashboard.index'
 import { Route as ProductsIdRouteImport } from './routes/products.$id'
 import { Route as EditProductIdRouteImport } from './routes/edit-product.$id'
+import { Route as DashboardOverviewRouteImport } from './routes/dashboard.overview'
 import { Route as CreatorsUsernameRouteImport } from './routes/creators.$username'
 import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
+import { Route as DashboardCreatorIndexRouteImport } from './routes/dashboard.creator.index'
+import { Route as DashboardCreatorWithdrawalsRouteImport } from './routes/dashboard.creator.withdrawals'
+import { Route as DashboardCreatorWithdrawalHistoryRouteImport } from './routes/dashboard.creator.withdrawal-history'
+import { Route as DashboardCreatorProfileRouteImport } from './routes/dashboard.creator.profile'
+import { Route as DashboardCreatorOrdersRouteImport } from './routes/dashboard.creator.orders'
+import { Route as DashboardCreatorMyProductsRouteImport } from './routes/dashboard.creator.my-products'
+import { Route as DashboardCreatorEarningsRouteImport } from './routes/dashboard.creator.earnings'
+import { Route as DashboardCreatorCustomersRouteImport } from './routes/dashboard.creator.customers'
+import { Route as DashboardCreatorAnalyticsRouteImport } from './routes/dashboard.creator.analytics'
+import { Route as DashboardCreatorAddProductRouteImport } from './routes/dashboard.creator.add-product'
 
-const WithdrawalsRoute = WithdrawalsRouteImport.update({
-  id: '/withdrawals',
-  path: '/withdrawals',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const WithdrawalHistoryRoute = WithdrawalHistoryRouteImport.update({
-  id: '/withdrawal-history',
-  path: '/withdrawal-history',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const VerifyEmailRoute = VerifyEmailRouteImport.update({
   id: '/verify-email',
   path: '/verify-email',
@@ -71,11 +63,6 @@ const TermsRoute = TermsRouteImport.update({
 const SignupRoute = SignupRouteImport.update({
   id: '/signup',
   path: '/signup',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const SettingsRoute = SettingsRouteImport.update({
-  id: '/settings',
-  path: '/settings',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SearchRoute = SearchRouteImport.update({
@@ -108,16 +95,6 @@ const PaymentSuccessRoute = PaymentSuccessRouteImport.update({
   path: '/payment-success',
   getParentRoute: () => rootRouteImport,
 } as any)
-const OrdersRoute = OrdersRouteImport.update({
-  id: '/orders',
-  path: '/orders',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const MyProductsRoute = MyProductsRouteImport.update({
-  id: '/my-products',
-  path: '/my-products',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const MarketplaceRoute = MarketplaceRouteImport.update({
   id: '/marketplace',
   path: '/marketplace',
@@ -148,24 +125,9 @@ const FaqRoute = FaqRouteImport.update({
   path: '/faq',
   getParentRoute: () => rootRouteImport,
 } as any)
-const EarningsRoute = EarningsRouteImport.update({
-  id: '/earnings',
-  path: '/earnings',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const DownloadsRoute = DownloadsRouteImport.update({
   id: '/downloads',
   path: '/downloads',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DashboardRoute = DashboardRouteImport.update({
-  id: '/dashboard',
-  path: '/dashboard',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const CustomersRoute = CustomersRouteImport.update({
-  id: '/customers',
-  path: '/customers',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ContactRoute = ContactRouteImport.update({
@@ -188,19 +150,9 @@ const BlogRoute = BlogRouteImport.update({
   path: '/blog',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AnalyticsRoute = AnalyticsRouteImport.update({
-  id: '/analytics',
-  path: '/analytics',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const AffiliatesRoute = AffiliatesRouteImport.update({
   id: '/affiliates',
   path: '/affiliates',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AddProductRoute = AddProductRouteImport.update({
-  id: '/add-product',
-  path: '/add-product',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AboutRoute = AboutRouteImport.update({
@@ -218,6 +170,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DashboardIndexRoute = DashboardIndexRouteImport.update({
+  id: '/dashboard/',
+  path: '/dashboard/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ProductsIdRoute = ProductsIdRouteImport.update({
   id: '/products/$id',
   path: '/products/$id',
@@ -226,6 +183,11 @@ const ProductsIdRoute = ProductsIdRouteImport.update({
 const EditProductIdRoute = EditProductIdRouteImport.update({
   id: '/edit-product/$id',
   path: '/edit-product/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DashboardOverviewRoute = DashboardOverviewRouteImport.update({
+  id: '/dashboard/overview',
+  path: '/dashboard/overview',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CreatorsUsernameRoute = CreatorsUsernameRouteImport.update({
@@ -238,127 +200,190 @@ const BlogSlugRoute = BlogSlugRouteImport.update({
   path: '/$slug',
   getParentRoute: () => BlogRoute,
 } as any)
+const DashboardCreatorIndexRoute = DashboardCreatorIndexRouteImport.update({
+  id: '/dashboard/creator/',
+  path: '/dashboard/creator/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DashboardCreatorWithdrawalsRoute =
+  DashboardCreatorWithdrawalsRouteImport.update({
+    id: '/dashboard/creator/withdrawals',
+    path: '/dashboard/creator/withdrawals',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const DashboardCreatorWithdrawalHistoryRoute =
+  DashboardCreatorWithdrawalHistoryRouteImport.update({
+    id: '/dashboard/creator/withdrawal-history',
+    path: '/dashboard/creator/withdrawal-history',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const DashboardCreatorProfileRoute = DashboardCreatorProfileRouteImport.update({
+  id: '/dashboard/creator/profile',
+  path: '/dashboard/creator/profile',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DashboardCreatorOrdersRoute = DashboardCreatorOrdersRouteImport.update({
+  id: '/dashboard/creator/orders',
+  path: '/dashboard/creator/orders',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DashboardCreatorMyProductsRoute =
+  DashboardCreatorMyProductsRouteImport.update({
+    id: '/dashboard/creator/my-products',
+    path: '/dashboard/creator/my-products',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const DashboardCreatorEarningsRoute =
+  DashboardCreatorEarningsRouteImport.update({
+    id: '/dashboard/creator/earnings',
+    path: '/dashboard/creator/earnings',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const DashboardCreatorCustomersRoute =
+  DashboardCreatorCustomersRouteImport.update({
+    id: '/dashboard/creator/customers',
+    path: '/dashboard/creator/customers',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const DashboardCreatorAnalyticsRoute =
+  DashboardCreatorAnalyticsRouteImport.update({
+    id: '/dashboard/creator/analytics',
+    path: '/dashboard/creator/analytics',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const DashboardCreatorAddProductRoute =
+  DashboardCreatorAddProductRouteImport.update({
+    id: '/dashboard/creator/add-product',
+    path: '/dashboard/creator/add-product',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/$': typeof SplatRoute
   '/about': typeof AboutRoute
-  '/add-product': typeof AddProductRoute
   '/affiliates': typeof AffiliatesRoute
-  '/analytics': typeof AnalyticsRoute
   '/blog': typeof BlogRouteWithChildren
   '/categories': typeof CategoriesRoute
   '/checkout': typeof CheckoutRoute
   '/contact': typeof ContactRoute
-  '/customers': typeof CustomersRoute
-  '/dashboard': typeof DashboardRoute
   '/downloads': typeof DownloadsRoute
-  '/earnings': typeof EarningsRoute
   '/faq': typeof FaqRoute
   '/features': typeof FeaturesRoute
   '/forgot-password': typeof ForgotPasswordRoute
   '/how-it-works': typeof HowItWorksRoute
   '/login': typeof LoginRoute
   '/marketplace': typeof MarketplaceRoute
-  '/my-products': typeof MyProductsRoute
-  '/orders': typeof OrdersRoute
   '/payment-success': typeof PaymentSuccessRoute
   '/pricing': typeof PricingRoute
   '/privacy': typeof PrivacyRoute
   '/refund-policy': typeof RefundPolicyRoute
   '/reset-password': typeof ResetPasswordRoute
   '/search': typeof SearchRoute
-  '/settings': typeof SettingsRoute
   '/signup': typeof SignupRoute
   '/terms': typeof TermsRoute
   '/verify-email': typeof VerifyEmailRoute
-  '/withdrawal-history': typeof WithdrawalHistoryRoute
-  '/withdrawals': typeof WithdrawalsRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/creators/$username': typeof CreatorsUsernameRoute
+  '/dashboard/overview': typeof DashboardOverviewRoute
   '/edit-product/$id': typeof EditProductIdRoute
   '/products/$id': typeof ProductsIdRoute
+  '/dashboard/': typeof DashboardIndexRoute
+  '/dashboard/creator/add-product': typeof DashboardCreatorAddProductRoute
+  '/dashboard/creator/analytics': typeof DashboardCreatorAnalyticsRoute
+  '/dashboard/creator/customers': typeof DashboardCreatorCustomersRoute
+  '/dashboard/creator/earnings': typeof DashboardCreatorEarningsRoute
+  '/dashboard/creator/my-products': typeof DashboardCreatorMyProductsRoute
+  '/dashboard/creator/orders': typeof DashboardCreatorOrdersRoute
+  '/dashboard/creator/profile': typeof DashboardCreatorProfileRoute
+  '/dashboard/creator/withdrawal-history': typeof DashboardCreatorWithdrawalHistoryRoute
+  '/dashboard/creator/withdrawals': typeof DashboardCreatorWithdrawalsRoute
+  '/dashboard/creator/': typeof DashboardCreatorIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/$': typeof SplatRoute
   '/about': typeof AboutRoute
-  '/add-product': typeof AddProductRoute
   '/affiliates': typeof AffiliatesRoute
-  '/analytics': typeof AnalyticsRoute
   '/blog': typeof BlogRouteWithChildren
   '/categories': typeof CategoriesRoute
   '/checkout': typeof CheckoutRoute
   '/contact': typeof ContactRoute
-  '/customers': typeof CustomersRoute
-  '/dashboard': typeof DashboardRoute
   '/downloads': typeof DownloadsRoute
-  '/earnings': typeof EarningsRoute
   '/faq': typeof FaqRoute
   '/features': typeof FeaturesRoute
   '/forgot-password': typeof ForgotPasswordRoute
   '/how-it-works': typeof HowItWorksRoute
   '/login': typeof LoginRoute
   '/marketplace': typeof MarketplaceRoute
-  '/my-products': typeof MyProductsRoute
-  '/orders': typeof OrdersRoute
   '/payment-success': typeof PaymentSuccessRoute
   '/pricing': typeof PricingRoute
   '/privacy': typeof PrivacyRoute
   '/refund-policy': typeof RefundPolicyRoute
   '/reset-password': typeof ResetPasswordRoute
   '/search': typeof SearchRoute
-  '/settings': typeof SettingsRoute
   '/signup': typeof SignupRoute
   '/terms': typeof TermsRoute
   '/verify-email': typeof VerifyEmailRoute
-  '/withdrawal-history': typeof WithdrawalHistoryRoute
-  '/withdrawals': typeof WithdrawalsRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/creators/$username': typeof CreatorsUsernameRoute
+  '/dashboard/overview': typeof DashboardOverviewRoute
   '/edit-product/$id': typeof EditProductIdRoute
   '/products/$id': typeof ProductsIdRoute
+  '/dashboard': typeof DashboardIndexRoute
+  '/dashboard/creator/add-product': typeof DashboardCreatorAddProductRoute
+  '/dashboard/creator/analytics': typeof DashboardCreatorAnalyticsRoute
+  '/dashboard/creator/customers': typeof DashboardCreatorCustomersRoute
+  '/dashboard/creator/earnings': typeof DashboardCreatorEarningsRoute
+  '/dashboard/creator/my-products': typeof DashboardCreatorMyProductsRoute
+  '/dashboard/creator/orders': typeof DashboardCreatorOrdersRoute
+  '/dashboard/creator/profile': typeof DashboardCreatorProfileRoute
+  '/dashboard/creator/withdrawal-history': typeof DashboardCreatorWithdrawalHistoryRoute
+  '/dashboard/creator/withdrawals': typeof DashboardCreatorWithdrawalsRoute
+  '/dashboard/creator': typeof DashboardCreatorIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/$': typeof SplatRoute
   '/about': typeof AboutRoute
-  '/add-product': typeof AddProductRoute
   '/affiliates': typeof AffiliatesRoute
-  '/analytics': typeof AnalyticsRoute
   '/blog': typeof BlogRouteWithChildren
   '/categories': typeof CategoriesRoute
   '/checkout': typeof CheckoutRoute
   '/contact': typeof ContactRoute
-  '/customers': typeof CustomersRoute
-  '/dashboard': typeof DashboardRoute
   '/downloads': typeof DownloadsRoute
-  '/earnings': typeof EarningsRoute
   '/faq': typeof FaqRoute
   '/features': typeof FeaturesRoute
   '/forgot-password': typeof ForgotPasswordRoute
   '/how-it-works': typeof HowItWorksRoute
   '/login': typeof LoginRoute
   '/marketplace': typeof MarketplaceRoute
-  '/my-products': typeof MyProductsRoute
-  '/orders': typeof OrdersRoute
   '/payment-success': typeof PaymentSuccessRoute
   '/pricing': typeof PricingRoute
   '/privacy': typeof PrivacyRoute
   '/refund-policy': typeof RefundPolicyRoute
   '/reset-password': typeof ResetPasswordRoute
   '/search': typeof SearchRoute
-  '/settings': typeof SettingsRoute
   '/signup': typeof SignupRoute
   '/terms': typeof TermsRoute
   '/verify-email': typeof VerifyEmailRoute
-  '/withdrawal-history': typeof WithdrawalHistoryRoute
-  '/withdrawals': typeof WithdrawalsRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/creators/$username': typeof CreatorsUsernameRoute
+  '/dashboard/overview': typeof DashboardOverviewRoute
   '/edit-product/$id': typeof EditProductIdRoute
   '/products/$id': typeof ProductsIdRoute
+  '/dashboard/': typeof DashboardIndexRoute
+  '/dashboard/creator/add-product': typeof DashboardCreatorAddProductRoute
+  '/dashboard/creator/analytics': typeof DashboardCreatorAnalyticsRoute
+  '/dashboard/creator/customers': typeof DashboardCreatorCustomersRoute
+  '/dashboard/creator/earnings': typeof DashboardCreatorEarningsRoute
+  '/dashboard/creator/my-products': typeof DashboardCreatorMyProductsRoute
+  '/dashboard/creator/orders': typeof DashboardCreatorOrdersRoute
+  '/dashboard/creator/profile': typeof DashboardCreatorProfileRoute
+  '/dashboard/creator/withdrawal-history': typeof DashboardCreatorWithdrawalHistoryRoute
+  '/dashboard/creator/withdrawals': typeof DashboardCreatorWithdrawalsRoute
+  '/dashboard/creator/': typeof DashboardCreatorIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -366,179 +391,173 @@ export interface FileRouteTypes {
     | '/'
     | '/$'
     | '/about'
-    | '/add-product'
     | '/affiliates'
-    | '/analytics'
     | '/blog'
     | '/categories'
     | '/checkout'
     | '/contact'
-    | '/customers'
-    | '/dashboard'
     | '/downloads'
-    | '/earnings'
     | '/faq'
     | '/features'
     | '/forgot-password'
     | '/how-it-works'
     | '/login'
     | '/marketplace'
-    | '/my-products'
-    | '/orders'
     | '/payment-success'
     | '/pricing'
     | '/privacy'
     | '/refund-policy'
     | '/reset-password'
     | '/search'
-    | '/settings'
     | '/signup'
     | '/terms'
     | '/verify-email'
-    | '/withdrawal-history'
-    | '/withdrawals'
     | '/blog/$slug'
     | '/creators/$username'
+    | '/dashboard/overview'
     | '/edit-product/$id'
     | '/products/$id'
+    | '/dashboard/'
+    | '/dashboard/creator/add-product'
+    | '/dashboard/creator/analytics'
+    | '/dashboard/creator/customers'
+    | '/dashboard/creator/earnings'
+    | '/dashboard/creator/my-products'
+    | '/dashboard/creator/orders'
+    | '/dashboard/creator/profile'
+    | '/dashboard/creator/withdrawal-history'
+    | '/dashboard/creator/withdrawals'
+    | '/dashboard/creator/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/$'
     | '/about'
-    | '/add-product'
     | '/affiliates'
-    | '/analytics'
     | '/blog'
     | '/categories'
     | '/checkout'
     | '/contact'
-    | '/customers'
-    | '/dashboard'
     | '/downloads'
-    | '/earnings'
     | '/faq'
     | '/features'
     | '/forgot-password'
     | '/how-it-works'
     | '/login'
     | '/marketplace'
-    | '/my-products'
-    | '/orders'
     | '/payment-success'
     | '/pricing'
     | '/privacy'
     | '/refund-policy'
     | '/reset-password'
     | '/search'
-    | '/settings'
     | '/signup'
     | '/terms'
     | '/verify-email'
-    | '/withdrawal-history'
-    | '/withdrawals'
     | '/blog/$slug'
     | '/creators/$username'
+    | '/dashboard/overview'
     | '/edit-product/$id'
     | '/products/$id'
+    | '/dashboard'
+    | '/dashboard/creator/add-product'
+    | '/dashboard/creator/analytics'
+    | '/dashboard/creator/customers'
+    | '/dashboard/creator/earnings'
+    | '/dashboard/creator/my-products'
+    | '/dashboard/creator/orders'
+    | '/dashboard/creator/profile'
+    | '/dashboard/creator/withdrawal-history'
+    | '/dashboard/creator/withdrawals'
+    | '/dashboard/creator'
   id:
     | '__root__'
     | '/'
     | '/$'
     | '/about'
-    | '/add-product'
     | '/affiliates'
-    | '/analytics'
     | '/blog'
     | '/categories'
     | '/checkout'
     | '/contact'
-    | '/customers'
-    | '/dashboard'
     | '/downloads'
-    | '/earnings'
     | '/faq'
     | '/features'
     | '/forgot-password'
     | '/how-it-works'
     | '/login'
     | '/marketplace'
-    | '/my-products'
-    | '/orders'
     | '/payment-success'
     | '/pricing'
     | '/privacy'
     | '/refund-policy'
     | '/reset-password'
     | '/search'
-    | '/settings'
     | '/signup'
     | '/terms'
     | '/verify-email'
-    | '/withdrawal-history'
-    | '/withdrawals'
     | '/blog/$slug'
     | '/creators/$username'
+    | '/dashboard/overview'
     | '/edit-product/$id'
     | '/products/$id'
+    | '/dashboard/'
+    | '/dashboard/creator/add-product'
+    | '/dashboard/creator/analytics'
+    | '/dashboard/creator/customers'
+    | '/dashboard/creator/earnings'
+    | '/dashboard/creator/my-products'
+    | '/dashboard/creator/orders'
+    | '/dashboard/creator/profile'
+    | '/dashboard/creator/withdrawal-history'
+    | '/dashboard/creator/withdrawals'
+    | '/dashboard/creator/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   SplatRoute: typeof SplatRoute
   AboutRoute: typeof AboutRoute
-  AddProductRoute: typeof AddProductRoute
   AffiliatesRoute: typeof AffiliatesRoute
-  AnalyticsRoute: typeof AnalyticsRoute
   BlogRoute: typeof BlogRouteWithChildren
   CategoriesRoute: typeof CategoriesRoute
   CheckoutRoute: typeof CheckoutRoute
   ContactRoute: typeof ContactRoute
-  CustomersRoute: typeof CustomersRoute
-  DashboardRoute: typeof DashboardRoute
   DownloadsRoute: typeof DownloadsRoute
-  EarningsRoute: typeof EarningsRoute
   FaqRoute: typeof FaqRoute
   FeaturesRoute: typeof FeaturesRoute
   ForgotPasswordRoute: typeof ForgotPasswordRoute
   HowItWorksRoute: typeof HowItWorksRoute
   LoginRoute: typeof LoginRoute
   MarketplaceRoute: typeof MarketplaceRoute
-  MyProductsRoute: typeof MyProductsRoute
-  OrdersRoute: typeof OrdersRoute
   PaymentSuccessRoute: typeof PaymentSuccessRoute
   PricingRoute: typeof PricingRoute
   PrivacyRoute: typeof PrivacyRoute
   RefundPolicyRoute: typeof RefundPolicyRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
   SearchRoute: typeof SearchRoute
-  SettingsRoute: typeof SettingsRoute
   SignupRoute: typeof SignupRoute
   TermsRoute: typeof TermsRoute
   VerifyEmailRoute: typeof VerifyEmailRoute
-  WithdrawalHistoryRoute: typeof WithdrawalHistoryRoute
-  WithdrawalsRoute: typeof WithdrawalsRoute
   CreatorsUsernameRoute: typeof CreatorsUsernameRoute
+  DashboardOverviewRoute: typeof DashboardOverviewRoute
   EditProductIdRoute: typeof EditProductIdRoute
   ProductsIdRoute: typeof ProductsIdRoute
+  DashboardIndexRoute: typeof DashboardIndexRoute
+  DashboardCreatorAddProductRoute: typeof DashboardCreatorAddProductRoute
+  DashboardCreatorAnalyticsRoute: typeof DashboardCreatorAnalyticsRoute
+  DashboardCreatorCustomersRoute: typeof DashboardCreatorCustomersRoute
+  DashboardCreatorEarningsRoute: typeof DashboardCreatorEarningsRoute
+  DashboardCreatorMyProductsRoute: typeof DashboardCreatorMyProductsRoute
+  DashboardCreatorOrdersRoute: typeof DashboardCreatorOrdersRoute
+  DashboardCreatorProfileRoute: typeof DashboardCreatorProfileRoute
+  DashboardCreatorWithdrawalHistoryRoute: typeof DashboardCreatorWithdrawalHistoryRoute
+  DashboardCreatorWithdrawalsRoute: typeof DashboardCreatorWithdrawalsRoute
+  DashboardCreatorIndexRoute: typeof DashboardCreatorIndexRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/withdrawals': {
-      id: '/withdrawals'
-      path: '/withdrawals'
-      fullPath: '/withdrawals'
-      preLoaderRoute: typeof WithdrawalsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/withdrawal-history': {
-      id: '/withdrawal-history'
-      path: '/withdrawal-history'
-      fullPath: '/withdrawal-history'
-      preLoaderRoute: typeof WithdrawalHistoryRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/verify-email': {
       id: '/verify-email'
       path: '/verify-email'
@@ -558,13 +577,6 @@ declare module '@tanstack/react-router' {
       path: '/signup'
       fullPath: '/signup'
       preLoaderRoute: typeof SignupRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/settings': {
-      id: '/settings'
-      path: '/settings'
-      fullPath: '/settings'
-      preLoaderRoute: typeof SettingsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/search': {
@@ -609,20 +621,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PaymentSuccessRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/orders': {
-      id: '/orders'
-      path: '/orders'
-      fullPath: '/orders'
-      preLoaderRoute: typeof OrdersRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/my-products': {
-      id: '/my-products'
-      path: '/my-products'
-      fullPath: '/my-products'
-      preLoaderRoute: typeof MyProductsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/marketplace': {
       id: '/marketplace'
       path: '/marketplace'
@@ -665,32 +663,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof FaqRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/earnings': {
-      id: '/earnings'
-      path: '/earnings'
-      fullPath: '/earnings'
-      preLoaderRoute: typeof EarningsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/downloads': {
       id: '/downloads'
       path: '/downloads'
       fullPath: '/downloads'
       preLoaderRoute: typeof DownloadsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/dashboard': {
-      id: '/dashboard'
-      path: '/dashboard'
-      fullPath: '/dashboard'
-      preLoaderRoute: typeof DashboardRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/customers': {
-      id: '/customers'
-      path: '/customers'
-      fullPath: '/customers'
-      preLoaderRoute: typeof CustomersRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/contact': {
@@ -721,25 +698,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BlogRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/analytics': {
-      id: '/analytics'
-      path: '/analytics'
-      fullPath: '/analytics'
-      preLoaderRoute: typeof AnalyticsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/affiliates': {
       id: '/affiliates'
       path: '/affiliates'
       fullPath: '/affiliates'
       preLoaderRoute: typeof AffiliatesRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/add-product': {
-      id: '/add-product'
-      path: '/add-product'
-      fullPath: '/add-product'
-      preLoaderRoute: typeof AddProductRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/about': {
@@ -763,6 +726,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/dashboard/': {
+      id: '/dashboard/'
+      path: '/dashboard'
+      fullPath: '/dashboard/'
+      preLoaderRoute: typeof DashboardIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/products/$id': {
       id: '/products/$id'
       path: '/products/$id'
@@ -775,6 +745,13 @@ declare module '@tanstack/react-router' {
       path: '/edit-product/$id'
       fullPath: '/edit-product/$id'
       preLoaderRoute: typeof EditProductIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dashboard/overview': {
+      id: '/dashboard/overview'
+      path: '/dashboard/overview'
+      fullPath: '/dashboard/overview'
+      preLoaderRoute: typeof DashboardOverviewRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/creators/$username': {
@@ -790,6 +767,76 @@ declare module '@tanstack/react-router' {
       fullPath: '/blog/$slug'
       preLoaderRoute: typeof BlogSlugRouteImport
       parentRoute: typeof BlogRoute
+    }
+    '/dashboard/creator/': {
+      id: '/dashboard/creator/'
+      path: '/dashboard/creator'
+      fullPath: '/dashboard/creator/'
+      preLoaderRoute: typeof DashboardCreatorIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dashboard/creator/withdrawals': {
+      id: '/dashboard/creator/withdrawals'
+      path: '/dashboard/creator/withdrawals'
+      fullPath: '/dashboard/creator/withdrawals'
+      preLoaderRoute: typeof DashboardCreatorWithdrawalsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dashboard/creator/withdrawal-history': {
+      id: '/dashboard/creator/withdrawal-history'
+      path: '/dashboard/creator/withdrawal-history'
+      fullPath: '/dashboard/creator/withdrawal-history'
+      preLoaderRoute: typeof DashboardCreatorWithdrawalHistoryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dashboard/creator/profile': {
+      id: '/dashboard/creator/profile'
+      path: '/dashboard/creator/profile'
+      fullPath: '/dashboard/creator/profile'
+      preLoaderRoute: typeof DashboardCreatorProfileRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dashboard/creator/orders': {
+      id: '/dashboard/creator/orders'
+      path: '/dashboard/creator/orders'
+      fullPath: '/dashboard/creator/orders'
+      preLoaderRoute: typeof DashboardCreatorOrdersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dashboard/creator/my-products': {
+      id: '/dashboard/creator/my-products'
+      path: '/dashboard/creator/my-products'
+      fullPath: '/dashboard/creator/my-products'
+      preLoaderRoute: typeof DashboardCreatorMyProductsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dashboard/creator/earnings': {
+      id: '/dashboard/creator/earnings'
+      path: '/dashboard/creator/earnings'
+      fullPath: '/dashboard/creator/earnings'
+      preLoaderRoute: typeof DashboardCreatorEarningsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dashboard/creator/customers': {
+      id: '/dashboard/creator/customers'
+      path: '/dashboard/creator/customers'
+      fullPath: '/dashboard/creator/customers'
+      preLoaderRoute: typeof DashboardCreatorCustomersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dashboard/creator/analytics': {
+      id: '/dashboard/creator/analytics'
+      path: '/dashboard/creator/analytics'
+      fullPath: '/dashboard/creator/analytics'
+      preLoaderRoute: typeof DashboardCreatorAnalyticsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dashboard/creator/add-product': {
+      id: '/dashboard/creator/add-product'
+      path: '/dashboard/creator/add-product'
+      fullPath: '/dashboard/creator/add-product'
+      preLoaderRoute: typeof DashboardCreatorAddProductRouteImport
+      parentRoute: typeof rootRouteImport
     }
   }
 }
@@ -808,40 +855,43 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   SplatRoute: SplatRoute,
   AboutRoute: AboutRoute,
-  AddProductRoute: AddProductRoute,
   AffiliatesRoute: AffiliatesRoute,
-  AnalyticsRoute: AnalyticsRoute,
   BlogRoute: BlogRouteWithChildren,
   CategoriesRoute: CategoriesRoute,
   CheckoutRoute: CheckoutRoute,
   ContactRoute: ContactRoute,
-  CustomersRoute: CustomersRoute,
-  DashboardRoute: DashboardRoute,
   DownloadsRoute: DownloadsRoute,
-  EarningsRoute: EarningsRoute,
   FaqRoute: FaqRoute,
   FeaturesRoute: FeaturesRoute,
   ForgotPasswordRoute: ForgotPasswordRoute,
   HowItWorksRoute: HowItWorksRoute,
   LoginRoute: LoginRoute,
   MarketplaceRoute: MarketplaceRoute,
-  MyProductsRoute: MyProductsRoute,
-  OrdersRoute: OrdersRoute,
   PaymentSuccessRoute: PaymentSuccessRoute,
   PricingRoute: PricingRoute,
   PrivacyRoute: PrivacyRoute,
   RefundPolicyRoute: RefundPolicyRoute,
   ResetPasswordRoute: ResetPasswordRoute,
   SearchRoute: SearchRoute,
-  SettingsRoute: SettingsRoute,
   SignupRoute: SignupRoute,
   TermsRoute: TermsRoute,
   VerifyEmailRoute: VerifyEmailRoute,
-  WithdrawalHistoryRoute: WithdrawalHistoryRoute,
-  WithdrawalsRoute: WithdrawalsRoute,
   CreatorsUsernameRoute: CreatorsUsernameRoute,
+  DashboardOverviewRoute: DashboardOverviewRoute,
   EditProductIdRoute: EditProductIdRoute,
   ProductsIdRoute: ProductsIdRoute,
+  DashboardIndexRoute: DashboardIndexRoute,
+  DashboardCreatorAddProductRoute: DashboardCreatorAddProductRoute,
+  DashboardCreatorAnalyticsRoute: DashboardCreatorAnalyticsRoute,
+  DashboardCreatorCustomersRoute: DashboardCreatorCustomersRoute,
+  DashboardCreatorEarningsRoute: DashboardCreatorEarningsRoute,
+  DashboardCreatorMyProductsRoute: DashboardCreatorMyProductsRoute,
+  DashboardCreatorOrdersRoute: DashboardCreatorOrdersRoute,
+  DashboardCreatorProfileRoute: DashboardCreatorProfileRoute,
+  DashboardCreatorWithdrawalHistoryRoute:
+    DashboardCreatorWithdrawalHistoryRoute,
+  DashboardCreatorWithdrawalsRoute: DashboardCreatorWithdrawalsRoute,
+  DashboardCreatorIndexRoute: DashboardCreatorIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

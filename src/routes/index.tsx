@@ -25,8 +25,6 @@ export const Route = createFileRoute("/")({
   component: CetohLanding,
 });
 
-
-
 function CetohLanding() {
   return (
     <div className="min-h-screen bg-background">

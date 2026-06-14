@@ -7,14 +7,14 @@
 
 ## Tech Stack
 
-| Tool | Purpose |
-|---|---|
+| Tool                                         | Purpose                                    |
+| -------------------------------------------- | ------------------------------------------ |
 | [TanStack Start](https://tanstack.com/start) | Full-stack React framework (SSR + routing) |
-| [React 19](https://react.dev) | UI library |
-| [Tailwind CSS v4](https://tailwindcss.com) | Styling |
-| [Vite](https://vitejs.dev) | Build tool |
-| [Bun](https://bun.sh) | Package manager & runtime |
-| [TypeScript](https://www.typescriptlang.org) | Type safety |
+| [React 19](https://react.dev)                | UI library                                 |
+| [Tailwind CSS v4](https://tailwindcss.com)   | Styling                                    |
+| [Vite](https://vitejs.dev)                   | Build tool                                 |
+| [Bun](https://bun.sh)                        | Package manager & runtime                  |
+| [TypeScript](https://www.typescriptlang.org) | Type safety                                |
 
 ---
 
@@ -75,20 +75,20 @@ ceto/
 
 ## Landing Page Sections
 
-| Section | Description |
-|---|---|
-| **SiteHeader** | Sticky navbar with nav links, EN switcher, Log In + Start Selling |
-| **Hero** | Full-width dark green hero with headline and CTA |
-| **MarketplaceExplore** | Marketplace screenshot preview |
-| **SellableTypes** | 6-card grid of sellable product types |
-| **SetupSteps** | 3-step "how it works" with photo |
-| **PaymentGateways** | 12 payment gateway logos + 3D globe SVG |
-| **SalesTools** | Affiliates, Sales Page, Automated Follow-ups cards |
-| **Integrations** | Facebook Pixel, Mailchimp, ConvertKit, Kartra, Zapier |
-| **Testimonials** | 5-slide carousel with customer quotes |
-| **EbookCTA** | Free ebook download CTA with 3D book mockup |
-| **PressAndFinalCTA** | Press logos + final sign-up CTA card |
-| **SiteFooter** | 4-column footer with links, social icons, EN switcher |
+| Section                | Description                                                       |
+| ---------------------- | ----------------------------------------------------------------- |
+| **SiteHeader**         | Sticky navbar with nav links, EN switcher, Log In + Start Selling |
+| **Hero**               | Full-width dark green hero with headline and CTA                  |
+| **MarketplaceExplore** | Marketplace screenshot preview                                    |
+| **SellableTypes**      | 6-card grid of sellable product types                             |
+| **SetupSteps**         | 3-step "how it works" with photo                                  |
+| **PaymentGateways**    | 12 payment gateway logos + 3D globe SVG                           |
+| **SalesTools**         | Affiliates, Sales Page, Automated Follow-ups cards                |
+| **Integrations**       | Facebook Pixel, Mailchimp, ConvertKit, Kartra, Zapier             |
+| **Testimonials**       | 5-slide carousel with customer quotes                             |
+| **EbookCTA**           | Free ebook download CTA with 3D book mockup                       |
+| **PressAndFinalCTA**   | Press logos + final sign-up CTA card                              |
+| **SiteFooter**         | 4-column footer with links, social icons, EN switcher             |
 
 ---
 
