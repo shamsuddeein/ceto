@@ -37,6 +37,7 @@ import { Route as DashboardIndexRouteImport } from './routes/dashboard.index'
 import { Route as ProductsIdRouteImport } from './routes/products.$id'
 import { Route as EditProductIdRouteImport } from './routes/edit-product.$id'
 import { Route as DashboardOverviewRouteImport } from './routes/dashboard.overview'
+import { Route as DashboardNotificationsRouteImport } from './routes/dashboard.notifications'
 import { Route as CreatorsUsernameRouteImport } from './routes/creators.$username'
 import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
 import { Route as DashboardCreatorIndexRouteImport } from './routes/dashboard.creator.index'
@@ -190,6 +191,11 @@ const DashboardOverviewRoute = DashboardOverviewRouteImport.update({
   path: '/dashboard/overview',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DashboardNotificationsRoute = DashboardNotificationsRouteImport.update({
+  id: '/dashboard/notifications',
+  path: '/dashboard/notifications',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CreatorsUsernameRoute = CreatorsUsernameRouteImport.update({
   id: '/creators/$username',
   path: '/creators/$username',
@@ -285,6 +291,7 @@ export interface FileRoutesByFullPath {
   '/verify-email': typeof VerifyEmailRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/creators/$username': typeof CreatorsUsernameRoute
+  '/dashboard/notifications': typeof DashboardNotificationsRoute
   '/dashboard/overview': typeof DashboardOverviewRoute
   '/edit-product/$id': typeof EditProductIdRoute
   '/products/$id': typeof ProductsIdRoute
@@ -327,6 +334,7 @@ export interface FileRoutesByTo {
   '/verify-email': typeof VerifyEmailRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/creators/$username': typeof CreatorsUsernameRoute
+  '/dashboard/notifications': typeof DashboardNotificationsRoute
   '/dashboard/overview': typeof DashboardOverviewRoute
   '/edit-product/$id': typeof EditProductIdRoute
   '/products/$id': typeof ProductsIdRoute
@@ -370,6 +378,7 @@ export interface FileRoutesById {
   '/verify-email': typeof VerifyEmailRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/creators/$username': typeof CreatorsUsernameRoute
+  '/dashboard/notifications': typeof DashboardNotificationsRoute
   '/dashboard/overview': typeof DashboardOverviewRoute
   '/edit-product/$id': typeof EditProductIdRoute
   '/products/$id': typeof ProductsIdRoute
@@ -414,6 +423,7 @@ export interface FileRouteTypes {
     | '/verify-email'
     | '/blog/$slug'
     | '/creators/$username'
+    | '/dashboard/notifications'
     | '/dashboard/overview'
     | '/edit-product/$id'
     | '/products/$id'
@@ -456,6 +466,7 @@ export interface FileRouteTypes {
     | '/verify-email'
     | '/blog/$slug'
     | '/creators/$username'
+    | '/dashboard/notifications'
     | '/dashboard/overview'
     | '/edit-product/$id'
     | '/products/$id'
@@ -498,6 +509,7 @@ export interface FileRouteTypes {
     | '/verify-email'
     | '/blog/$slug'
     | '/creators/$username'
+    | '/dashboard/notifications'
     | '/dashboard/overview'
     | '/edit-product/$id'
     | '/products/$id'
@@ -540,6 +552,7 @@ export interface RootRouteChildren {
   TermsRoute: typeof TermsRoute
   VerifyEmailRoute: typeof VerifyEmailRoute
   CreatorsUsernameRoute: typeof CreatorsUsernameRoute
+  DashboardNotificationsRoute: typeof DashboardNotificationsRoute
   DashboardOverviewRoute: typeof DashboardOverviewRoute
   EditProductIdRoute: typeof EditProductIdRoute
   ProductsIdRoute: typeof ProductsIdRoute
@@ -754,6 +767,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardOverviewRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/dashboard/notifications': {
+      id: '/dashboard/notifications'
+      path: '/dashboard/notifications'
+      fullPath: '/dashboard/notifications'
+      preLoaderRoute: typeof DashboardNotificationsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/creators/$username': {
       id: '/creators/$username'
       path: '/creators/$username'
@@ -877,6 +897,7 @@ const rootRouteChildren: RootRouteChildren = {
   TermsRoute: TermsRoute,
   VerifyEmailRoute: VerifyEmailRoute,
   CreatorsUsernameRoute: CreatorsUsernameRoute,
+  DashboardNotificationsRoute: DashboardNotificationsRoute,
   DashboardOverviewRoute: DashboardOverviewRoute,
   EditProductIdRoute: EditProductIdRoute,
   ProductsIdRoute: ProductsIdRoute,

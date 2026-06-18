@@ -16,6 +16,7 @@ import {
   ChevronDown,
   UserCircle,
   Store,
+  Bell,
 } from "lucide-react";
 import logoImg from "@/assets/logo.png";
 import { profile as mockProfile } from "@/lib/mock-data";
@@ -23,7 +24,10 @@ import { profile as mockProfile } from "@/lib/mock-data";
 const GENERAL_NAV = [
   {
     title: "CUSTOMER PROFILE",
-    items: [{ label: "Overview", to: "/dashboard/overview" as const, icon: LayoutDashboard }],
+    items: [
+      { label: "Overview", to: "/dashboard/overview" as const, icon: LayoutDashboard },
+      { label: "Notifications", to: "/dashboard/notifications" as const, icon: Bell },
+    ],
   },
 ];
 
@@ -54,6 +58,12 @@ const CREATOR_NAV = [
         to: "/dashboard/creator/withdrawal-history" as const,
         icon: Download,
       },
+    ],
+  },
+  {
+    title: "ACTIVITY",
+    items: [
+      { label: "Notifications", to: "/dashboard/notifications" as const, icon: Bell },
     ],
   },
 ];
@@ -173,6 +183,20 @@ export function DashboardLayout({ title, children }: { title: string; children: 
                 >
                   View Site
                 </Link>
+
+                {/* Notifications bell */}
+                <Link
+                  to="/dashboard/notifications"
+                  className="relative grid h-10 w-10 place-items-center rounded-xl border-[3px] border-border bg-white shadow-vibe-sm transition-transform hover:-translate-y-1 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+                  aria-label="Notifications"
+                >
+                  <Bell className="h-5 w-5 stroke-[2.5] text-foreground" />
+                  {/* Unread badge — swap 3 for real unread count when connected */}
+                  <span className="absolute -right-1 -top-1 grid h-4 w-4 place-items-center rounded-full bg-primary text-[9px] font-black text-white">
+                    3
+                  </span>
+                </Link>
+
                 {isCreatorView && (
                   <Link
                     to="/dashboard/creator/add-product"
