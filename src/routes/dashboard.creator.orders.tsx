@@ -73,7 +73,11 @@ function Orders() {
                       <td className="px-5 py-4 font-mono text-sm">{o.id}</td>
                       <td>{o.date}</td>
                       <td className="text-foreground/70">{typeof o.buyer === "string" ? o.buyer : o.buyer?.username}</td>
-                      <td className="font-semibold line-clamp-1">{o.product as string}</td>
+                      <td className="font-semibold line-clamp-1">
+                        {typeof o.product === "object" && o.product !== null
+                          ? (o.product as import("@/types").Product).title
+                          : String(o.product)}
+                      </td>
                       <td className="font-semibold text-foreground">
                         ₦{Number(o.amount).toLocaleString("en-US")}
                       </td>
@@ -109,10 +113,14 @@ function Orders() {
                     ₦{Number(o.amount).toLocaleString("en-US")}
                   </div>
                   <div className="mt-2 line-clamp-1 font-bold text-foreground/80">
-                    {o.product as string}
+                    {typeof o.product === "object" && o.product !== null
+                      ? (o.product as import("@/types").Product).title
+                      : String(o.product)}
                   </div>
                   <div className="mt-4 flex justify-between text-sm text-foreground/70 font-bold border-t-[3px] border-border pt-3">
-                    <span className="truncate mr-2">{o.buyer as string}</span>
+                    <span className="truncate mr-2">
+                      {typeof o.buyer === "string" ? o.buyer : o.buyer?.username}
+                    </span>
                     <span className="shrink-0">{o.date}</span>
                   </div>
                 </div>
