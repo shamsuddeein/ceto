@@ -31,7 +31,9 @@ function CreatorProfile() {
       ? products[0].creator_details || products[0].creator
       : { username, bio: "Turn what you know into income.", avatar_url: null };
 
-  const name = profile?.username ? profile.username.charAt(0).toUpperCase() + profile.username.slice(1) : "";
+  const name = profile?.username
+    ? profile.username.charAt(0).toUpperCase() + profile.username.slice(1)
+    : "";
   const displayAvatar = profile?.username ? profile.username.charAt(0).toUpperCase() : "";
 
   if (isLoading) {

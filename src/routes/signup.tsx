@@ -169,13 +169,20 @@ function SignupPage() {
                       role === "" ? "text-foreground/50" : "text-foreground"
                     }`}
                   >
-                    <option value="" disabled>Select account type</option>
+                    <option value="" disabled>
+                      Select account type
+                    </option>
                     <option value="customer">Customer: browse &amp; buy digital products</option>
                     <option value="creator">Creator: sell my products &amp; services</option>
                   </select>
                   {/* Custom chevron */}
                   <span className="pointer-events-none absolute inset-y-0 right-4 flex items-center">
-                    <svg className="h-4 w-4 stroke-[3px] text-foreground/60" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <svg
+                      className="h-4 w-4 stroke-[3px] text-foreground/60"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                    >
                       <path d="M6 9l6 6 6-6" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
                   </span>

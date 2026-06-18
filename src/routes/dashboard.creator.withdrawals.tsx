@@ -162,7 +162,9 @@ function Withdrawals() {
                 history.map((h: Transaction) => (
                   <tr key={h.id} className="transition-colors hover:bg-muted/50">
                     <td className="py-4 font-mono text-sm">WD-{h.id}</td>
-                    <td className="py-4">{new Date(h.requested_at || h.created_at).toLocaleDateString()}</td>
+                    <td className="py-4">
+                      {new Date(h.requested_at || h.created_at).toLocaleDateString()}
+                    </td>
                     <td className="py-4 text-foreground/70">Bank Transfer</td>
                     <td className="py-4 font-black text-foreground">
                       ₦{Number(h.amount).toLocaleString("en-US")}

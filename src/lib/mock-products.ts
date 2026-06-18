@@ -36,13 +36,15 @@ export const CATEGORIES = [
 export function tintClass(t: Product["tint"] | string | undefined) {
   if (!t) return "bg-muted";
   return (
-    ({
-      mint: "bg-tint-mint",
-      lilac: "bg-tint-lilac",
-      peach: "bg-tint-peach",
-      rose: "bg-tint-rose",
-      cream: "bg-tint-cream",
-    } as Record<string, string>)[t] || "bg-muted"
+    (
+      {
+        mint: "bg-tint-mint",
+        lilac: "bg-tint-lilac",
+        peach: "bg-tint-peach",
+        rose: "bg-tint-rose",
+        cream: "bg-tint-cream",
+      } as Record<string, string>
+    )[t] || "bg-muted"
   );
 }
 

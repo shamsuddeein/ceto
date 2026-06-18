@@ -119,7 +119,24 @@ npx playwright test e2e/vrt.spec.ts --update-snapshots
 
 ---
 
-## 6. Directory Structure Overview
+## 6. Backend API Integration & Environment Variables
+
+For connecting the frontend application to the Django REST API:
+
+- **API Base URL configuration:** Create a `.env` file in the project root containing the base API target URL:
+  ```env
+  VITE_API_URL=http://localhost:8000
+  ```
+- **Local Dev Server:** Start the Vite dev server with the env variable loaded:
+  ```bash
+  VITE_API_URL=http://localhost:8000 bun run dev
+  ```
+- **Axios HTTP Client:** Ensure the Axios client uses `withCredentials: true` to forward and receive HttpOnly session cookies for JWT verification.
+- **Cross-Domain SameSite Warning:** If the frontend is hosted on Vercel and backend is on Cloud Run, verify that simplejwt cookie settings have `SameSite="None"` and `Secure=True` configured on the server.
+
+---
+
+## 7. Directory Structure Overview
 
 ```text
 ceto/

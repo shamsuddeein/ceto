@@ -129,14 +129,26 @@ function MarketplaceExplore() {
       ? products.slice(0, 6)
       : [
           ...products,
-          ...[
+          ...([
             { id: "mock-1", slug: "mock-1", title: "Digital eBook", price: 4500, type: "ebook" },
             { id: "mock-2", slug: "mock-2", title: "Video Course", price: 30000, type: "course" },
-            { id: "mock-3", slug: "mock-3", title: "Notion Template", price: 15000, type: "template" },
-            { id: "mock-4", slug: "mock-4", title: "1-on-1 Coaching", price: 90000, type: "service" },
+            {
+              id: "mock-3",
+              slug: "mock-3",
+              title: "Notion Template",
+              price: 15000,
+              type: "template",
+            },
+            {
+              id: "mock-4",
+              slug: "mock-4",
+              title: "1-on-1 Coaching",
+              price: 90000,
+              type: "service",
+            },
             { id: "mock-5", slug: "mock-5", title: "Design Assets", price: 5000, type: "software" },
             { id: "mock-6", slug: "mock-6", title: "Event Ticket", price: 10000, type: "ticket" },
-          ] as unknown as Product[],
+          ] as unknown as Product[]),
         ].slice(0, 6);
 
   return (

@@ -412,9 +412,7 @@ function PasswordTab() {
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
             className={`w-full rounded-2xl border-[3px] border-border bg-background px-4 py-3 font-bold text-foreground outline-none shadow-vibe-sm transition-all focus:translate-x-[2px] focus:translate-y-[2px] focus:shadow-none ${
-              confirmPassword && confirmPassword !== newPassword
-                ? "border-red-400 bg-red-50"
-                : ""
+              confirmPassword && confirmPassword !== newPassword ? "border-red-400 bg-red-50" : ""
             }`}
           />
           {confirmPassword && confirmPassword !== newPassword && (
