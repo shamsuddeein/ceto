@@ -1,4 +1,4 @@
-import { Link, useLocation } from "@tanstack/react-router";
+import { Link, useLocation, useNavigate } from "@tanstack/react-router";
 import { useState, useRef, useEffect } from "react";
 import {
   LayoutDashboard,
@@ -66,6 +66,7 @@ export function DashboardLayout({ title, children }: { title: string; children: 
   const location = useLocation();
   const isCreatorView = location.pathname.startsWith("/dashboard/creator");
 
+  const navigate = useNavigate();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -83,7 +84,7 @@ export function DashboardLayout({ title, children }: { title: string; children: 
     if (typeof window !== "undefined") {
       window.localStorage.removeItem("mock_token");
     }
-    window.location.href = "/login";
+    navigate({ to: "/login" });
   }
 
   // Determine which nav to show based on if user is in creator route or not

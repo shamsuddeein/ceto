@@ -138,7 +138,7 @@ function ProductDetails() {
                 </div>
                 <Link
                   to="/checkout"
-                  search={{ product: p.id }}
+                  search={{ productId: String(p.id) }}
                   className="rounded-md bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground hover:bg-primary/90"
                 >
                   Buy now

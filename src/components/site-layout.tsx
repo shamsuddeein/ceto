@@ -60,7 +60,7 @@ export function SiteHeader() {
     if (typeof window !== "undefined") {
       window.localStorage.removeItem("mock_token");
     }
-    window.location.href = "/login";
+    navigate({ to: "/login" });
   }
 
   useEffect(() => {

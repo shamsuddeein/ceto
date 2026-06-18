@@ -8,15 +8,16 @@ import { APIError, Product } from "@/types";
 
 export const Route = createFileRoute("/checkout")({
   head: () => ({ meta: [{ title: "Checkout | Cetoh" }] }),
-  validateSearch: (search: Record<string, unknown>) => {
+  validateSearch: (search: Record<string, unknown>): { productId?: string } => {
     return {
       productId: search.productId as string | undefined,
     };
   },
+  loaderDeps: ({ search }) => ({ productId: search.productId }),
   loader: ({ deps }) => {
     return {
       product: deps.productId
-        ? mockProducts.find((p) => p.id === deps.productId) || mockProducts[0]
+        ? mockProducts.find((p) => String(p.id) === deps.productId) || mockProducts[0]
         : mockProducts[0],
     };
   },

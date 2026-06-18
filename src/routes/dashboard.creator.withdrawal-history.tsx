@@ -35,7 +35,7 @@ function WithdrawalHistory() {
           </p>
         </div>
         <Link
-          to="/withdrawals"
+          to="/dashboard/creator/withdrawals"
           className="inline-flex items-center gap-2 rounded-full border-[3px] border-border bg-primary px-6 py-4 text-base font-black text-white shadow-vibe transition-transform hover:-translate-y-1 hover:shadow-vibe-hover"
         >
           + New withdrawal

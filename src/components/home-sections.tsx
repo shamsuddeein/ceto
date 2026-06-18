@@ -130,13 +130,13 @@ function MarketplaceExplore() {
       : [
           ...products,
           ...[
-            { title: "Digital eBook", price: 4500, type: "ebook" },
-            { title: "Video Course", price: 30000, type: "course" },
-            { title: "Notion Template", price: 15000, type: "template" },
-            { title: "1-on-1 Coaching", price: 90000, type: "service" },
-            { title: "Design Assets", price: 5000, type: "software" },
-            { title: "Event Ticket", price: 10000, type: "ticket" },
-          ],
+            { id: "mock-1", slug: "mock-1", title: "Digital eBook", price: 4500, type: "ebook" },
+            { id: "mock-2", slug: "mock-2", title: "Video Course", price: 30000, type: "course" },
+            { id: "mock-3", slug: "mock-3", title: "Notion Template", price: 15000, type: "template" },
+            { id: "mock-4", slug: "mock-4", title: "1-on-1 Coaching", price: 90000, type: "service" },
+            { id: "mock-5", slug: "mock-5", title: "Design Assets", price: 5000, type: "software" },
+            { id: "mock-6", slug: "mock-6", title: "Event Ticket", price: 10000, type: "ticket" },
+          ] as unknown as Product[],
         ].slice(0, 6);
 
   return (
@@ -206,7 +206,7 @@ function MarketplaceExplore() {
                       to={item.id ? "/products/$id" : "/marketplace"}
                       params={item.id ? { id: String(item.id) } : {}}
                       key={i}
-                      className={`flex flex-col rounded-[1.5rem] border-[4px] border-border ${tintClass((i % 4) as 0 | 1 | 2 | 3)} p-4 shadow-vibe-sm transition-transform hover:-translate-y-1 hover:shadow-vibe cursor-pointer relative overflow-hidden`}
+                      className={`flex flex-col rounded-[1.5rem] border-[4px] border-border ${tintClass(["mint", "lilac", "peach", "rose"][i % 4])} p-4 shadow-vibe-sm transition-transform hover:-translate-y-1 hover:shadow-vibe cursor-pointer relative overflow-hidden`}
                     >
                       <div className="flex h-28 items-center justify-center rounded-xl border-[3px] border-border bg-white relative overflow-hidden">
                         {item.cover_image ? (

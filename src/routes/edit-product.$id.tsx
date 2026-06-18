@@ -1,14 +1,14 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
-import { Loader2, ArrowLeft, Trash2 } from "lucide-react";
+import { Loader2, ArrowLeft, Trash2, Upload, Save } from "lucide-react";
 import { DashboardLayout } from "@/components/dashboard-layout";
-import { APIError, Product } from "@/types";
+import { Product } from "@/types";
 import { tintClass } from "@/lib/mock-products";
 import { products as mockProducts } from "@/lib/mock-data";
 
 export const Route = createFileRoute("/edit-product/$id")({
-  head: ({ params }) => ({ meta: [{ title: `Edit ${params.id} | Cetoh` }] }),
+  head: ({ params }) => ({ meta: [{ title: `Edit Product | Cetoh` }] }),
   component: EditProduct,
 });
 
@@ -20,21 +20,17 @@ function EditProduct() {
   const [title, setTitle] = useState("");
   const [price, setPrice] = useState(0);
   const [desc, setDesc] = useState("");
+  const [isPublished, setIsPublished] = useState(false);
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     if (p) {
       setTitle(p.title || "");
       setPrice(Number(p.price) || 0);
       setDesc(p.description || "");
+      setIsPublished(p.is_published ?? false);
     }
   }, [p]);
-
-  const updateMutation = {
-    isPending: false,
-    mutate: (data: Partial<Product>) => {
-      toast.success("Product updated successfully");
-    },
-  };
 
   if (pLoading)
     return (
@@ -44,127 +40,172 @@ function EditProduct() {
         </div>
       </DashboardLayout>
     );
+
   if (!p)
     return (
       <DashboardLayout title="Edit Product">
-        <p className="text-center text-foreground/60">Product not found.</p>
+        <p className="text-center text-foreground/60 py-20">Product not found.</p>
       </DashboardLayout>
     );
 
   async function save(e: React.FormEvent) {
     e.preventDefault();
-    updateMutation.mutate({ title, price, description: desc });
+    setSaving(true);
+    await new Promise((r) => setTimeout(r, 800));
+    toast.success("Product updated successfully!");
+    setSaving(false);
   }
+
   return (
     <DashboardLayout title="Edit Product">
       <Link
-        to="/my-products"
-        className="mb-4 inline-flex items-center gap-1 text-sm text-foreground/70 hover:text-primary"
+        to="/dashboard/creator/my-products"
+        className="mb-8 inline-flex items-center gap-2 rounded-xl border-[3px] border-border bg-white px-4 py-2 text-sm font-black text-foreground shadow-vibe-sm transition-transform hover:-translate-y-1"
       >
-        <ArrowLeft className="h-4 w-4" /> Back to my products
+        <ArrowLeft className="h-4 w-4 stroke-[3px]" /> Back to My Products
       </Link>
+
       <form onSubmit={save} className="grid max-w-5xl gap-6 lg:grid-cols-3">
+        {/* Left column */}
         <div className="space-y-6 lg:col-span-2">
-          <Card title="Product details">
-            <Field label="Title">
-              <input
-                required
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                className="input"
-              />
-            </Field>
-            <Field label="Description">
-              <textarea
-                rows={6}
-                value={desc}
-                onChange={(e) => setDesc(e.target.value)}
-                className="input resize-none"
-              />
-            </Field>
-          </Card>
-          <Card title="Files">
-            <div className="rounded-lg border border-dashed border-border bg-surface p-6 text-center text-sm text-foreground/60">
-              Current file:{" "}
-              <span className="font-mono text-foreground">
-                {p.digital_file ? p.digital_file.split("/").pop() : "No file uploaded"}
-              </span>{" "}
-              ·{" "}
+          {/* Product Details */}
+          <div className="rounded-[2.5rem] border-[4px] border-border bg-white p-6 sm:p-8 shadow-vibe">
+            <h2 className="font-display text-xl font-black text-foreground">Product Details</h2>
+            <div className="mt-6 space-y-6">
+              <label className="block">
+                <span className="mb-2 block text-base font-black text-foreground">Title</span>
+                <input
+                  required
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                  placeholder="e.g. Ultimate Notion Template Pack"
+                  className="w-full rounded-2xl border-[3px] border-border bg-background px-4 py-3 font-bold text-foreground outline-none shadow-vibe-sm transition-all focus:translate-x-[2px] focus:translate-y-[2px] focus:shadow-none"
+                />
+              </label>
+              <label className="block">
+                <span className="mb-2 block text-base font-black text-foreground">Description</span>
+                <textarea
+                  rows={6}
+                  value={desc}
+                  onChange={(e) => setDesc(e.target.value)}
+                  placeholder="Describe what your customers will get…"
+                  className="w-full resize-none rounded-2xl border-[3px] border-border bg-background px-4 py-3 font-bold text-foreground outline-none shadow-vibe-sm transition-all focus:translate-x-[2px] focus:translate-y-[2px] focus:shadow-none"
+                />
+              </label>
+            </div>
+          </div>
+
+          {/* Digital File */}
+          <div className="rounded-[2.5rem] border-[4px] border-border bg-white p-6 sm:p-8 shadow-vibe">
+            <h2 className="font-display text-xl font-black text-foreground">Digital File</h2>
+            <div className="mt-6 rounded-2xl border-[3px] border-dashed border-border bg-muted p-8 text-center">
+              <Upload className="mx-auto h-10 w-10 stroke-[2] text-foreground/50" />
+              <p className="mt-3 text-base font-bold text-foreground/70">
+                Current file:{" "}
+                <span className="font-mono text-foreground">
+                  {p.digital_file ? p.digital_file.split("/").pop() : "No file uploaded"}
+                </span>
+              </p>
               <button
                 type="button"
-                className="font-semibold text-primary hover:underline"
-                onClick={() => toast.error("File replace requires Week 3 integration")}
+                onClick={() => toast.error("File replace coming in a future update")}
+                className="mt-4 inline-flex items-center gap-2 rounded-xl border-[3px] border-border bg-white px-5 py-2.5 text-sm font-black shadow-vibe-sm transition-transform hover:-translate-y-1"
               >
-                Replace
+                Replace file
               </button>
             </div>
-          </Card>
+          </div>
         </div>
+
+        {/* Right column */}
         <div className="space-y-6">
-          <Card title="Pricing">
-            <Field label="Price (USD)">
-              <input
-                type="number"
-                min={0}
-                value={price}
-                onChange={(e) => setPrice(Number(e.target.value))}
-                className="input"
-              />
-            </Field>
-          </Card>
-          <Card title="Cover">
-            <div className="aspect-[4/3] rounded-lg bg-muted relative overflow-hidden">
+          {/* Pricing */}
+          <div className="rounded-[2.5rem] border-[4px] border-border bg-white p-6 shadow-vibe">
+            <h2 className="font-display text-xl font-black text-foreground">Pricing</h2>
+            <div className="mt-6">
+              <label className="block">
+                <span className="mb-2 block text-base font-black text-foreground">Price (NGN)</span>
+                <div className="flex items-center rounded-2xl border-[3px] border-border bg-background shadow-vibe-sm transition-all focus-within:translate-x-[2px] focus-within:translate-y-[2px] focus-within:shadow-none overflow-hidden">
+                  <span className="pl-4 font-black text-foreground/50">₦</span>
+                  <input
+                    type="number"
+                    min={0}
+                    value={price}
+                    onChange={(e) => setPrice(Number(e.target.value))}
+                    className="w-full bg-transparent px-3 py-3 font-bold text-foreground outline-none"
+                  />
+                </div>
+              </label>
+            </div>
+          </div>
+
+          {/* Cover Image */}
+          <div className="rounded-[2.5rem] border-[4px] border-border bg-white p-6 shadow-vibe">
+            <h2 className="font-display text-xl font-black text-foreground">Cover Image</h2>
+            <div
+              className={`mt-6 aspect-[4/3] rounded-2xl border-[3px] border-border overflow-hidden relative ${tintClass(p.tint || "mint")}`}
+            >
               {p.cover_image ? (
                 <img src={p.cover_image} alt={p.title} className="w-full h-full object-cover" />
               ) : (
-                <div className="w-full h-full flex items-center justify-center text-muted-foreground">
-                  No Image
+                <div className="w-full h-full flex items-center justify-center text-foreground/40 font-bold text-sm">
+                  No Cover Image
                 </div>
               )}
             </div>
             <button
               type="button"
-              onClick={() => toast.error("Cover replace requires Week 3 integration")}
-              className="mt-3 w-full rounded-md border border-border py-2 text-sm font-semibold"
+              onClick={() => toast.error("Cover replace coming in a future update")}
+              className="mt-4 w-full inline-flex items-center justify-center gap-2 rounded-xl border-[3px] border-border bg-tint-cream px-5 py-2.5 text-sm font-black shadow-vibe-sm transition-transform hover:-translate-y-1"
             >
-              Change cover
+              <Upload className="h-4 w-4 stroke-[3px]" /> Change cover
             </button>
-          </Card>
+          </div>
+
+          {/* Publish status */}
+          <div className="rounded-[2.5rem] border-[4px] border-border bg-white p-6 shadow-vibe">
+            <h2 className="font-display text-xl font-black text-foreground">Visibility</h2>
+            <label className="mt-6 flex cursor-pointer items-center justify-between gap-4 rounded-2xl border-[3px] border-border bg-tint-cream p-4 shadow-vibe-sm transition-transform hover:-translate-y-1">
+              <div>
+                <p className="text-base font-black text-foreground">
+                  {isPublished ? "Live" : "Draft"}
+                </p>
+                <p className="mt-0.5 text-sm font-bold text-foreground/70">
+                  {isPublished ? "Visible in marketplace" : "Not visible to buyers yet"}
+                </p>
+              </div>
+              <input
+                type="checkbox"
+                checked={isPublished}
+                onChange={() => setIsPublished(!isPublished)}
+                className="h-6 w-6 accent-[color:var(--color-primary)] cursor-pointer"
+              />
+            </label>
+          </div>
+
+          {/* Action buttons */}
           <button
             type="submit"
-            disabled={updateMutation.isPending}
-            className="inline-flex w-full items-center justify-center gap-2 rounded-md bg-primary py-3 text-sm font-semibold text-primary-foreground hover:bg-primary/90 disabled:opacity-70"
+            disabled={saving}
+            className="inline-flex w-full items-center justify-center gap-2 rounded-full border-[3px] border-border bg-primary py-4 text-base font-black text-white shadow-vibe hover:-translate-y-1 hover:shadow-vibe-hover disabled:opacity-70 transition-all"
           >
-            {updateMutation.isPending && <Loader2 className="h-4 w-4 animate-spin" />}{" "}
-            {updateMutation.isPending ? "Saving..." : "Save changes"}
+            {saving ? (
+              <Loader2 className="h-5 w-5 animate-spin stroke-[3px]" />
+            ) : (
+              <Save className="h-5 w-5 stroke-[3px]" />
+            )}{" "}
+            {saving ? "Saving..." : "Save changes"}
           </button>
+
           <button
             type="button"
-            onClick={() => toast.error("Delete disabled")}
-            className="inline-flex w-full items-center justify-center gap-2 rounded-md border border-destructive/30 py-3 text-sm font-semibold text-destructive hover:bg-destructive/10"
+            onClick={() => toast.error("Delete disabled in demo")}
+            className="inline-flex w-full items-center justify-center gap-2 rounded-full border-[3px] border-border bg-tint-rose py-4 text-base font-black text-foreground shadow-vibe-sm transition-transform hover:-translate-y-1"
           >
-            <Trash2 className="h-4 w-4" /> Delete product
+            <Trash2 className="h-5 w-5 stroke-[3px]" /> Delete product
           </button>
         </div>
       </form>
-      <style>{`.input{width:100%;border:1px solid var(--color-border);background:var(--color-card);border-radius:0.5rem;padding:0.5rem 0.75rem;font-size:0.875rem;outline:none}.input:focus{border-color:var(--color-primary);box-shadow:0 0 0 2px color-mix(in oklab, var(--color-primary) 20%, transparent)}`}</style>
     </DashboardLayout>
-  );
-}
-
-function Card({ title, children }: { title: string; children: React.ReactNode }) {
-  return (
-    <div className="rounded-2xl border border-border bg-card p-6">
-      <h3 className="font-display text-lg font-semibold text-primary">{title}</h3>
-      <div className="mt-4 space-y-4">{children}</div>
-    </div>
-  );
-}
-function Field({ label, children }: { label: string; children: React.ReactNode }) {
-  return (
-    <label className="block">
-      <span className="mb-1.5 block text-sm font-semibold">{label}</span>
-      {children}
-    </label>
   );
 }

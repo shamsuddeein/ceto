@@ -1,8 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useState } from "react";
 import { DashboardLayout } from "@/components/dashboard-layout";
-import { Download, Search } from "lucide-react";
+import { Download, Search, X } from "lucide-react";
 
 export const Route = createFileRoute("/dashboard/creator/customers")({
+  head: () => ({ meta: [{ title: "Customers | Cetoh" }] }),
   component: CustomersComponent,
 });
 
@@ -55,6 +57,14 @@ const CUSTOMERS = [
 ];
 
 function CustomersComponent() {
+  const [q, setQ] = useState("");
+
+  const filtered = CUSTOMERS.filter(
+    (c) =>
+      c.name.toLowerCase().includes(q.toLowerCase()) ||
+      c.email.toLowerCase().includes(q.toLowerCase()),
+  );
+
   return (
     <DashboardLayout title="Customers">
       <div className="rounded-[2.5rem] border-[4px] border-border bg-white p-8 shadow-vibe">
@@ -67,12 +77,22 @@ function CustomersComponent() {
           </div>
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 w-full sm:w-auto">
             <div className="relative flex-1 flex items-center rounded-[1.5rem] border-[3px] border-border bg-white px-4 py-3 shadow-vibe-sm focus-within:translate-x-[2px] focus-within:translate-y-[2px] focus-within:shadow-none transition-all">
-              <Search className="h-5 w-5 text-foreground stroke-[3px]" />
+              <Search className="h-5 w-5 text-foreground stroke-[3px] shrink-0" />
               <input
                 type="text"
+                value={q}
+                onChange={(e) => setQ(e.target.value)}
                 placeholder="Search customers..."
                 className="ml-3 w-full bg-transparent text-base font-bold text-foreground outline-none placeholder:text-foreground/50"
               />
+              {q && (
+                <button
+                  onClick={() => setQ("")}
+                  className="rounded-full bg-muted p-1 hover:bg-muted-foreground/20 text-foreground/70 shrink-0"
+                >
+                  <X className="h-4 w-4 stroke-[3px]" />
+                </button>
+              )}
             </div>
             <button className="inline-flex justify-center items-center gap-2 rounded-xl border-[3px] border-border bg-tint-mint px-6 py-3 text-base font-black text-foreground shadow-vibe-sm transition-transform hover:-translate-y-1">
               <Download className="h-5 w-5 stroke-[3px]" /> Export
@@ -93,7 +113,7 @@ function CustomersComponent() {
                 </tr>
               </thead>
               <tbody className="divide-y-[3px] divide-border font-medium">
-                {CUSTOMERS.map((c) => (
+                {filtered.map((c) => (
                   <tr key={c.id} className="transition-colors hover:bg-muted/50">
                     <td className="py-4 font-semibold">{c.name}</td>
                     <td className="py-4 text-foreground/70">{c.email}</td>

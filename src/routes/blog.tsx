@@ -1,17 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import {
-  Calendar,
-  Clock,
-  ArrowRight,
-  Target,
-  DollarSign,
-  Megaphone,
-  PenTool,
-  Wrench,
-  FileText,
-} from "lucide-react";
+import { Calendar, Clock, ArrowRight } from "lucide-react";
 import { SiteHeader, SiteFooter } from "@/components/site-layout";
 import { tintClass } from "@/lib/mock-products";
+import { POSTS, getBlogIcon } from "@/lib/blog";
 
 export const Route = createFileRoute("/blog")({
   head: () => ({
@@ -25,90 +16,6 @@ export const Route = createFileRoute("/blog")({
   }),
   component: BlogHome,
 });
-
-export const POSTS = [
-  {
-    slug: "launching-your-first-digital-product",
-    title: "How to launch your first digital product in 30 days",
-    excerpt:
-      "A practical, no-fluff guide to going from idea to first paying customer in one month.",
-    author: "Amara Okafor",
-    date: "June 5, 2026",
-    readTime: "8 min",
-    tag: "Strategy",
-    tint: "mint" as const,
-  },
-  {
-    slug: "pricing-your-ebook",
-    title: "The psychology of pricing your eBook (and not undercharging)",
-    excerpt:
-      "Why creators leave money on the table - and the 3-tier pricing framework that fixes it.",
-    author: "Kwame Boateng",
-    date: "May 28, 2026",
-    readTime: "6 min",
-    tag: "Pricing",
-    tint: "lilac" as const,
-  },
-  {
-    slug: "building-an-audience",
-    title: "Building an audience before you have a product",
-    excerpt:
-      "Pre-launch communities convert 10x better. Here's how the top Cetoh creators build theirs.",
-    author: "Zainab Yusuf",
-    date: "May 14, 2026",
-    readTime: "10 min",
-    tag: "Marketing",
-    tint: "peach" as const,
-  },
-  {
-    slug: "from-side-hustle-to-six-figures",
-    title: "From side-hustle to six figures: a creator's story",
-    excerpt:
-      "Tunde went from selling Notion templates after work to a ₦18M/yr business in 18 months.",
-    author: "Lerato Mokoena",
-    date: "Apr 30, 2026",
-    readTime: "12 min",
-    tag: "Stories",
-    tint: "rose" as const,
-  },
-  {
-    slug: "best-tools-for-creators-2026",
-    title: "The best tools for digital creators in 2026",
-    excerpt: "Our hand-picked stack for writers, course creators, and designers shipping today.",
-    author: "Chinedu Eze",
-    date: "Apr 22, 2026",
-    readTime: "7 min",
-    tag: "Tools",
-    tint: "cream" as const,
-  },
-  {
-    slug: "writing-a-product-page-that-converts",
-    title: "Writing a product page that converts (with examples)",
-    excerpt: "Steal these copy patterns from the top-selling products on Cetoh.",
-    author: "Amara Okafor",
-    date: "Apr 10, 2026",
-    readTime: "9 min",
-    tag: "Copywriting",
-    tint: "mint" as const,
-  },
-];
-
-export function getBlogIcon(tag: string) {
-  switch (tag) {
-    case "Strategy":
-      return Target;
-    case "Pricing":
-      return DollarSign;
-    case "Marketing":
-      return Megaphone;
-    case "Copywriting":
-      return PenTool;
-    case "Tools":
-      return Wrench;
-    default:
-      return FileText;
-  }
-}
 
 function BlogHome() {
   const [featured, ...rest] = POSTS;

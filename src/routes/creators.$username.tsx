@@ -31,8 +31,8 @@ function CreatorProfile() {
       ? products[0].creator_details || products[0].creator
       : { username, bio: "Turn what you know into income.", avatar_url: null };
 
-  const name = profile.username.charAt(0).toUpperCase() + profile.username.slice(1);
-  const displayAvatar = profile.username.charAt(0).toUpperCase();
+  const name = profile?.username ? profile.username.charAt(0).toUpperCase() + profile.username.slice(1) : "";
+  const displayAvatar = profile?.username ? profile.username.charAt(0).toUpperCase() : "";
 
   if (isLoading) {
     return (
@@ -54,7 +54,7 @@ function CreatorProfile() {
 
         {/* Profile Avatar */}
         <div className="flex h-24 w-24 shrink-0 items-center justify-center rounded-full bg-primary text-xl font-bold text-primary-foreground shadow-md overflow-hidden">
-          {profile.avatar_url ? (
+          {profile?.avatar_url ? (
             <img src={profile.avatar_url} alt={name} className="h-full w-full object-cover" />
           ) : (
             displayAvatar
@@ -64,7 +64,7 @@ function CreatorProfile() {
         <h1 className="mt-8 font-display text-3xl font-bold text-primary">{name}</h1>
 
         <div className="mt-6 space-y-2 text-[15px] leading-relaxed text-foreground/80 whitespace-pre-wrap">
-          {profile.bio || "Turn what you know into income."}
+          {profile?.bio || "Turn what you know into income."}
         </div>
 
         <div className="mt-10 flex gap-5 text-foreground/90">

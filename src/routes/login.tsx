@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
 import { toast } from "sonner";
@@ -26,6 +26,7 @@ function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
   const [socialLoading, setSocialLoading] = useState<string | null>(null);
+  const navigate = useNavigate();
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -45,7 +46,7 @@ function LoginPage() {
         window.localStorage.setItem("mock_token", "mock-session-token");
       }
       toast.success("Welcome back! Redirecting...");
-      setTimeout(() => (window.location.href = "/dashboard"), 1000);
+      setTimeout(() => navigate({ to: "/dashboard" }), 1000);
     } catch (err: APIError | unknown) {
       const apiErr = err as APIError;
       const msg = apiErr.response?.data?.detail || "Invalid credentials. Please try again.";

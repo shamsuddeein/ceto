@@ -12,6 +12,7 @@ import {
 import { ArrowUpRight, Users, Eye, CreditCard, Activity } from "lucide-react";
 
 export const Route = createFileRoute("/dashboard/creator/analytics")({
+  head: () => ({ meta: [{ title: "Analytics | Cetoh" }] }),
   component: AnalyticsComponent,
 });
 

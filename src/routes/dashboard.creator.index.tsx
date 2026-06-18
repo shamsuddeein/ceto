@@ -1,5 +1,4 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState } from "react";
 import { TrendingUp, Banknote, ShoppingBag, Eye, ArrowUpRight, PackageOpen } from "lucide-react";
 import { DashboardLayout } from "@/components/dashboard-layout";
 import { EmptyState } from "@/components/ui/empty-state";

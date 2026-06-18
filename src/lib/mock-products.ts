@@ -33,15 +33,16 @@ export const CATEGORIES = [
   { slug: "design", name: "Design Assets", count: 504, tint: "peach" },
 ] as const;
 
-export function tintClass(t: Product["tint"] | string) {
+export function tintClass(t: Product["tint"] | string | undefined) {
+  if (!t) return "bg-muted";
   return (
-    {
+    ({
       mint: "bg-tint-mint",
       lilac: "bg-tint-lilac",
       peach: "bg-tint-peach",
       rose: "bg-tint-rose",
       cream: "bg-tint-cream",
-    }[t as Product["tint"]] || "bg-muted"
+    } as Record<string, string>)[t] || "bg-muted"
   );
 }
 

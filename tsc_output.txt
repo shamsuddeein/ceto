@@ -1,0 +1,58 @@
+src/components/home-sections.tsx(202,38): error TS2345: Argument of type '(item: Product, i: number) => JSX.Element' is not assignable to parameter of type '(value: MockProduct | { title: string; price: number; type: string; }, index: number, array: (MockProduct | { title: string; price: number; type: string; })[]) => Element'.
+  Types of parameters 'item' and 'value' are incompatible.
+    Type 'MockProduct | { title: string; price: number; type: string; }' is not assignable to type 'Product'.
+      Type '{ title: string; price: number; type: string; }' is missing the following properties from type 'Product': id, slug
+src/components/home-sections.tsx(209,105): error TS2345: Argument of type '0 | 1 | 2 | 3' is not assignable to parameter of type 'string | undefined'.
+  Type 'number' is not assignable to type 'string'.
+src/components/site-layout.tsx(101,12): error TS2741: Property 'search' is missing in type '{ children: Element; to: "/checkout"; "aria-label": string; className: string; }' but required in type 'MakeRequiredSearchParams<RouterCore<Route<Register, any, "/", "/", string, "__root__", undefined, {}, { queryClient: QueryClient; }, AnyContext, AnyContext, ... 6 more ..., undefined>, "never", false, RouterHistory, Record<...>>, string, "/checkout">'.
+src/components/site-layout.tsx(179,16): error TS2741: Property 'search' is missing in type '{ children: Element; to: "/checkout"; onClick: () => void; "aria-label": string; className: string; }' but required in type 'MakeRequiredSearchParams<RouterCore<Route<Register, any, "/", "/", string, "__root__", undefined, {}, { queryClient: QueryClient; }, AnyContext, AnyContext, ... 6 more ..., undefined>, "never", false, RouterHistory, Record<...>>, string, "/checkout">'.
+src/lib/mock-products.ts(44,7): error TS2538: Type 'undefined' cannot be used as an index type.
+src/routes/checkout.tsx(18,21): error TS2339: Property 'productId' does not exist on type '{}'.
+src/routes/checkout.tsx(19,50): error TS2339: Property 'productId' does not exist on type '{}'.
+src/routes/creators.$username.tsx(34,16): error TS18048: 'profile' is possibly 'undefined'.
+src/routes/creators.$username.tsx(34,59): error TS18048: 'profile' is possibly 'undefined'.
+src/routes/creators.$username.tsx(35,25): error TS18048: 'profile' is possibly 'undefined'.
+src/routes/creators.$username.tsx(57,12): error TS18048: 'profile' is possibly 'undefined'.
+src/routes/creators.$username.tsx(58,23): error TS18048: 'profile' is possibly 'undefined'.
+src/routes/creators.$username.tsx(67,12): error TS18048: 'profile' is possibly 'undefined'.
+src/routes/creators.$username.tsx(118,66): error TS2322: Type 'import("/home/deen/Desktop/CETO-FRONDEND/ceto/src/types/index").Product' is not assignable to type 'import("/home/deen/Desktop/CETO-FRONDEND/ceto/src/lib/mock-products").Product'.
+  Type 'Product' is not assignable to type '{ creatorHandle?: string | undefined; type?: "audio" | "template" | "ebook" | "course" | "service" | undefined; cover?: string | undefined; rating?: number | undefined; tint?: "mint" | ... 4 more ... | undefined; saved?: boolean | undefined; }'.
+    Types of property 'type' are incompatible.
+      Type 'string | undefined' is not assignable to type '"audio" | "template" | "ebook" | "course" | "service" | undefined'.
+        Type 'string' is not assignable to type '"audio" | "template" | "ebook" | "course" | "service" | undefined'.
+src/routes/dashboard.creator.earnings.tsx(68,64): error TS2339: Property 'buyer_email' does not exist on type 'Transaction'.
+src/routes/dashboard.creator.my-products.tsx(87,120): error TS2345: Argument of type '0 | 1 | 2 | 3' is not assignable to parameter of type 'string | undefined'.
+  Type 'number' is not assignable to type 'string'.
+src/routes/dashboard.creator.orders.tsx(75,58): error TS2322: Type 'string | UserProfile' is not assignable to type 'ReactNode'.
+  Type 'UserProfile' is not assignable to type 'ReactNode'.
+src/routes/dashboard.creator.withdrawals.tsx(54,32): error TS2339: Property 'bank_details' does not exist on type 'User & { profile: UserProfile & { website?: string | undefined; avatar_url?: string | null | undefined; bank_details?: { method?: string | undefined; account_name?: string | undefined; account_number?: string | undefined; bank_name?: string | undefined; } | undefined; notification_preferences?: Record<...> | undefin...'.
+src/routes/dashboard.creator.withdrawals.tsx(165,52): error TS2769: No overload matches this call.
+  Overload 1 of 4, '(value: string | number | Date): Date', gave the following error.
+    Argument of type 'string | undefined' is not assignable to parameter of type 'string | number | Date'.
+      Type 'undefined' is not assignable to type 'string | number | Date'.
+  Overload 2 of 4, '(value: string | number): Date', gave the following error.
+    Argument of type 'string | undefined' is not assignable to parameter of type 'string | number'.
+      Type 'undefined' is not assignable to type 'string | number'.
+src/routes/downloads.tsx(66,33): error TS2322: Type 'string | number' is not assignable to type 'string'.
+  Type 'number' is not assignable to type 'string'.
+src/routes/edit-product.$id.tsx(146,121): error TS2345: Argument of type 'number' is not assignable to parameter of type 'string'.
+src/routes/marketplace.tsx(87,39): error TS2322: Type 'MockProduct' is not assignable to type 'Product'.
+  Type 'MockProduct' is not assignable to type '{ creatorHandle?: string | undefined; type?: "audio" | "template" | "ebook" | "course" | "service" | undefined; cover?: string | undefined; rating?: number | undefined; tint?: "mint" | ... 4 more ... | undefined; saved?: boolean | undefined; }'.
+    Types of property 'type' are incompatible.
+      Type 'string | undefined' is not assignable to type '"audio" | "template" | "ebook" | "course" | "service" | undefined'.
+        Type 'string' is not assignable to type '"audio" | "template" | "ebook" | "course" | "service" | undefined'.
+src/routes/products.$id.tsx(141,29): error TS2353: Object literal may only specify known properties, and 'product' does not exist in type '{ productId: string | undefined; } | ParamsReducerFn<RouterCore<Route<Register, any, "/", "/", string, "__root__", undefined, {}, { queryClient: QueryClient; }, AnyContext, ... 7 more ..., undefined>, "never", false, RouterHistory, Record<...>>, "SEARCH", string, "/checkout">'.
+src/routes/products.$id.tsx(164,41): error TS2322: Type 'MockProduct' is not assignable to type 'Product'.
+  Type 'MockProduct' is not assignable to type '{ creatorHandle?: string | undefined; type?: "audio" | "template" | "ebook" | "course" | "service" | undefined; cover?: string | undefined; rating?: number | undefined; tint?: "mint" | ... 4 more ... | undefined; saved?: boolean | undefined; }'.
+    Types of property 'type' are incompatible.
+      Type 'string | undefined' is not assignable to type '"audio" | "template" | "ebook" | "course" | "service" | undefined'.
+        Type 'string' is not assignable to type '"audio" | "template" | "ebook" | "course" | "service" | undefined'.
+src/routes/search.tsx(66,41): error TS2322: Type 'import("/home/deen/Desktop/CETO-FRONDEND/ceto/src/types/index").Product' is not assignable to type 'import("/home/deen/Desktop/CETO-FRONDEND/ceto/src/lib/mock-products").Product'.
+  Type 'Product' is not assignable to type '{ creatorHandle?: string | undefined; type?: "audio" | "template" | "ebook" | "course" | "service" | undefined; cover?: string | undefined; rating?: number | undefined; tint?: "mint" | ... 4 more ... | undefined; saved?: boolean | undefined; }'.
+    Types of property 'type' are incompatible.
+      Type 'string | undefined' is not assignable to type '"audio" | "template" | "ebook" | "course" | "service" | undefined'.
+        Type 'string' is not assignable to type '"audio" | "template" | "ebook" | "course" | "service" | undefined'.
+src/routes/signup.tsx(80,9): error TS7053: Element implicitly has an 'any' type because expression of type '0' can't be used to index type '{}'.
+  Property '0' does not exist on type '{}'.
+src/routes/signup.tsx(81,9): error TS7053: Element implicitly has an 'any' type because expression of type '0' can't be used to index type '{}'.
+  Property '0' does not exist on type '{}'.

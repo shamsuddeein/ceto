@@ -8,7 +8,7 @@ import {
   Scripts,
   useRouterState,
 } from "@tanstack/react-router";
-import { useEffect, useState, type ReactNode, Profiler } from "react";
+import { useEffect, useState, useRef, type ReactNode, Profiler } from "react";
 import { Toaster } from "sonner";
 import { SiteHeader, SiteFooter } from "@/components/site-layout";
 import { Search, Home, ArrowLeft } from "lucide-react";
@@ -155,18 +155,20 @@ function RootShell({ children }: { children: ReactNode }) {
 function RouteBenchmark() {
   const isLoading = useRouterState({ select: (s) => s.status === "pending" });
   const location = useRouterState({ select: (s) => s.location });
-  const [startTime, setStartTime] = useState(0);
+  const startTimeRef = useRef(0);
 
   useEffect(() => {
+    if (!import.meta.env.DEV) return;
     if (isLoading) {
-      setStartTime(performance.now());
+      startTimeRef.current = performance.now();
       console.log(`[Benchmark] Navigating to ${location.pathname}...`);
-    } else if (startTime > 0) {
-      const duration = performance.now() - startTime;
+    } else if (startTimeRef.current > 0) {
+      const duration = performance.now() - startTimeRef.current;
       console.log(
         `%c[Benchmark] Loaded ${location.pathname} in ${duration.toFixed(2)}ms`,
         "color: #10b981; font-weight: bold;",
       );
+      startTimeRef.current = 0;
     }
   }, [isLoading, location.pathname]);
 
@@ -177,10 +179,11 @@ function onRenderProfile(
   id: string,
   phase: string,
   actualDuration: number,
-  baseDuration: number,
-  startTime: number,
-  commitTime: number,
+  _baseDuration: number,
+  _startTime: number,
+  _commitTime: number,
 ) {
+  if (!import.meta.env.DEV) return;
   if (actualDuration > 5) {
     console.log(
       `%c[Profiler] [${id}] ${phase} render took ${actualDuration.toFixed(2)}ms`,

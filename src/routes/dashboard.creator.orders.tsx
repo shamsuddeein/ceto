@@ -72,7 +72,7 @@ function Orders() {
                     <tr key={o.id} className="transition-colors hover:bg-muted/50">
                       <td className="px-5 py-4 font-mono text-sm">{o.id}</td>
                       <td>{o.date}</td>
-                      <td className="text-foreground/70">{o.buyer}</td>
+                      <td className="text-foreground/70">{typeof o.buyer === "string" ? o.buyer : o.buyer?.username}</td>
                       <td className="font-semibold line-clamp-1">{o.product as string}</td>
                       <td className="font-semibold text-foreground">
                         ₦{Number(o.amount).toLocaleString("en-US")}

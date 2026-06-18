@@ -61,7 +61,7 @@ function MyProducts() {
           </select>
         </div>
         <Link
-          to="/add-product"
+          to="/dashboard/creator/add-product"
           className="inline-flex items-center justify-center gap-2 rounded-full border-[3px] border-border bg-primary px-6 py-3 text-base font-black text-white shadow-vibe-sm transition-transform hover:-translate-y-1 hover:shadow-vibe"
         >
           <Plus className="h-5 w-5 stroke-[3px]" /> New product
@@ -84,7 +84,7 @@ function MyProducts() {
               className="overflow-hidden rounded-[2.5rem] border-[4px] border-border bg-white shadow-vibe transition-transform hover:-translate-y-2"
             >
               <div
-                className={`flex aspect-[4/3] items-center justify-center p-6 border-b-[4px] border-border ${tintClass((i % 4) as 0 | 1 | 2 | 3)} relative`}
+                className={`flex aspect-[4/3] items-center justify-center p-6 border-b-[4px] border-border ${tintClass(["mint", "lilac", "peach", "rose"][i % 4])} relative`}
               >
                 {p.cover_image ? (
                   <img

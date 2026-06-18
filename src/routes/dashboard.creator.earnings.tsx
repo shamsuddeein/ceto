@@ -36,7 +36,7 @@ function Earnings() {
           <p className="font-display text-4xl font-black text-foreground">Withdraw your earnings</p>
         </div>
         <Link
-          to="/withdrawals"
+          to="/dashboard/creator/withdrawals"
           className="rounded-full border-[3px] border-border bg-white px-8 py-4 text-lg font-black text-foreground shadow-vibe-sm hover:-translate-y-1 hover:shadow-vibe transition-all whitespace-nowrap"
         >
           Withdraw funds
@@ -57,7 +57,7 @@ function Earnings() {
               </tr>
             </thead>
             <tbody className="divide-y-[3px] divide-border font-medium">
-              {tx.map((t: Transaction) => {
+              {tx.map((t: import("@/types").Order) => {
                 const gross = Number(t.amount);
                 const fee = gross * 0.05; // 5% fee
                 const net = gross - fee;

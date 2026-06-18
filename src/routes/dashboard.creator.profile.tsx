@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { toast } from "sonner";
-import { Loader2, Camera, HelpCircle } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { DashboardLayout } from "@/components/dashboard-layout";
 import { profile as mockProfile } from "@/lib/mock-data";
 import { User } from "@/types";
@@ -93,22 +93,22 @@ function Field({
 function ProfileTab({ user }: { user: User }) {
   const [loading, setLoading] = useState(false);
 
-  // Form State
-  const [firstName, setFirstName] = useState("Deen");
-  const [lastName, setLastName] = useState("Yusuf");
-  const [gender, setGender] = useState("Male");
-  const [dob, setDob] = useState("2001-02-28");
-  const [creatorType, setCreatorType] = useState("");
-  const [storeDesc, setStoreDesc] = useState("");
+  // Form State — initialise from user data, fallback to empty
+  const [firstName, setFirstName] = useState(user?.profile?.first_name || "");
+  const [lastName, setLastName] = useState(user?.profile?.last_name || "");
+  const [gender, setGender] = useState(user?.profile?.gender || "");
+  const [dob, setDob] = useState(user?.profile?.dob || "");
+  const [creatorType, setCreatorType] = useState(user?.profile?.creator_type || "");
+  const [storeDesc, setStoreDesc] = useState(user?.profile?.bio || "");
 
   // Socials
-  const [twitter, setTwitter] = useState("");
-  const [instagram, setInstagram] = useState("");
-  const [facebook, setFacebook] = useState("");
-  const [tiktok, setTiktok] = useState("");
-  const [linkedin, setLinkedin] = useState("");
-  const [youtube, setYoutube] = useState("");
-  const [contactNumber, setContactNumber] = useState("+2349124449345");
+  const [twitter, setTwitter] = useState(user?.profile?.twitter || "");
+  const [instagram, setInstagram] = useState(user?.profile?.instagram || "");
+  const [facebook, setFacebook] = useState(user?.profile?.facebook || "");
+  const [tiktok, setTiktok] = useState(user?.profile?.tiktok || "");
+  const [linkedin, setLinkedin] = useState(user?.profile?.linkedin || "");
+  const [youtube, setYoutube] = useState(user?.profile?.youtube || "");
+  const [contactNumber, setContactNumber] = useState(user?.profile?.phone || "");
 
   async function handleSave(e: React.FormEvent) {
     e.preventDefault();
@@ -360,11 +360,23 @@ function PayoutsTab({ user }: { user: User }) {
 
 function PasswordTab() {
   const [loading, setLoading] = useState(false);
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
   async function handleSave(e: React.FormEvent) {
     e.preventDefault();
+    if (newPassword !== confirmPassword) {
+      toast.error("Passwords do not match. Please re-enter.");
+      return;
+    }
+    if (newPassword.length < 8) {
+      toast.error("Password must be at least 8 characters.");
+      return;
+    }
     setLoading(true);
     await new Promise((r) => setTimeout(r, 600));
     setLoading(false);
+    setNewPassword("");
+    setConfirmPassword("");
     toast.success("Password updated!");
   }
   return (
@@ -378,6 +390,7 @@ function PasswordTab() {
           <input
             type="password"
             placeholder="••••••••"
+            required
             className="w-full rounded-2xl border-[3px] border-border bg-background px-4 py-3 font-bold text-foreground outline-none shadow-vibe-sm transition-all focus:translate-x-[2px] focus:translate-y-[2px] focus:shadow-none"
           />
         </Field>
@@ -385,8 +398,28 @@ function PasswordTab() {
           <input
             type="password"
             placeholder="••••••••"
+            required
+            value={newPassword}
+            onChange={(e) => setNewPassword(e.target.value)}
             className="w-full rounded-2xl border-[3px] border-border bg-background px-4 py-3 font-bold text-foreground outline-none shadow-vibe-sm transition-all focus:translate-x-[2px] focus:translate-y-[2px] focus:shadow-none"
           />
+        </Field>
+        <Field label="Confirm New Password">
+          <input
+            type="password"
+            placeholder="••••••••"
+            required
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            className={`w-full rounded-2xl border-[3px] border-border bg-background px-4 py-3 font-bold text-foreground outline-none shadow-vibe-sm transition-all focus:translate-x-[2px] focus:translate-y-[2px] focus:shadow-none ${
+              confirmPassword && confirmPassword !== newPassword
+                ? "border-red-400 bg-red-50"
+                : ""
+            }`}
+          />
+          {confirmPassword && confirmPassword !== newPassword && (
+            <p className="mt-2 text-xs font-bold text-red-500">Passwords do not match</p>
+          )}
         </Field>
       </div>
       <button

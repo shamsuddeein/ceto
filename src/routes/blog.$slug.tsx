@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowLeft, Calendar, Clock, Share2 } from "lucide-react";
 import { SiteHeader, SiteFooter } from "@/components/site-layout";
-import { POSTS, getBlogIcon } from "./blog";
+import { POSTS, getBlogIcon } from "@/lib/blog";
 import { tintClass } from "@/lib/mock-products";
 
 export const Route = createFileRoute("/blog/$slug")({
@@ -63,35 +63,14 @@ function BlogArticle() {
           </div>
           <div className="prose prose-lg md:prose-xl max-w-none text-foreground/90 font-medium">
             <p className="text-2xl font-bold leading-relaxed">{p.excerpt}</p>
-            <p className="mt-8 leading-relaxed">
-              Most creators get stuck because they treat their product launch like a single event
-              instead of a 30-day campaign. The most successful Cetoh creators we've worked with
-              share three habits: they ship before they're ready, they price for value not for time,
-              and they treat every early customer like a co-founder.
-            </p>
-            <h2 className="mt-12 font-display text-3xl font-black text-foreground">
-              Start with the smallest valuable thing
-            </h2>
-            <p className="mt-4 leading-relaxed">
-              Your first product doesn't need to be your magnum opus. Pick a single problem, solve
-              it well, and ship a v1 your audience can hold in their hands within two weeks. You'll
-              learn more from 50 early users than from 6 months of polish.
-            </p>
-            <h2 className="mt-12 font-display text-3xl font-black text-foreground">
-              Sell before you build
-            </h2>
-            <p className="mt-4 leading-relaxed">
-              Pre-orders are validation with skin in the game. If 30 people pay ₦15,000 before your
-              course exists, you've validated demand and funded the work. If nobody pays, you saved
-              months of building the wrong thing.
-            </p>
-            <h2 className="mt-12 font-display text-3xl font-black text-foreground">
-              Treat the first week like a launch
-            </h2>
-            <p className="mt-4 leading-relaxed">
-              Show up daily. Reply to every email. Tweet every milestone. The first week sets the
-              algorithmic and social momentum that compounds for months.
-            </p>
+            {p.body.map((section, i) => (
+              <div key={i}>
+                <h2 className="mt-12 font-display text-3xl font-black text-foreground">
+                  {section.heading}
+                </h2>
+                <p className="mt-4 leading-relaxed">{section.text}</p>
+              </div>
+            ))}
           </div>
         </article>
         <section className="container-page max-w-5xl pb-20 md:pb-28">

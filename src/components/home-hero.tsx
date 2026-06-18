@@ -50,7 +50,7 @@ export default function Hero() {
             The Cetoh <br /> Creator Platform ✦
           </div>
 
-          <div className="relative rounded-[2.5rem] border-[4px] border-border bg-tint-mint p-8 shadow-vibe -rotate-2 transform">
+          <div className="relative rounded-[2.5rem] border-[4px] border-border bg-tint-mint pt-8 px-8 pb-14 shadow-vibe -rotate-2 transform">
             <div className="flex items-center gap-2 mb-6 border-b-2 border-border pb-4">
               <div className="h-4 w-4 rounded-full bg-destructive border-2 border-border shadow-vibe-sm"></div>
               <div className="h-4 w-4 rounded-full bg-gold border-2 border-border shadow-vibe-sm"></div>

@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
-import { type Product, tintClass, getProductIcon } from "@/lib/mock-products";
+import { type Product } from "@/types";
+import { tintClass, getProductIcon } from "@/lib/mock-products";
 
 export function ProductCard({ p }: { p: Product }) {
   // Map category to icon, fallback to generic
