@@ -170,8 +170,8 @@ function SignupPage() {
                     }`}
                   >
                     <option value="" disabled>Select account type</option>
-                    <option value="customer">👤 Customer — browse &amp; buy digital products</option>
-                    <option value="creator">🏪 Creator — sell my products &amp; services</option>
+                    <option value="customer">Customer — browse &amp; buy digital products</option>
+                    <option value="creator">Creator — sell my products &amp; services</option>
                   </select>
                   {/* Custom chevron */}
                   <span className="pointer-events-none absolute inset-y-0 right-4 flex items-center">
@@ -183,7 +183,7 @@ function SignupPage() {
                 {/* Contextual hint */}
                 {role === "creator" && (
                   <p className="mt-2 text-xs font-bold text-primary">
-                    🎉 0% commission for your first 3 months as a creator!
+                    0% commission for your first 3 months as a creator!
                   </p>
                 )}
                 {role === "customer" && (
@@ -455,9 +455,6 @@ function SignupPage() {
                   <p className="text-sm font-black text-foreground">
                     Instant <span className="text-primary">Naira payouts</span>
                   </p>
-                  <div className="mt-2 flex flex-wrap gap-1.5">
-                    <span className="text-xl leading-none">🇳🇬</span>
-                  </div>
                 </div>
               </div>
               <div className="flex items-center gap-3 rounded-2xl border-[3px] border-border bg-white p-4 pr-6 shadow-vibe-sm">
