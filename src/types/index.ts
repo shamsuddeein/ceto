@@ -1,6 +1,7 @@
 export interface UserProfile {
   id: string | number;
   username: string;
+  display_name?: string;      // CustomUser.display_name
   avatar?: string;
   avatar_url?: string | null;
   bio?: string;
@@ -31,6 +32,7 @@ export interface UserProfile {
 export interface User {
   id: string | number;
   email: string;
+  is_verified?: boolean;       // CustomUser.is_verified
   profile?: UserProfile;
 }
 
