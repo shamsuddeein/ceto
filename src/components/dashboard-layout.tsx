@@ -74,7 +74,22 @@ export function DashboardLayout({ title, children }: { title: string; children: 
   const isLoading = false;
 
   const location = useLocation();
-  const isCreatorView = location.pathname.startsWith("/dashboard/creator");
+
+  // Determine dashboard role from URL, and persist it so neutral routes
+  // (e.g. /dashboard/notifications) keep the correct nav after navigating from creator.
+  const isOnCreatorRoute = location.pathname.startsWith("/dashboard/creator");
+  const isOnCustomerRoute = location.pathname.startsWith("/dashboard/overview");
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (isOnCreatorRoute) window.localStorage.setItem("dashboard_role", "creator");
+    else if (isOnCustomerRoute) window.localStorage.setItem("dashboard_role", "customer");
+  }, [isOnCreatorRoute, isOnCustomerRoute]);
+
+  const isCreatorView = isOnCreatorRoute ||
+    (!isOnCustomerRoute &&
+      typeof window !== "undefined" &&
+      window.localStorage.getItem("dashboard_role") === "creator");
 
   const navigate = useNavigate();
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -93,6 +108,7 @@ export function DashboardLayout({ title, children }: { title: string; children: 
   async function handleLogout() {
     if (typeof window !== "undefined") {
       window.localStorage.removeItem("mock_token");
+      window.localStorage.removeItem("dashboard_role");
     }
     navigate({ to: "/login" });
   }
