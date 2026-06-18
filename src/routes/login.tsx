@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import { SiteHeader } from "@/components/site-layout";
 import { SocialAuthButton } from "@/components/social-auth-button";
 import { APIError } from "@/types";
+import { api } from "@/lib/axios";
 import loginIllustration from "@/assets/setup-person-cartoon.png";
 export const Route = createFileRoute("/login")({
   head: () => ({
@@ -41,15 +42,18 @@ function LoginPage() {
     setLoading(true);
     setErrorMsg("");
     try {
-      await new Promise((r) => setTimeout(r, 600));
+      await api.post("/auth/login/", {
+        email: identifier,
+        password,
+      });
+
       if (typeof window !== "undefined") {
-        window.localStorage.setItem("mock_token", "mock-session-token");
+        window.localStorage.setItem("mock_token", "session-active");
       }
       toast.success("Welcome back! Redirecting...");
       setTimeout(() => navigate({ to: "/dashboard" }), 1000);
-    } catch (err: APIError | unknown) {
-      const apiErr = err as APIError;
-      const msg = apiErr.response?.data?.detail || "Invalid credentials. Please try again.";
+    } catch (err: any) {
+      const msg = err.response?.data?.detail || err.response?.data?.non_field_errors?.[0] || "Invalid credentials. Please try again.";
       setErrorMsg(msg);
       toast.error(msg);
     } finally {

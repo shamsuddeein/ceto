@@ -25,6 +25,7 @@ import { toast } from "sonner";
 import { SiteHeader } from "@/components/site-layout";
 import { SocialAuthButton } from "@/components/social-auth-button";
 import { APIError } from "@/types";
+import { api } from "@/lib/axios";
 import signupBook from "@/assets/signup-book.png";
 import logoImg from "@/assets/logo.png";
 
@@ -71,19 +72,26 @@ function SignupPage() {
     if (!agree) return toast.error("Please agree to the Terms of Service and Privacy Policy.");
     setLoading(true);
     try {
-      await new Promise((r) => setTimeout(r, 600));
+      await api.post("/auth/register/", {
+        email,
+        password,
+        username,
+        display_name: username,
+      });
+
       if (typeof window !== "undefined") {
         window.localStorage.setItem("mock_role", role);
       }
-      toast.success("Account created! Redirecting to login...");
+      toast.success("Account created successfully! Redirecting to login...");
       setTimeout(() => {
         navigate({ to: "/login" });
       }, 1500);
-    } catch (err: APIError | unknown) {
-      const apiErr = err as APIError;
+    } catch (err: APIError | any) {
       const errorMsg =
-        apiErr.response?.data?.email?.[0] ||
-        apiErr.response?.data?.username?.[0] ||
+        err.response?.data?.email?.[0] ||
+        err.response?.data?.username?.[0] ||
+        err.response?.data?.password?.[0] ||
+        err.response?.data?.detail ||
         "Couldn't create your account. Please try again.";
       toast.error(errorMsg);
     } finally {
