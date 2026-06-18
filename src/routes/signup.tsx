@@ -77,6 +77,7 @@ function SignupPage() {
         password,
         username,
         display_name: username,
+        role,
       });
 
       if (typeof window !== "undefined") {
