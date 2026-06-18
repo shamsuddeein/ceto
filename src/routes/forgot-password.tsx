@@ -3,6 +3,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { Loader2, ArrowLeft, MailCheck } from "lucide-react";
 import { SiteHeader } from "@/components/site-layout";
+import { api } from "@/lib/axios";
 
 export const Route = createFileRoute("/forgot-password")({
   head: () => ({ meta: [{ title: "Forgot Password | Cetoh" }] }),
@@ -13,15 +14,22 @@ function ForgotPassword() {
   const [email, setEmail] = useState("");
   const [sent, setSent] = useState(false);
   const [loading, setLoading] = useState(false);
+
   async function submit(e: React.FormEvent) {
     e.preventDefault();
     if (!email.trim()) return toast.error("Enter your email");
     setLoading(true);
-    await new Promise((r) => setTimeout(r, 700));
-    setLoading(false);
-    setSent(true);
-    toast.success("Reset link sent. Check your inbox.");
+    try {
+      await api.post("/auth/password-reset/", { email });
+      setSent(true);
+      toast.success("Reset link sent. Check your inbox.");
+    } catch (err: any) {
+      toast.error(err.response?.data?.detail || "Failed to request password reset.");
+    } finally {
+      setLoading(false);
+    }
   }
+
   return (
     <div className="min-h-screen bg-background">
       <SiteHeader />

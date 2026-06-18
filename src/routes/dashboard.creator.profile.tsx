@@ -3,8 +3,9 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 import { DashboardLayout } from "@/components/dashboard-layout";
-import { profile as mockProfile } from "@/lib/mock-data";
 import { User } from "@/types";
+import { useQuery } from "@tanstack/react-query";
+import { api } from "@/lib/axios";
 
 export const Route = createFileRoute("/dashboard/creator/profile")({
   head: () => ({ meta: [{ title: "Creator Profile | Cetoh" }] }),
@@ -12,8 +13,13 @@ export const Route = createFileRoute("/dashboard/creator/profile")({
 });
 
 function CreatorProfile() {
-  const user = mockProfile;
-  const isLoading = false;
+  const { data: user, isLoading } = useQuery<User>({
+    queryKey: ["profile"],
+    queryFn: async () => {
+      const res = await api.get("/users/profile/");
+      return res.data;
+    },
+  });
 
   const [tab, setTab] = useState<"profile" | "payouts" | "password" | "security">("profile");
   const tabs = [
@@ -28,6 +34,16 @@ function CreatorProfile() {
       <DashboardLayout title="Settings">
         <div className="flex justify-center p-10">
           <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        </div>
+      </DashboardLayout>
+    );
+  }
+
+  if (!user) {
+    return (
+      <DashboardLayout title="Settings">
+        <div className="text-center p-10 font-bold text-red-500">
+          Failed to load profile. Please log in again.
         </div>
       </DashboardLayout>
     );
@@ -94,30 +110,48 @@ function ProfileTab({ user }: { user: User }) {
   const [loading, setLoading] = useState(false);
 
   // Form State — initialise from user data, fallback to empty
-  const [firstName, setFirstName] = useState(user?.profile?.first_name || "");
-  const [lastName, setLastName] = useState(user?.profile?.last_name || "");
-  const [gender, setGender] = useState(user?.profile?.gender || "");
-  const [dob, setDob] = useState(user?.profile?.dob || "");
-  const [creatorType, setCreatorType] = useState(user?.profile?.creator_type || "");
+  const [firstName, setFirstName] = useState(user?.first_name || "");
+  const [lastName, setLastName] = useState(user?.last_name || "");
+  const [gender, setGender] = useState((user?.profile?.social_links as any)?.gender || "Male");
+  const [dob, setDob] = useState((user?.profile?.social_links as any)?.dob || "");
+  const [creatorType, setCreatorType] = useState((user?.profile?.social_links as any)?.creator_type || "");
   const [storeDesc, setStoreDesc] = useState(user?.profile?.bio || "");
 
   // Socials
-  const [twitter, setTwitter] = useState(user?.profile?.twitter || "");
-  const [instagram, setInstagram] = useState(user?.profile?.instagram || "");
-  const [facebook, setFacebook] = useState(user?.profile?.facebook || "");
-  const [tiktok, setTiktok] = useState(user?.profile?.tiktok || "");
-  const [linkedin, setLinkedin] = useState(user?.profile?.linkedin || "");
-  const [youtube, setYoutube] = useState(user?.profile?.youtube || "");
-  const [contactNumber, setContactNumber] = useState(user?.profile?.phone || "");
+  const [twitter, setTwitter] = useState((user?.profile?.social_links as any)?.twitter || "");
+  const [instagram, setInstagram] = useState((user?.profile?.social_links as any)?.instagram || "");
+  const [facebook, setFacebook] = useState((user?.profile?.social_links as any)?.facebook || "");
+  const [tiktok, setTiktok] = useState((user?.profile?.social_links as any)?.tiktok || "");
+  const [linkedin, setLinkedin] = useState((user?.profile?.social_links as any)?.linkedin || "");
+  const [youtube, setYoutube] = useState((user?.profile?.social_links as any)?.youtube || "");
+  const [contactNumber, setContactNumber] = useState((user?.profile?.social_links as any)?.phone || "");
 
   async function handleSave(e: React.FormEvent) {
     e.preventDefault();
     setLoading(true);
     try {
-      await new Promise((r) => setTimeout(r, 600));
+      await api.patch("/users/profile/", {
+        first_name: firstName,
+        last_name: lastName,
+        profile: {
+          bio: storeDesc,
+          social_links: {
+            gender,
+            dob,
+            creator_type: creatorType,
+            twitter,
+            instagram,
+            facebook,
+            tiktok,
+            linkedin,
+            youtube,
+            phone: contactNumber,
+          },
+        },
+      });
       toast.success("Profile updated successfully!");
-    } catch (err: unknown) {
-      toast.error("Failed to update profile");
+    } catch (err: any) {
+      toast.error(err.response?.data?.detail || "Failed to update profile");
     } finally {
       setLoading(false);
     }
@@ -152,10 +186,10 @@ function ProfileTab({ user }: { user: User }) {
         </Field>
       </div>
 
-      <Field label="Email Address" helpText="Verify Email">
+      <Field label="Email Address" helpText="Locked field">
         <input
           disabled
-          value={user?.email || "talktodeen@gmail.com"}
+          value={user?.email || ""}
           className="w-full rounded-2xl border-[3px] border-border bg-tint-mint/30 px-4 py-3 font-bold text-foreground outline-none cursor-not-allowed"
         />
       </Field>
@@ -298,10 +332,19 @@ function PayoutsTab({ user }: { user: User }) {
     e.preventDefault();
     setLoading(true);
     try {
-      await new Promise((r) => setTimeout(r, 600));
+      await api.patch("/users/profile/", {
+        profile: {
+          bank_details: {
+            method,
+            account_name: accountName,
+            account_number: accountNumber,
+            bank_name: bankName,
+          },
+        },
+      });
       toast.success("Payout method saved successfully!");
-    } catch (err: unknown) {
-      toast.error("Failed to save payout method");
+    } catch (err: any) {
+      toast.error(err.response?.data?.detail || "Failed to save payout method");
     } finally {
       setLoading(false);
     }
@@ -360,8 +403,11 @@ function PayoutsTab({ user }: { user: User }) {
 
 function PasswordTab() {
   const [loading, setLoading] = useState(false);
-  const [confirmPassword, setConfirmPassword] = useState("");
+  const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const navigate = Route.useNavigate();
+
   async function handleSave(e: React.FormEvent) {
     e.preventDefault();
     if (newPassword !== confirmPassword) {
@@ -373,12 +419,24 @@ function PasswordTab() {
       return;
     }
     setLoading(true);
-    await new Promise((r) => setTimeout(r, 600));
-    setLoading(false);
-    setNewPassword("");
-    setConfirmPassword("");
-    toast.success("Password updated!");
+    try {
+      await api.post("/users/change-password/", {
+        old_password: oldPassword,
+        new_password: newPassword,
+      });
+      toast.success("Password updated! Please log in again.");
+      if (typeof window !== "undefined") {
+        window.localStorage.removeItem("mock_token");
+        window.localStorage.removeItem("dashboard_role");
+      }
+      setTimeout(() => navigate({ to: "/login" }), 1500);
+    } catch (err: any) {
+      toast.error(err.response?.data?.old_password?.[0] || err.response?.data?.detail || "Failed to update password");
+    } finally {
+      setLoading(false);
+    }
   }
+
   return (
     <form
       onSubmit={handleSave}
@@ -391,6 +449,8 @@ function PasswordTab() {
             type="password"
             placeholder="••••••••"
             required
+            value={oldPassword}
+            onChange={(e) => setOldPassword(e.target.value)}
             className="w-full rounded-2xl border-[3px] border-border bg-background px-4 py-3 font-bold text-foreground outline-none shadow-vibe-sm transition-all focus:translate-x-[2px] focus:translate-y-[2px] focus:shadow-none"
           />
         </Field>
@@ -425,6 +485,7 @@ function PasswordTab() {
         disabled={loading}
         className="mt-10 inline-flex items-center justify-center gap-2 rounded-xl border-[3px] border-border bg-primary px-8 py-3 text-base font-black text-white shadow-vibe hover:-translate-y-1 hover:shadow-vibe-hover disabled:opacity-70 transition-transform"
       >
+        {loading && <Loader2 className="h-5 w-5 animate-spin stroke-[3px]" />}{" "}
         {loading ? "Saving..." : "Save"}
       </button>
     </form>

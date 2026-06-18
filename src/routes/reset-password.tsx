@@ -3,35 +3,55 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { Loader2, CheckCircle2, Eye, EyeOff } from "lucide-react";
 import { SiteHeader } from "@/components/site-layout";
+import { api } from "@/lib/axios";
 
 export const Route = createFileRoute("/reset-password")({
+  validateSearch: (search: Record<string, unknown>) => {
+    return {
+      uid: (search.uid as string) || "",
+      token: (search.token as string) || "",
+    };
+  },
   head: () => ({ meta: [{ title: "Reset Password | Cetoh" }] }),
   component: ResetPassword,
 });
 
 function ResetPassword() {
+  const { uid, token } = Route.useSearch();
   const [pw, setPw] = useState("");
   const [pw2, setPw2] = useState("");
   const [show, setShow] = useState(false);
   const [loading, setLoading] = useState(false);
   const [done, setDone] = useState(false);
   const navigate = Route.useNavigate();
+
   const reqs = [
     { label: "At least 8 characters", ok: pw.length >= 8 },
     { label: "Contains a number", ok: /\d/.test(pw) },
     { label: "Contains a letter", ok: /[a-zA-Z]/.test(pw) },
     { label: "Passwords match", ok: pw.length > 0 && pw === pw2 },
   ];
+
   async function submit(e: React.FormEvent) {
     e.preventDefault();
     if (reqs.some((r) => !r.ok)) return toast.error("Fix password requirements");
     setLoading(true);
-    await new Promise((r) => setTimeout(r, 800));
-    setLoading(false);
-    setDone(true);
-    toast.success("Password updated. Sign in with your new password.");
-    setTimeout(() => navigate({ to: "/login" }), 1500);
+    try {
+      await api.post("/auth/password-reset/confirm/", {
+        uid,
+        token,
+        new_password: pw,
+      });
+      setDone(true);
+      toast.success("Password updated. Sign in with your new password.");
+      setTimeout(() => navigate({ to: "/login" }), 1500);
+    } catch (err: any) {
+      toast.error(err.response?.data?.detail || "Invalid or expired password reset link.");
+    } finally {
+      setLoading(false);
+    }
   }
+
   return (
     <div className="min-h-screen bg-background">
       <SiteHeader />

@@ -19,7 +19,9 @@ import {
   Bell,
 } from "lucide-react";
 import logoImg from "@/assets/logo.png";
-import { profile as mockProfile } from "@/lib/mock-data";
+import { useQuery } from "@tanstack/react-query";
+import { api } from "@/lib/axios";
+import { User } from "@/types";
 
 const GENERAL_NAV = [
   {
@@ -69,9 +71,14 @@ const CREATOR_NAV = [
 ];
 
 export function DashboardLayout({ title, children }: { title: string; children: React.ReactNode }) {
-  const user =
-    typeof window !== "undefined" && window.localStorage.getItem("mock_token") ? mockProfile : null;
-  const isLoading = false;
+  const { data: user, isLoading } = useQuery<User>({
+    queryKey: ["profile"],
+    queryFn: async () => {
+      const res = await api.get("/users/profile/");
+      return res.data;
+    },
+    enabled: typeof window !== "undefined" && !!window.localStorage.getItem("mock_token"),
+  });
 
   const location = useLocation();
 
@@ -106,6 +113,11 @@ export function DashboardLayout({ title, children }: { title: string; children: 
   }, []);
 
   async function handleLogout() {
+    try {
+      await api.post("/auth/logout/");
+    } catch (e) {
+      // proceed even if api fails
+    }
     if (typeof window !== "undefined") {
       window.localStorage.removeItem("mock_token");
       window.localStorage.removeItem("dashboard_role");

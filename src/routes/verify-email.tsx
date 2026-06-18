@@ -1,19 +1,50 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import { MailCheck, RefreshCw, Loader2 } from "lucide-react";
 import { SiteHeader } from "@/components/site-layout";
+import { api } from "@/lib/axios";
 
 export const Route = createFileRoute("/verify-email")({
+  validateSearch: (search: Record<string, unknown>) => {
+    return {
+      uid: (search.uid as string) || "",
+      token: (search.token as string) || "",
+    };
+  },
   head: () => ({ meta: [{ title: "Verify Email | Cetoh" }] }),
   component: VerifyEmail,
 });
 
 function VerifyEmail() {
+  const { uid, token } = Route.useSearch();
   const [code, setCode] = useState(["", "", "", "", "", ""]);
   const [loading, setLoading] = useState(false);
   const [resending, setResending] = useState(false);
   const navigate = Route.useNavigate();
+
+  useEffect(() => {
+    if (uid && token) {
+      autoVerify();
+    }
+  }, [uid, token]);
+
+  async function autoVerify() {
+    setLoading(true);
+    try {
+      await api.post("/auth/verify-email/", { uid, token });
+      toast.success("Email verified successfully!");
+      if (typeof window !== "undefined") {
+        window.localStorage.setItem("mock_token", "session-active");
+      }
+      setTimeout(() => navigate({ to: "/dashboard" }), 1500);
+    } catch (err: any) {
+      toast.error(err.response?.data?.detail || "Email verification failed or link has expired.");
+    } finally {
+      setLoading(false);
+    }
+  }
+
   function setDigit(i: number, v: string) {
     const ch = v.replace(/\D/g, "").slice(0, 1);
     const next = [...code];
@@ -21,21 +52,29 @@ function VerifyEmail() {
     setCode(next);
     if (ch && i < 5) document.getElementById(`otp-${i + 1}`)?.focus();
   }
+
   async function verify(e: React.FormEvent) {
     e.preventDefault();
     if (code.some((c) => !c)) return toast.error("Enter all 6 digits");
     setLoading(true);
+    // Fallback: otp verification is mocked as successful for manual entry
     await new Promise((r) => setTimeout(r, 800));
     setLoading(false);
     toast.success("Email verified!");
+    if (typeof window !== "undefined") {
+      window.localStorage.setItem("mock_token", "session-active");
+    }
     setTimeout(() => navigate({ to: "/dashboard" }), 600);
   }
+
   async function resend() {
     setResending(true);
+    // For manual entry, resending is simulated
     await new Promise((r) => setTimeout(r, 600));
     setResending(false);
     toast.success("A new code has been sent.");
   }
+
   return (
     <div className="min-h-screen bg-background">
       <SiteHeader />
@@ -51,7 +90,9 @@ function VerifyEmail() {
             Verify your email
           </h1>
           <p className="mt-2 text-sm text-foreground/70">
-            We sent a 6-digit code to your email. Enter it below to activate your account.
+            {uid && token
+              ? "Verifying your email verification link..."
+              : "We sent a 6-digit code to your email. Enter it below to activate your account."}
           </p>
           <form className="mt-6 space-y-5" onSubmit={verify} noValidate>
             <div className="flex justify-center gap-2 sm:gap-3">
@@ -67,13 +108,14 @@ function VerifyEmail() {
                   }}
                   inputMode="numeric"
                   maxLength={1}
-                  className="h-12 w-10 rounded-md border border-border bg-background text-center font-display text-xl font-bold text-primary outline-none focus:border-primary focus:ring-2 focus:ring-primary/30 sm:h-14 sm:w-12"
+                  disabled={!!(uid && token) || loading}
+                  className="h-12 w-10 rounded-md border border-border bg-background text-center font-display text-xl font-bold text-primary outline-none focus:border-primary focus:ring-2 focus:ring-primary/30 sm:h-14 sm:w-12 disabled:opacity-50"
                 />
               ))}
             </div>
             <button
               type="submit"
-              disabled={loading}
+              disabled={loading || !!(uid && token)}
               className="inline-flex w-full items-center justify-center gap-2 rounded-md bg-primary py-3 text-sm font-semibold text-primary-foreground hover:bg-primary/90 disabled:opacity-70"
             >
               {loading && <Loader2 className="h-4 w-4 animate-spin" />}{" "}
@@ -82,7 +124,7 @@ function VerifyEmail() {
           </form>
           <button
             onClick={resend}
-            disabled={resending}
+            disabled={resending || !!(uid && token)}
             className="mt-4 inline-flex items-center gap-1 text-sm text-foreground/70 hover:text-primary disabled:opacity-60"
           >
             <RefreshCw className={`h-4 w-4 ${resending ? "animate-spin" : ""}`} /> Resend code
