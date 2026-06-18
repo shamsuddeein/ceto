@@ -170,8 +170,8 @@ function SignupPage() {
                     }`}
                   >
                     <option value="" disabled>Select account type</option>
-                    <option value="customer">Customer — browse &amp; buy digital products</option>
-                    <option value="creator">Creator — sell my products &amp; services</option>
+                    <option value="customer">Customer - browse &amp; buy digital products</option>
+                    <option value="creator">Creator - sell my products &amp; services</option>
                   </select>
                   {/* Custom chevron */}
                   <span className="pointer-events-none absolute inset-y-0 right-4 flex items-center">
