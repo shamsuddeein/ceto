@@ -18,7 +18,9 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { profile as mockProfile } from "@/lib/mock-data";
+import { useQuery } from "@tanstack/react-query";
+import { api } from "@/lib/axios";
+import { clearClientSession, fetchCurrentUser } from "@/lib/auth";
 
 /* ---------- Logo ---------- */
 export function Logo({ className = "", light = false }: { className?: string; light?: boolean }) {
@@ -52,14 +54,19 @@ export function SiteHeader() {
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
 
-  const user =
-    typeof window !== "undefined" && window.localStorage.getItem("mock_token") ? mockProfile : null;
-  const isLoading = false;
+  const { data: user = null } = useQuery({
+    queryKey: ["profile"],
+    queryFn: fetchCurrentUser,
+    retry: false,
+  });
 
   async function handleLogout() {
-    if (typeof window !== "undefined") {
-      window.localStorage.removeItem("mock_token");
+    try {
+      await api.post("/auth/logout/");
+    } catch (e) {
+      // proceed even if the cookie is already gone
     }
+    clearClientSession();
     navigate({ to: "/login" });
   }
 

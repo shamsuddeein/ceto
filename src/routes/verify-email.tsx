@@ -10,6 +10,7 @@ export const Route = createFileRoute("/verify-email")({
     return {
       uid: (search.uid as string) || "",
       token: (search.token as string) || "",
+      email: (search.email as string) || "",
     };
   },
   head: () => ({ meta: [{ title: "Verify Email | Cetoh" }] }),
@@ -17,16 +18,18 @@ export const Route = createFileRoute("/verify-email")({
 });
 
 function VerifyEmail() {
-  const { uid, token } = Route.useSearch();
-  const [code, setCode] = useState(["", "", "", "", "", ""]);
+  const { uid, token, email } = Route.useSearch();
   const [loading, setLoading] = useState(false);
   const [resending, setResending] = useState(false);
+  const [resendEmail, setResendEmail] = useState(email || "");
   const navigate = Route.useNavigate();
 
+  // If uid + token are in the URL, auto-verify immediately
   useEffect(() => {
     if (uid && token) {
       autoVerify();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [uid, token]);
 
   async function autoVerify() {
@@ -34,45 +37,32 @@ function VerifyEmail() {
     try {
       await api.post("/auth/verify-email/", { uid, token });
       toast.success("Email verified successfully!");
-      if (typeof window !== "undefined") {
-        window.localStorage.setItem("mock_token", "session-active");
-      }
       setTimeout(() => navigate({ to: "/dashboard" }), 1500);
     } catch (err: any) {
-      toast.error(err.response?.data?.detail || "Email verification failed or link has expired.");
+      toast.error(
+        err.response?.data?.detail ||
+          "Verification link is invalid or has expired. Request a new one below."
+      );
     } finally {
       setLoading(false);
     }
   }
 
-  function setDigit(i: number, v: string) {
-    const ch = v.replace(/\D/g, "").slice(0, 1);
-    const next = [...code];
-    next[i] = ch;
-    setCode(next);
-    if (ch && i < 5) document.getElementById(`otp-${i + 1}`)?.focus();
-  }
-
-  async function verify(e: React.FormEvent) {
+  // Real resend — calls POST /api/auth/resend-verification/
+  async function resend(e: React.FormEvent) {
     e.preventDefault();
-    if (code.some((c) => !c)) return toast.error("Enter all 6 digits");
-    setLoading(true);
-    // Fallback: otp verification is mocked as successful for manual entry
-    await new Promise((r) => setTimeout(r, 800));
-    setLoading(false);
-    toast.success("Email verified!");
-    if (typeof window !== "undefined") {
-      window.localStorage.setItem("mock_token", "session-active");
-    }
-    setTimeout(() => navigate({ to: "/dashboard" }), 600);
-  }
-
-  async function resend() {
+    if (!resendEmail.trim()) return toast.error("Enter your email address");
     setResending(true);
-    // For manual entry, resending is simulated
-    await new Promise((r) => setTimeout(r, 600));
-    setResending(false);
-    toast.success("A new code has been sent.");
+    try {
+      await api.post("/auth/resend-verification/", { email: resendEmail });
+      toast.success("A new verification link has been sent to your email.");
+    } catch (err: any) {
+      toast.error(
+        err.response?.data?.detail || "Failed to resend verification email."
+      );
+    } finally {
+      setResending(false);
+    }
   }
 
   return (
@@ -84,51 +74,69 @@ function VerifyEmail() {
       >
         <div className="w-full max-w-md rounded-2xl bg-card p-8 text-center shadow-[0_10px_40px_-10px_rgba(0,0,0,0.08)] sm:p-10">
           <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-primary-soft">
-            <MailCheck className="h-7 w-7 text-primary" />
+            {loading ? (
+              <Loader2 className="h-7 w-7 animate-spin text-primary" />
+            ) : (
+              <MailCheck className="h-7 w-7 text-primary" />
+            )}
           </div>
-          <h1 className="mt-4 font-display text-2xl font-bold text-primary sm:text-3xl">
-            Verify your email
-          </h1>
-          <p className="mt-2 text-sm text-foreground/70">
-            {uid && token
-              ? "Verifying your email verification link..."
-              : "We sent a 6-digit code to your email. Enter it below to activate your account."}
-          </p>
-          <form className="mt-6 space-y-5" onSubmit={verify} noValidate>
-            <div className="flex justify-center gap-2 sm:gap-3">
-              {code.map((d, i) => (
-                <input
-                  key={i}
-                  id={`otp-${i}`}
-                  value={d}
-                  onChange={(e) => setDigit(i, e.target.value)}
-                  onKeyDown={(e) => {
-                    if (e.key === "Backspace" && !d && i > 0)
-                      document.getElementById(`otp-${i - 1}`)?.focus();
-                  }}
-                  inputMode="numeric"
-                  maxLength={1}
-                  disabled={!!(uid && token) || loading}
-                  className="h-12 w-10 rounded-md border border-border bg-background text-center font-display text-xl font-bold text-primary outline-none focus:border-primary focus:ring-2 focus:ring-primary/30 sm:h-14 sm:w-12 disabled:opacity-50"
-                />
-              ))}
-            </div>
-            <button
-              type="submit"
-              disabled={loading || !!(uid && token)}
-              className="inline-flex w-full items-center justify-center gap-2 rounded-md bg-primary py-3 text-sm font-semibold text-primary-foreground hover:bg-primary/90 disabled:opacity-70"
-            >
-              {loading && <Loader2 className="h-4 w-4 animate-spin" />}{" "}
-              {loading ? "Verifying..." : "Verify email"}
-            </button>
-          </form>
-          <button
-            onClick={resend}
-            disabled={resending || !!(uid && token)}
-            className="mt-4 inline-flex items-center gap-1 text-sm text-foreground/70 hover:text-primary disabled:opacity-60"
-          >
-            <RefreshCw className={`h-4 w-4 ${resending ? "animate-spin" : ""}`} /> Resend code
-          </button>
+
+          {uid && token ? (
+            // Link-based flow: just show status
+            <>
+              <h1 className="mt-4 font-display text-2xl font-bold text-primary sm:text-3xl">
+                {loading ? "Verifying your email…" : "Email verified!"}
+              </h1>
+              <p className="mt-2 text-sm text-foreground/70">
+                {loading
+                  ? "Please wait while we confirm your link."
+                  : "Redirecting you to your dashboard…"}
+              </p>
+            </>
+          ) : (
+            // No link in URL — show "check your inbox" + resend form
+            <>
+              <h1 className="mt-4 font-display text-2xl font-bold text-primary sm:text-3xl">
+                Check your inbox
+              </h1>
+              <p className="mt-2 text-sm text-foreground/70">
+                We sent a verification link to your email. Click the link to
+                activate your account.
+              </p>
+
+              <div className="mt-8 rounded-xl border border-border bg-background p-6 text-left">
+                <p className="text-sm font-semibold text-foreground">
+                  Didn't get the email?
+                </p>
+                <p className="mt-1 text-xs text-foreground/60">
+                  Check your spam folder, or resend the link below.
+                </p>
+                <form onSubmit={resend} className="mt-4 flex flex-col gap-3">
+                  <input
+                    type="email"
+                    id="resend-email"
+                    value={resendEmail}
+                    onChange={(e) => setResendEmail(e.target.value)}
+                    placeholder="your@email.com"
+                    disabled={resending}
+                    className="w-full rounded-md border border-border bg-card px-4 py-2.5 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/30"
+                  />
+                  <button
+                    type="submit"
+                    id="resend-btn"
+                    disabled={resending}
+                    className="inline-flex items-center justify-center gap-2 rounded-md bg-primary py-2.5 text-sm font-semibold text-primary-foreground hover:bg-primary/90 disabled:opacity-60"
+                  >
+                    <RefreshCw
+                      className={`h-4 w-4 ${resending ? "animate-spin" : ""}`}
+                    />
+                    {resending ? "Sending…" : "Resend verification link"}
+                  </button>
+                </form>
+              </div>
+            </>
+          )}
+
           <p className="mt-6 text-xs text-foreground/60">
             Wrong email?{" "}
             <Link to="/signup" className="font-semibold text-primary hover:underline">

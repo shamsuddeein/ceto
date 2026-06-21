@@ -21,6 +21,7 @@ export const Route = createFileRoute("/login")({
 });
 
 function LoginPage() {
+  const [authType, setAuthType] = useState<"password" | "magic">("password");
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -32,9 +33,27 @@ function LoginPage() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!identifier.trim()) {
-      toast.error("Enter your username or email to continue.");
+      toast.error(authType === "magic" ? "Enter your email address to continue." : "Enter your username or email to continue.");
       return;
     }
+
+    if (authType === "magic") {
+      setLoading(true);
+      setErrorMsg("");
+      try {
+        await api.post("/auth/access-link/", { email: identifier });
+        toast.success("Magic access link sent! Check your inbox.");
+        setIdentifier("");
+      } catch (err: any) {
+        const msg = err.response?.data?.detail || "Failed to send magic link. Please try again.";
+        setErrorMsg(msg);
+        toast.error(msg);
+      } finally {
+        setLoading(false);
+      }
+      return;
+    }
+
     if (!password) {
       toast.error("Enter your password to continue.");
       return;
@@ -47,9 +66,6 @@ function LoginPage() {
         password,
       });
 
-      if (typeof window !== "undefined") {
-        window.localStorage.setItem("mock_token", "session-active");
-      }
       toast.success("Welcome back! Redirecting...");
       setTimeout(() => navigate({ to: "/dashboard" }), 1000);
     } catch (err: any) {
@@ -155,63 +171,96 @@ function LoginPage() {
               </p>
 
               <form className="mt-6 space-y-5 sm:mt-8" onSubmit={handleSubmit} noValidate>
+                {/* Auth Type Switcher */}
+                <div className="mb-6 flex gap-2 rounded-2xl border-[3px] border-border p-1 bg-tint-cream">
+                  <button
+                    type="button"
+                    onClick={() => setAuthType("password")}
+                    className={`flex-1 rounded-xl py-2 text-sm font-black transition-all ${
+                      authType === "password"
+                        ? "bg-primary text-white shadow-vibe-sm"
+                        : "text-foreground/75 hover:bg-tint-mint/50"
+                    }`}
+                  >
+                    Password Login
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setAuthType("magic")}
+                    className={`flex-1 rounded-xl py-2 text-sm font-black transition-all ${
+                      authType === "magic"
+                        ? "bg-primary text-white shadow-vibe-sm"
+                        : "text-foreground/75 hover:bg-tint-mint/50"
+                    }`}
+                  >
+                    Guest Magic Link
+                  </button>
+                </div>
+
                 {/* Username / Email */}
                 <div>
                   <label
                     htmlFor="login-identifier"
                     className="block text-sm font-semibold text-foreground"
                   >
-                    Username or Email
+                    {authType === "magic" ? "Email Address" : "Username or Email"}
                   </label>
                   <input
                     id="login-identifier"
-                    type="text"
+                    type={authType === "magic" ? "email" : "text"}
                     value={identifier}
                     onChange={(e) => setIdentifier(e.target.value)}
-                    placeholder="Username or Email address"
-                    autoComplete="username"
+                    placeholder={authType === "magic" ? "you@example.com" : "Username or Email address"}
+                    autoComplete={authType === "magic" ? "email" : "username"}
                     disabled={loading}
                     className="mt-2 w-full rounded-2xl border-[3px] border-border bg-background px-4 py-4 font-bold text-foreground outline-none shadow-vibe-sm transition-all focus:translate-x-[2px] focus:translate-y-[2px] focus:shadow-none disabled:opacity-60"
                   />
+                  {authType === "magic" && (
+                    <p className="mt-2 text-xs font-bold text-foreground/60">
+                      We'll email you a secure link to access your purchases and downloads without needing a password.
+                    </p>
+                  )}
                 </div>
 
                 {/* Password */}
-                <div>
-                  <div className="flex items-center justify-between">
-                    <label
-                      htmlFor="login-password"
-                      className="block text-sm font-semibold text-foreground"
-                    >
-                      Password
-                    </label>
-                    <Link
-                      to="/forgot-password"
-                      className="text-xs font-medium text-primary hover:underline"
-                    >
-                      Forgot password?
-                    </Link>
+                {authType === "password" && (
+                  <div>
+                    <div className="flex items-center justify-between">
+                      <label
+                        htmlFor="login-password"
+                        className="block text-sm font-semibold text-foreground"
+                      >
+                        Password
+                      </label>
+                      <Link
+                        to="/forgot-password"
+                        className="text-xs font-medium text-primary hover:underline"
+                      >
+                        Forgot password?
+                      </Link>
+                    </div>
+                    <div className="relative mt-2">
+                      <input
+                        id="login-password"
+                        type={showPassword ? "text" : "password"}
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        placeholder="••••••••"
+                        autoComplete="current-password"
+                        disabled={loading}
+                        className="w-full rounded-2xl border-[3px] border-border bg-background px-4 py-4 pr-12 font-bold text-foreground outline-none shadow-vibe-sm transition-all focus:translate-x-[2px] focus:translate-y-[2px] focus:shadow-none disabled:opacity-60"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword((v) => !v)}
+                        aria-label={showPassword ? "Hide password" : "Show password"}
+                        className="absolute inset-y-0 right-3 grid place-items-center text-foreground/60"
+                      >
+                        {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                      </button>
+                    </div>
                   </div>
-                  <div className="relative mt-2">
-                    <input
-                      id="login-password"
-                      type={showPassword ? "text" : "password"}
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      placeholder="••••••••"
-                      autoComplete="current-password"
-                      disabled={loading}
-                      className="w-full rounded-2xl border-[3px] border-border bg-background px-4 py-4 pr-12 font-bold text-foreground outline-none shadow-vibe-sm transition-all focus:translate-x-[2px] focus:translate-y-[2px] focus:shadow-none disabled:opacity-60"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowPassword((v) => !v)}
-                      aria-label={showPassword ? "Hide password" : "Show password"}
-                      className="absolute inset-y-0 right-3 grid place-items-center text-foreground/60"
-                    >
-                      {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                    </button>
-                  </div>
-                </div>
+                )}
 
                 {errorMsg && (
                   <div className="rounded-xl border-[3px] border-border bg-tint-peach p-3 text-sm font-bold text-foreground shadow-vibe-sm">

@@ -80,12 +80,9 @@ function SignupPage() {
         role,
       });
 
-      if (typeof window !== "undefined") {
-        window.localStorage.setItem("mock_role", role);
-      }
-      toast.success("Account created successfully! Redirecting to login...");
+      toast.success("Account created! Check your email to verify your account.");
       setTimeout(() => {
-        navigate({ to: "/login" });
+        navigate({ to: "/verify-email", search: { uid: "", token: "", email } });
       }, 1500);
     } catch (err: APIError | any) {
       const errorMsg =

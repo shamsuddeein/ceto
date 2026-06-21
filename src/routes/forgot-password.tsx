@@ -82,6 +82,7 @@ function ForgotPassword() {
               </p>
               <Link
                 to="/reset-password"
+                search={{ uid: "", token: "" }}
                 className="mt-6 inline-flex rounded-md bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground"
               >
                 Open reset page

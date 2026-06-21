@@ -19,6 +19,7 @@ export interface UserProfile {
   tiktok?: string;
   linkedin?: string;
   youtube?: string;
+  social_links?: any;
   // Bank / payouts
   bank_details?: {
     method?: string;
@@ -32,8 +33,14 @@ export interface UserProfile {
 export interface User {
   id: string | number;
   email: string;
+  username?: string;
+  role?: string;
   is_verified?: boolean;       // CustomUser.is_verified
+  display_name?: string;
+  first_name?: string;
+  last_name?: string;
   profile?: UserProfile;
+  creatorprofile?: UserProfile;
 }
 
 export interface Category {
@@ -73,6 +80,7 @@ export interface Order {
   buyer: string | UserProfile;
   buyer_email?: string;
   amount: number | string;
+  transaction_reference?: string;
   status: string;
   created_at: string;
   date?: string;

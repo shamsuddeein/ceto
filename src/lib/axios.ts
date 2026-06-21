@@ -66,6 +66,8 @@ api.interceptors.response.use(
         if (typeof window !== "undefined") {
           window.localStorage.removeItem("mock_token");
           window.localStorage.removeItem("mock_role");
+          window.localStorage.removeItem("dashboard_role");
+          window.localStorage.removeItem("guest_token");
         }
         return Promise.reject(refreshError);
       }

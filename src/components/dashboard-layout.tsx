@@ -21,6 +21,7 @@ import {
 import logoImg from "@/assets/logo.png";
 import { useQuery } from "@tanstack/react-query";
 import { api } from "@/lib/axios";
+import { clearClientSession, fetchCurrentUser } from "@/lib/auth";
 import { User } from "@/types";
 
 const GENERAL_NAV = [
@@ -74,10 +75,12 @@ export function DashboardLayout({ title, children }: { title: string; children: 
   const { data: user, isLoading } = useQuery<User>({
     queryKey: ["profile"],
     queryFn: async () => {
-      const res = await api.get("/users/profile/");
-      return res.data;
+      const currentUser = await fetchCurrentUser();
+      if (!currentUser) {
+        throw new Error("Not authenticated");
+      }
+      return currentUser;
     },
-    enabled: typeof window !== "undefined" && !!window.localStorage.getItem("mock_token"),
   });
 
   const location = useLocation();
@@ -118,10 +121,7 @@ export function DashboardLayout({ title, children }: { title: string; children: 
     } catch (e) {
       // proceed even if api fails
     }
-    if (typeof window !== "undefined") {
-      window.localStorage.removeItem("mock_token");
-      window.localStorage.removeItem("dashboard_role");
-    }
+    clearClientSession();
     navigate({ to: "/login" });
   }
 
@@ -242,15 +242,15 @@ export function DashboardLayout({ title, children }: { title: string; children: 
                     className="flex items-center gap-2 rounded-full border-[3px] border-border bg-tint-peach p-1 pr-3 shadow-vibe-sm transition-transform hover:-translate-y-1 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
                   >
                     <div className="flex h-10 w-10 overflow-hidden rounded-full border-[2px] border-border bg-white">
-                      {user?.profile?.avatar ? (
+                      {(user?.profile?.avatar || user?.creatorprofile?.avatar) ? (
                         <img
-                          src={user.profile.avatar}
+                          src={user.profile?.avatar || user.creatorprofile?.avatar}
                           alt="Profile"
                           className="h-full w-full object-cover"
                         />
                       ) : (
                         <span className="flex h-full w-full items-center justify-center font-display font-black text-primary uppercase">
-                          {user?.profile?.username?.[0] || user?.email?.[0] || "?"}
+                          {user?.profile?.username?.[0] || user?.creatorprofile?.username?.[0] || user?.email?.[0] || "?"}
                         </span>
                       )}
                     </div>
@@ -279,7 +279,7 @@ export function DashboardLayout({ title, children }: { title: string; children: 
                           Switch To Customer Profile
                         </Link>
                       ) : (
-                        user?.profile?.username && (
+                        (user?.creatorprofile?.username || user?.profile?.username) && (
                           <Link
                             to="/dashboard/creator"
                             onClick={() => setDropdownOpen(false)}

@@ -426,8 +426,8 @@ function PasswordTab() {
       });
       toast.success("Password updated! Please log in again.");
       if (typeof window !== "undefined") {
-        window.localStorage.removeItem("mock_token");
         window.localStorage.removeItem("dashboard_role");
+        window.localStorage.removeItem("guest_token");
       }
       setTimeout(() => navigate({ to: "/login" }), 1500);
     } catch (err: any) {
