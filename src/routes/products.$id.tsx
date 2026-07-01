@@ -1,10 +1,12 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteHeader, SiteFooter } from "@/components/site-layout";
 import { ProductCard } from "@/components/product-card";
-import { Product } from "@/types";
+import { type Product } from "@/types";
 import { tintClass, getProductIcon } from "@/lib/mock-products";
 import { Star, Check, Shield, Download, Share2, Loader2 } from "lucide-react";
-import { products as mockProducts } from "@/lib/mock-data";
+import { useQuery } from "@tanstack/react-query";
+import { api } from "@/lib/axios";
+import { useMemo } from "react";
 
 export const Route = createFileRoute("/products/$id")({
   head: () => {
@@ -22,10 +24,31 @@ export const Route = createFileRoute("/products/$id")({
 function ProductDetails() {
   const { id } = Route.useParams();
 
-  const p = mockProducts.find((x) => String(x.id) === String(id));
-  const isLoading = false;
-  const error = null;
-  const allProducts = mockProducts;
+  const {
+    data: p,
+    isLoading,
+    error,
+  } = useQuery<Product>({
+    queryKey: ["product", id],
+    queryFn: async () => {
+      const res = await api.get(`/catalog/products/${id}/`);
+      return res.data;
+    },
+  });
+
+  const { data: allProducts = [] } = useQuery<Product[]>({
+    queryKey: ["products"],
+    queryFn: async () => {
+      const res = await api.get("/catalog/products/");
+      return res.data.results || [];
+    },
+    enabled: !!p,
+  });
+
+  const related = useMemo(() => {
+    if (!p) return [];
+    return allProducts.filter((x: Product) => String(x.id) !== String(p.id)).slice(0, 4);
+  }, [p, allProducts]);
 
   if (isLoading) {
     return (
@@ -54,9 +77,6 @@ function ProductDetails() {
     );
   }
 
-  const related = allProducts
-    ? allProducts.filter((x: Product) => String(x.id) !== String(p.id)).slice(0, 4)
-    : [];
   return (
     <div className="min-h-screen bg-background">
       <SiteHeader />

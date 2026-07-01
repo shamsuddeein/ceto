@@ -1,10 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 import { DashboardLayout } from "@/components/dashboard-layout";
 import { User } from "@/types";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { api } from "@/lib/axios";
 
 export const Route = createFileRoute("/dashboard/creator/profile")({
@@ -107,6 +107,7 @@ function Field({
 }
 
 function ProfileTab({ user }: { user: User }) {
+  const queryClient = useQueryClient();
   const [loading, setLoading] = useState(false);
 
   // Form State — initialise from user data, fallback to empty
@@ -114,7 +115,9 @@ function ProfileTab({ user }: { user: User }) {
   const [lastName, setLastName] = useState(user?.last_name || "");
   const [gender, setGender] = useState((user?.profile?.social_links as any)?.gender || "Male");
   const [dob, setDob] = useState((user?.profile?.social_links as any)?.dob || "");
-  const [creatorType, setCreatorType] = useState((user?.profile?.social_links as any)?.creator_type || "");
+  const [creatorType, setCreatorType] = useState(
+    (user?.profile?.social_links as any)?.creator_type || "",
+  );
   const [storeDesc, setStoreDesc] = useState(user?.profile?.bio || "");
 
   // Socials
@@ -124,7 +127,29 @@ function ProfileTab({ user }: { user: User }) {
   const [tiktok, setTiktok] = useState((user?.profile?.social_links as any)?.tiktok || "");
   const [linkedin, setLinkedin] = useState((user?.profile?.social_links as any)?.linkedin || "");
   const [youtube, setYoutube] = useState((user?.profile?.social_links as any)?.youtube || "");
-  const [contactNumber, setContactNumber] = useState((user?.profile?.social_links as any)?.phone || "");
+  const [contactNumber, setContactNumber] = useState(
+    (user?.profile?.social_links as any)?.phone || "",
+  );
+
+  // Sync state with props when fresh data is loaded
+  useEffect(() => {
+    if (user) {
+      setFirstName(user.first_name || "");
+      setLastName(user.last_name || "");
+      const links = user.profile?.social_links as any;
+      setGender(links?.gender || "Male");
+      setDob(links?.dob || "");
+      setCreatorType(links?.creator_type || "");
+      setStoreDesc(user.profile?.bio || "");
+      setTwitter(links?.twitter || "");
+      setInstagram(links?.instagram || "");
+      setFacebook(links?.facebook || "");
+      setTiktok(links?.tiktok || "");
+      setLinkedin(links?.linkedin || "");
+      setYoutube(links?.youtube || "");
+      setContactNumber(links?.phone || "");
+    }
+  }, [user]);
 
   async function handleSave(e: React.FormEvent) {
     e.preventDefault();
@@ -149,6 +174,7 @@ function ProfileTab({ user }: { user: User }) {
           },
         },
       });
+      queryClient.invalidateQueries({ queryKey: ["profile"] });
       toast.success("Profile updated successfully!");
     } catch (err: any) {
       toast.error(err.response?.data?.detail || "Failed to update profile");
@@ -321,12 +347,22 @@ function ProfileTab({ user }: { user: User }) {
 }
 
 function PayoutsTab({ user }: { user: User }) {
+  const queryClient = useQueryClient();
   const bankDetails = user?.profile?.bank_details || {};
   const [method, setMethod] = useState(bankDetails.method || "Bank transfer");
   const [accountName, setAccountName] = useState(bankDetails.account_name || "");
   const [accountNumber, setAccountNumber] = useState(bankDetails.account_number || "");
   const [bankName, setBankName] = useState(bankDetails.bank_name || "");
   const [loading, setLoading] = useState(false);
+
+  // Sync state with props when fresh data is loaded
+  useEffect(() => {
+    const details = user?.profile?.bank_details || {};
+    setMethod(details.method || "Bank transfer");
+    setAccountName(details.account_name || "");
+    setAccountNumber(details.account_number || "");
+    setBankName(details.bank_name || "");
+  }, [user]);
 
   async function handleSave(e: React.FormEvent) {
     e.preventDefault();
@@ -342,6 +378,7 @@ function PayoutsTab({ user }: { user: User }) {
           },
         },
       });
+      queryClient.invalidateQueries({ queryKey: ["profile"] });
       toast.success("Payout method saved successfully!");
     } catch (err: any) {
       toast.error(err.response?.data?.detail || "Failed to save payout method");
@@ -431,7 +468,11 @@ function PasswordTab() {
       }
       setTimeout(() => navigate({ to: "/login" }), 1500);
     } catch (err: any) {
-      toast.error(err.response?.data?.old_password?.[0] || err.response?.data?.detail || "Failed to update password");
+      toast.error(
+        err.response?.data?.old_password?.[0] ||
+          err.response?.data?.detail ||
+          "Failed to update password",
+      );
     } finally {
       setLoading(false);
     }
@@ -496,7 +537,7 @@ function SecurityTab() {
   return (
     <div className="rounded-[2.5rem] border-[4px] border-border bg-white p-6 sm:p-8 shadow-vibe flex flex-col gap-6">
       <h2 className="font-display text-2xl font-black text-foreground">Security Settings</h2>
-      <div className="rounded-2xl border-[3px] border-border bg-tint-peach p-6 shadow-vibe-sm">
+      <div className="rounded-2xl border-[3px] border-border bg-tint-mint p-6 shadow-vibe-sm">
         <h3 className="font-black text-lg">Two-Factor Authentication</h3>
         <p className="text-sm font-bold text-foreground/70 mt-2">
           Add an extra layer of security to your account.

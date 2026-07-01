@@ -36,6 +36,8 @@ import { ProductCard } from "@/components/product-card";
 import { Product } from "@/types";
 import { products as mockProducts } from "@/lib/mock-data";
 import { getProductIcon, tintClass } from "@/lib/mock-products";
+import { useQuery } from "@tanstack/react-query";
+import { api } from "@/lib/axios";
 
 /* ---------- Reusable ---------- */
 function PrimaryButton({
@@ -122,7 +124,15 @@ const products = [
 ];
 
 function MarketplaceExplore() {
-  const products = mockProducts;
+  const { data: dbProducts = [] } = useQuery<Product[]>({
+    queryKey: ["products"],
+    queryFn: async () => {
+      const res = await api.get("/catalog/products/");
+      return res.data.results || [];
+    },
+  });
+
+  const products = dbProducts.length > 0 ? dbProducts : mockProducts;
 
   const displayProducts =
     products.length >= 6
@@ -153,7 +163,6 @@ function MarketplaceExplore() {
 
   return (
     <section className="bg-background py-16 md:py-24 relative overflow-hidden">
-      <div className="pointer-events-none absolute left-1/2 top-1/2 h-[40rem] w-[40rem] -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-border bg-tint-mint shadow-vibe opacity-40" />
       <div className="container-page relative z-10 animate-fade-in-up">
         <div className="mx-auto w-full max-w-5xl overflow-hidden rounded-[2rem] border-[4px] border-border bg-background shadow-vibe relative z-10 flex flex-col pointer-events-none select-none">
           {/* Browser Header */}
@@ -211,14 +220,16 @@ function MarketplaceExplore() {
               </div>
               {/* Grid */}
               <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                {displayProducts.map((item: Product, i: number) => {
+                {(displayProducts as Product[]).map((item, i: number) => {
                   const Icon = getProductIcon(item.product_type || item.type || "ebook");
+                  const tintNames = ["mint", "lilac", "peach", "rose"] as const;
+                  const tintName = tintNames[i % 4];
                   return (
                     <Link
                       to={item.id ? "/products/$id" : "/marketplace"}
-                      params={item.id ? { id: String(item.id) } : {}}
+                      params={item.id ? { id: item.slug || String(item.id) } : {}}
                       key={i}
-                      className={`flex flex-col rounded-[1.5rem] border-[4px] border-border ${tintClass(["mint", "lilac", "peach", "rose"][i % 4])} p-4 shadow-vibe-sm transition-transform hover:-translate-y-1 hover:shadow-vibe cursor-pointer relative overflow-hidden`}
+                      className={`flex flex-col rounded-[1.5rem] border-[4px] border-border ${tintClass(tintName)} p-4 shadow-vibe-sm transition-transform hover:-translate-y-1 hover:shadow-vibe cursor-pointer relative overflow-hidden`}
                     >
                       <div className="flex h-28 items-center justify-center rounded-xl border-[3px] border-border bg-white relative overflow-hidden">
                         {item.cover_image ? (
@@ -293,12 +304,6 @@ function SellableTypes() {
       id="features"
       className="relative overflow-hidden bg-surface py-20 md:py-28 border-y-2 border-border"
     >
-      <div className="absolute right-10 top-10 hidden lg:block">
-        <div className="relative h-20 w-20">
-          <div className="absolute inset-0 rounded-full border-2 border-border bg-gold shadow-vibe" />
-          <div className="absolute left-3 top-3 h-16 w-16 rounded-full border-2 border-border bg-tint-mint" />
-        </div>
-      </div>
       <div className="container-page animate-fade-in-up" style={{ animationDelay: "100ms" }}>
         <div className="mx-auto max-w-3xl text-center">
           <h2 className="font-display text-4xl font-black leading-tight md:text-5xl">
@@ -542,9 +547,6 @@ function GlobeViz() {
 function PaymentGateways() {
   return (
     <section className="relative overflow-hidden bg-background py-20 md:py-28">
-      <div className="pointer-events-none absolute -left-32 top-1/2 h-72 w-72 rounded-full border-2 border-border bg-tint-lilac shadow-vibe opacity-60" />
-      <div className="pointer-events-none absolute right-10 top-20 h-20 w-20 rotate-12 rounded-lg border-2 border-border bg-tint-peach shadow-vibe-sm opacity-60" />
-
       <div
         className="container-page relative animate-fade-in-up"
         style={{ animationDelay: "300ms" }}
@@ -639,8 +641,6 @@ function SalesTools() {
   ];
   return (
     <section className="relative overflow-hidden bg-background py-20 md:py-28 border-y-2 border-border">
-      <div className="pointer-events-none absolute -left-20 top-10 h-40 w-40 rounded-full border-2 border-border bg-tint-peach shadow-vibe opacity-80" />
-      <div className="pointer-events-none absolute right-10 bottom-10 h-40 w-40 rounded-full border-2 border-border bg-tint-mint shadow-vibe opacity-80" />
       <div
         className="container-page relative animate-fade-in-up"
         style={{ animationDelay: "400ms" }}
@@ -698,9 +698,6 @@ function Integrations() {
   ];
   return (
     <section className="relative overflow-hidden bg-background py-20 md:py-28 border-t-2 border-border">
-      <div className="pointer-events-none absolute -left-20 top-0 h-40 w-40 rounded-full border-2 border-border bg-tint-rose shadow-vibe opacity-60" />
-      <div className="pointer-events-none absolute right-10 top-10 h-24 w-24 rotate-45 rounded-lg border-2 border-border bg-gold shadow-vibe-sm opacity-60" />
-
       <div
         className="container-page relative animate-fade-in-up"
         style={{ animationDelay: "500ms" }}
@@ -727,11 +724,35 @@ function Integrations() {
 }
 
 /* ---------- Stats & Final CTA ---------- */
+const NairaIcon = ({ className = "h-8 w-8" }: { className?: string }) => (
+  <svg
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="3.2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    className={className}
+  >
+    <path d="M6 19V5l12 14V5" />
+    <path d="M4 10h16" />
+    <path d="M4 14h16" />
+  </svg>
+);
+
 function PressAndFinalCTA() {
   const stats = [
     { value: "10 min", label: "Time to set up your store" },
     { value: "90%", label: "Of every sale goes to you" },
-    { value: "₦0", label: "Cost to get started" },
+    {
+      value: (
+        <span className="inline-flex items-center justify-center gap-1.5">
+          <NairaIcon className="h-10 w-10 md:h-12 md:w-12 text-primary" />
+          <span>0</span>
+        </span>
+      ),
+      label: "Cost to get started",
+    },
   ];
   return (
     <section id="start" className="relative overflow-hidden bg-background py-20 md:py-28">
@@ -748,9 +769,7 @@ function PressAndFinalCTA() {
           ))}
         </div>
 
-        <div className="relative mt-24 mx-auto max-w-4xl overflow-hidden rounded-[4rem] border-[4px] border-border bg-tint-mint px-6 py-24 text-center shadow-vibe md:px-16">
-          <div className="pointer-events-none absolute -right-12 -top-16 h-64 w-64 rounded-full border-[3px] border-border bg-tint-rose shadow-vibe-sm opacity-50" />
-
+        <div className="relative mt-24 mx-auto max-w-4xl overflow-hidden rounded-[4rem] border-[4px] border-border bg-tint-peach px-6 py-24 text-center shadow-vibe md:px-16">
           <h2 className="relative z-10 mx-auto max-w-md font-display text-5xl font-black text-foreground leading-tight md:text-6xl">
             Start Selling on Cetoh
           </h2>
@@ -761,7 +780,7 @@ function PressAndFinalCTA() {
           <div className="relative z-10 mt-10 flex flex-col items-center justify-center gap-6 sm:flex-row">
             <Link
               to="/signup"
-              className="inline-flex items-center justify-center gap-2 rounded-full border-[3px] border-border bg-primary px-10 py-5 text-xl font-black text-white shadow-vibe shadow-vibe-hover"
+              className="inline-flex items-center justify-center gap-2 rounded-full border-[3px] border-border bg-primary px-10 py-5 text-xl font-black text-white shadow-vibe-cta shadow-vibe-cta-hover"
             >
               Get started for free <ArrowRight className="h-6 w-6" />
             </Link>

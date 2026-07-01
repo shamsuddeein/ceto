@@ -14,8 +14,9 @@ test.describe("Visual Regression Tests", () => {
       // Navigate to the route
       await page.goto(route.path);
 
-      // Wait for network idle to ensure fonts/images are loaded
-      await page.waitForLoadState("networkidle");
+      // Wait for load state and let fonts/styles settle
+      await page.waitForLoadState("load");
+      await page.waitForTimeout(1000);
 
       // Hide specific dynamic elements like floating decorative circles with random rotation if they break VRT
       await page.addStyleTag({
@@ -28,7 +29,6 @@ test.describe("Visual Regression Tests", () => {
         fullPage: true,
         maxDiffPixelRatio: 0.05, // Allow small pixel differences for rendering variations
         timeout: 15000, // Increase timeout for long pages
-        animations: "disabled",
       });
     });
   }

@@ -4,6 +4,8 @@ import { Product } from "@/types";
 import { products as mockProducts } from "@/lib/mock-data";
 import { Loader2, Search, ShoppingCart } from "lucide-react";
 import { SiInstagram, SiX, SiFacebook } from "@icons-pack/react-simple-icons";
+import { useQuery } from "@tanstack/react-query";
+import { api } from "@/lib/axios";
 
 export const Route = createFileRoute("/creators/$username")({
   head: ({ params }) => ({
@@ -18,23 +20,33 @@ export const Route = createFileRoute("/creators/$username")({
 function CreatorProfile() {
   const { username } = Route.useParams();
 
-  const allProducts = mockProducts;
-  const isLoading = false;
+  const { data: dbProducts = [], isLoading } = useQuery<Product[]>({
+    queryKey: ["products"],
+    queryFn: async () => {
+      const res = await api.get("/catalog/products/");
+      return res.data.results || [];
+    },
+  });
+
+  const allProducts = dbProducts.length > 0 ? dbProducts : mockProducts;
 
   const products = allProducts.filter(
     (p: Product) => p.creator_details?.username === username || p.creator?.username === username,
   );
 
   // Derive creator details from the first product, or fallback to URL param
-  const profile =
-    products.length > 0 && (products[0].creator_details || products[0].creator)
-      ? products[0].creator_details || products[0].creator
-      : { username, bio: "Turn what you know into income.", avatar_url: null };
+  const firstProduct = products[0];
+  const profile: { username?: string; bio?: string; avatar_url?: string | null } =
+    (firstProduct?.creator_details || firstProduct?.creator) ?? {
+      username,
+      bio: "Turn what you know into income.",
+      avatar_url: null,
+    };
 
-  const name = profile?.username
+  const name = profile.username
     ? profile.username.charAt(0).toUpperCase() + profile.username.slice(1)
     : "";
-  const displayAvatar = profile?.username ? profile.username.charAt(0).toUpperCase() : "";
+  const displayAvatar = profile.username ? profile.username.charAt(0).toUpperCase() : "";
 
   if (isLoading) {
     return (
@@ -64,6 +76,7 @@ function CreatorProfile() {
         </div>
 
         <h1 className="mt-8 font-display text-3xl font-bold text-primary">{name}</h1>
+        <p className="text-sm font-semibold text-foreground/60">@{profile.username}</p>
 
         <div className="mt-6 space-y-2 text-[15px] leading-relaxed text-foreground/80 whitespace-pre-wrap">
           {profile?.bio || "Turn what you know into income."}
@@ -79,13 +92,6 @@ function CreatorProfile() {
           <a href="#" className="hover:text-primary transition-colors">
             <SiFacebook className="h-5 w-5" />
           </a>
-        </div>
-
-        {/* Decorative background vectors */}
-        <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-64 overflow-hidden">
-          <div className="absolute -bottom-24 -left-12 h-56 w-56 rounded-full bg-primary/10" />
-          <div className="absolute -bottom-10 -right-16 h-48 w-48 rounded-full bg-primary/5" />
-          <div className="absolute bottom-8 left-16 h-32 w-32 rounded-full bg-primary/5" />
         </div>
       </aside>
 
@@ -114,6 +120,7 @@ function CreatorProfile() {
           </div>
         </div>
 
+        <h2 className="mb-6 font-display text-2xl font-bold text-foreground">Featured Products</h2>
         {/* Product Grid */}
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {products.length > 0 ? (

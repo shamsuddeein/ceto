@@ -29,7 +29,7 @@ export const CATEGORIES = [
   { slug: "audio", name: "Audio", count: 198, tint: "rose" },
   { slug: "services", name: "Services", count: 421, tint: "cream" },
   { slug: "memberships", name: "Memberships", count: 87, tint: "mint" },
-  { slug: "audio", name: "Audio & Music", count: 312, tint: "lilac" },
+  { slug: "audio-music", name: "Audio & Music", count: 312, tint: "lilac" },
   { slug: "design", name: "Design Assets", count: 504, tint: "peach" },
 ] as const;
 

@@ -6,6 +6,8 @@ import { SiteHeader, SiteFooter } from "@/components/site-layout";
 import { ProductCard } from "@/components/product-card";
 import { products as mockProducts } from "@/lib/mock-data";
 import { useDebounce } from "@/hooks/use-debounce";
+import { useQuery } from "@tanstack/react-query";
+import { api } from "@/lib/axios";
 
 export const Route = createFileRoute("/search")({
   head: () => ({ meta: [{ title: "Search | Cetoh" }] }),
@@ -16,8 +18,15 @@ function SearchPage() {
   const [q, setQ] = useState("");
   const debouncedQ = useDebounce(q, 300);
 
-  const products = mockProducts;
-  const isLoading = false;
+  const { data: dbProducts = [], isLoading } = useQuery<Product[]>({
+    queryKey: ["products"],
+    queryFn: async () => {
+      const res = await api.get("/catalog/products/");
+      return res.data.results || [];
+    },
+  });
+
+  const products = dbProducts.length > 0 ? dbProducts : mockProducts;
 
   const results = useMemo(() => {
     if (!debouncedQ.trim()) return products;

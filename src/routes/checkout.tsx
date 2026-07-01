@@ -3,22 +3,26 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { Lock, CreditCard, Loader2, ShieldCheck } from "lucide-react";
 import { SiteHeader } from "@/components/site-layout";
-import { products as mockProducts } from "@/lib/mock-data";
 import { APIError, Product } from "@/types";
+import { api } from "@/lib/axios";
 
 export const Route = createFileRoute("/checkout")({
   head: () => ({ meta: [{ title: "Checkout | Cetoh" }] }),
   validateSearch: (search: Record<string, unknown>): { productId?: string } => {
+    const rawId = search.productId as string | undefined;
     return {
-      productId: search.productId as string | undefined,
+      productId: rawId ? rawId.replace(/^"|"$/g, "") : undefined,
     };
   },
   loaderDeps: ({ search }) => ({ productId: search.productId }),
-  loader: ({ deps }) => {
+  loader: async ({ deps }) => {
+    if (!deps.productId) {
+      throw new Error("Product ID is required for checkout");
+    }
+    const cleanId = deps.productId.replace(/^"|"$/g, "");
+    const res = await api.get(`/catalog/products/${cleanId}/`);
     return {
-      product: deps.productId
-        ? mockProducts.find((p) => String(p.id) === deps.productId) || mockProducts[0]
-        : mockProducts[0],
+      product: res.data as Product,
     };
   },
   component: Checkout,
@@ -40,11 +44,18 @@ function Checkout() {
   async function pay(e: React.FormEvent) {
     e.preventDefault();
     setLoading(true);
-    toast.success("Payment successful! Redirecting...");
-    setTimeout(() => {
+    try {
+      const res = await api.post("/orders/checkout/", {
+        product_slug: product.slug,
+        buyer_email: email,
+      });
+      toast.success("Order initialized! Redirecting...");
+      const checkoutUrl = res.data.checkout_url;
+      window.location.href = checkoutUrl;
+    } catch (err: any) {
+      toast.error(err.response?.data?.detail || "Failed to initialize order.");
       setLoading(false);
-      navigate({ to: "/payment-success" });
-    }, 1000);
+    }
   }
   return (
     <div className="min-h-screen bg-surface">

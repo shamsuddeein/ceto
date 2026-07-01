@@ -77,12 +77,16 @@
 
   --gold: oklch(0.78 0.16 75);
 
-  /* Soft category tints */
-  --tint-mint: oklch(0.94 0.04 155);
-  --tint-lilac: oklch(0.93 0.04 305);
-  --tint-peach: oklch(0.94 0.05 75);
-  --tint-rose: oklch(0.94 0.04 15);
-  --tint-cream: oklch(0.95 0.04 90);
+  /* Soft category tints mapped to strict 3-color palette:
+     1. Mint Green (trust/payment)
+     2. Warm Orange (action/selling)
+     3. Off-white (neutral background)
+  */
+  --tint-mint: oklch(0.93 0.055 150);   /* Trust/Payment: Mint Green */
+  --tint-peach: oklch(0.92 0.065 65);   /* Action/Selling: Warm Orange */
+  --tint-cream: oklch(0.985 0.008 95);  /* Neutral Background: Off-white */
+  --tint-lilac: oklch(0.985 0.008 95);  /* Mapped to Neutral Off-white */
+  --tint-rose: oklch(0.92 0.065 65);    /* Mapped to Action Orange */
 
   --destructive: oklch(0.577 0.245 27.325);
   --destructive-foreground: oklch(0.99 0 0);
@@ -141,20 +145,33 @@
 }
 
 @utility shadow-vibe {
+  box-shadow: none;
+}
+
+@utility shadow-vibe-sm {
+  box-shadow: none;
+}
+
+@utility shadow-vibe-hover {
+  transition: none;
+  &:hover {
+    box-shadow: none;
+    transform: none;
+  }
+  &:active {
+    box-shadow: none;
+    transform: none;
+  }
+}
+
+@utility shadow-vibe-cta {
   box-shadow: 4px 4px 0px 0px var(--color-border);
   @media (min-width: 768px) {
     box-shadow: 12px 12px 0px 0px var(--color-border);
   }
 }
 
-@utility shadow-vibe-sm {
-  box-shadow: 2px 2px 0px 0px var(--color-border);
-  @media (min-width: 768px) {
-    box-shadow: 6px 6px 0px 0px var(--color-border);
-  }
-}
-
-@utility shadow-vibe-hover {
+@utility shadow-vibe-cta-hover {
   transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
   &:hover {
     box-shadow: 6px 6px 0px 0px var(--color-border);

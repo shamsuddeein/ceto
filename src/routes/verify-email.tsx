@@ -41,7 +41,7 @@ function VerifyEmail() {
     } catch (err: any) {
       toast.error(
         err.response?.data?.detail ||
-          "Verification link is invalid or has expired. Request a new one below."
+          "Verification link is invalid or has expired. Request a new one below.",
       );
     } finally {
       setLoading(false);
@@ -57,9 +57,7 @@ function VerifyEmail() {
       await api.post("/auth/resend-verification/", { email: resendEmail });
       toast.success("A new verification link has been sent to your email.");
     } catch (err: any) {
-      toast.error(
-        err.response?.data?.detail || "Failed to resend verification email."
-      );
+      toast.error(err.response?.data?.detail || "Failed to resend verification email.");
     } finally {
       setResending(false);
     }
@@ -100,14 +98,11 @@ function VerifyEmail() {
                 Check your inbox
               </h1>
               <p className="mt-2 text-sm text-foreground/70">
-                We sent a verification link to your email. Click the link to
-                activate your account.
+                We sent a verification link to your email. Click the link to activate your account.
               </p>
 
               <div className="mt-8 rounded-xl border border-border bg-background p-6 text-left">
-                <p className="text-sm font-semibold text-foreground">
-                  Didn't get the email?
-                </p>
+                <p className="text-sm font-semibold text-foreground">Didn't get the email?</p>
                 <p className="mt-1 text-xs text-foreground/60">
                   Check your spam folder, or resend the link below.
                 </p>
@@ -127,9 +122,7 @@ function VerifyEmail() {
                     disabled={resending}
                     className="inline-flex items-center justify-center gap-2 rounded-md bg-primary py-2.5 text-sm font-semibold text-primary-foreground hover:bg-primary/90 disabled:opacity-60"
                   >
-                    <RefreshCw
-                      className={`h-4 w-4 ${resending ? "animate-spin" : ""}`}
-                    />
+                    <RefreshCw className={`h-4 w-4 ${resending ? "animate-spin" : ""}`} />
                     {resending ? "Sending…" : "Resend verification link"}
                   </button>
                 </form>

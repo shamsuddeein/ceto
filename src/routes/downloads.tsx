@@ -63,7 +63,7 @@ function Downloads() {
                   <div className="flex-1 min-w-0">
                     <Link
                       to="/products/$id"
-                      params={{ id: String(p.id) }}
+                      params={{ id: p.slug || String(p.id) }}
                       className="block font-display text-base font-semibold text-foreground hover:text-primary line-clamp-1"
                     >
                       {p.title}

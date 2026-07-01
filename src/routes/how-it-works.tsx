@@ -118,7 +118,60 @@ function HowItWorks() {
                   Start free
                 </Link>
               </div>
-              <div className="aspect-square rounded-[3rem] border-[4px] border-border bg-white shadow-vibe" />
+              <div className="aspect-square flex flex-col justify-between rounded-[3rem] border-[4px] border-border bg-tint-cream p-4 sm:p-8 relative overflow-hidden select-none shadow-vibe">
+                {/* Browser Header Bar */}
+                <div className="absolute top-0 left-0 right-0 border-b-[3px] border-border bg-white px-4 py-2.5 flex items-center gap-1.5 z-10">
+                  <div className="h-2.5 w-2.5 rounded-full border border-border bg-tint-peach" />
+                  <div className="h-2.5 w-2.5 rounded-full border border-border bg-gold" />
+                  <div className="h-2.5 w-2.5 rounded-full border border-border bg-tint-mint" />
+                  <div className="mx-auto h-5 w-40 rounded-md border-2 border-border bg-white text-[10px] font-black text-foreground/75 flex items-center justify-center">
+                    checkout.cetoh.com
+                  </div>
+                </div>
+
+                {/* Mock Checkout Card */}
+                <div className="mt-8 flex-1 flex flex-col justify-center">
+                  <div className="rounded-2xl border-[3px] border-border bg-white p-4 shadow-vibe-sm flex flex-col gap-3">
+                    {/* Product info */}
+                    <div className="flex items-center justify-between border-b-2 border-border pb-3">
+                      <div>
+                        <h4 className="font-display text-sm font-black text-foreground">Launch Blueprint</h4>
+                        <p className="text-[10px] font-bold text-foreground/50">Digital Guide (eBook)</p>
+                      </div>
+                      <span className="rounded-lg border-2 border-border bg-tint-mint px-2.5 py-1 text-xs font-black text-foreground">
+                        ₦10,000
+                      </span>
+                    </div>
+
+                    {/* Payment methods */}
+                    <div className="flex gap-2">
+                      <button className="flex-1 rounded-lg border-2 border-border bg-tint-peach p-2 text-center text-xs font-black text-foreground shadow-vibe-sm">
+                        💳 Card
+                      </button>
+                      <button className="flex-1 rounded-lg border-2 border-border bg-white p-2 text-center text-xs font-black text-foreground/60">
+                        🏦 Transfer
+                      </button>
+                    </div>
+
+                    {/* Inputs */}
+                    <div className="flex flex-col gap-2">
+                      <div className="rounded-lg border-2 border-border bg-white px-3 py-1.5 text-left">
+                        <p className="text-[9px] font-bold text-foreground/50">EMAIL ADDRESS</p>
+                        <p className="text-xs font-black text-foreground">buyer@example.com</p>
+                      </div>
+                      <div className="rounded-lg border-2 border-border bg-white px-3 py-1.5 text-left">
+                        <p className="text-[9px] font-bold text-foreground/50">CARD DETAILS</p>
+                        <p className="text-xs font-black text-foreground">••••  ••••  ••••  4242</p>
+                      </div>
+                    </div>
+
+                    {/* Action Button */}
+                    <button className="w-full rounded-xl border-[3px] border-border bg-primary py-2.5 text-center text-xs font-black text-white shadow-vibe-cta">
+                      Pay ₦10,000
+                    </button>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </section>

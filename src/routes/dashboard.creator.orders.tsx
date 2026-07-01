@@ -1,10 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
-import { Search, Inbox, ShoppingBag, X } from "lucide-react";
+import { Search, Inbox, ShoppingBag, X, Loader2 } from "lucide-react";
 import { DashboardLayout } from "@/components/dashboard-layout";
 import { EmptyState } from "@/components/ui/empty-state";
 import { Order } from "@/types";
-import { orders as mockOrders } from "@/lib/mock-data";
+import { useQuery } from "@tanstack/react-query";
+import { api } from "@/lib/axios";
 
 export const Route = createFileRoute("/dashboard/creator/orders")({
   head: () => ({ meta: [{ title: "Orders & Sales | Cetoh" }] }),
@@ -14,17 +15,44 @@ export const Route = createFileRoute("/dashboard/creator/orders")({
 function Orders() {
   const [q, setQ] = useState("");
 
-  const orders = mockOrders;
+  const { data = null, isLoading } = useQuery({
+    queryKey: ["creatorOrders"],
+    queryFn: async () => {
+      const res = await api.get("/orders/sales/");
+      return res.data;
+    },
+  });
 
-  const list = orders.filter((o: Order) =>
-    (String(o.id) + String(o.buyer) + String(o.product)).toLowerCase().includes(q.toLowerCase()),
-  );
+  const orders: Order[] = data?.results || [];
+
+  const list = orders.filter((o: Order) => {
+    const searchString = (
+      String(o.id) +
+      String(o.buyer_email || "") +
+      (typeof o.product === "object" && o.product ? o.product.title : String(o.product))
+    ).toLowerCase();
+    return searchString.includes(q.toLowerCase());
+  });
+
+  if (isLoading) {
+    return (
+      <DashboardLayout title="Orders & Sales">
+        <div className="flex justify-center py-20">
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        </div>
+      </DashboardLayout>
+    );
+  }
+
+  const totalRevenue = orders
+    .filter((o: Order) => o.status === "paid")
+    .reduce((sum: number, o: Order) => sum + Number(o.amount), 0);
 
   return (
     <DashboardLayout title="Orders & Sales">
       <div className="grid gap-6 sm:grid-cols-3">
         <Stat label="Total orders" value={String(orders.length)} />
-        <Stat label="Revenue (30d)" value={`₦0`} />
+        <Stat label="Total revenue" value={`₦${totalRevenue.toLocaleString("en-US")}`} />
         <Stat label="Refund rate" value="0%" />
       </div>
 
@@ -71,10 +99,8 @@ function Orders() {
                   {list.map((o: Order) => (
                     <tr key={o.id} className="transition-colors hover:bg-muted/50">
                       <td className="px-5 py-4 font-mono text-sm">{o.id}</td>
-                      <td>{o.date}</td>
-                      <td className="text-foreground/70">
-                        {typeof o.buyer === "string" ? o.buyer : o.buyer?.username}
-                      </td>
+                      <td>{new Date(o.created_at).toLocaleDateString()}</td>
+                      <td className="text-foreground/70">{o.buyer_email}</td>
                       <td className="font-semibold line-clamp-1">
                         {typeof o.product === "object" && o.product !== null
                           ? (o.product as import("@/types").Product).title
@@ -85,7 +111,7 @@ function Orders() {
                       </td>
                       <td>
                         <span
-                          className={`rounded-full border-[3px] border-border px-3 py-1 text-xs font-black shadow-vibe-sm ${o.status === "Completed" ? "bg-tint-mint text-foreground" : o.status === "Refunded" ? "bg-tint-rose text-foreground" : "bg-tint-cream text-foreground"}`}
+                          className={`rounded-full border-[3px] border-border px-3 py-1 text-xs font-black shadow-vibe-sm ${o.status === "paid" ? "bg-tint-mint text-foreground" : o.status === "failed" ? "bg-tint-rose text-foreground" : "bg-tint-cream text-foreground"}`}
                         >
                           {o.status}
                         </span>
@@ -106,7 +132,7 @@ function Orders() {
                   <div className="flex justify-between items-start mb-2">
                     <span className="font-mono text-sm font-black">#{o.id}</span>
                     <span
-                      className={`rounded-full border-[3px] border-border px-2 py-0.5 text-xs font-black shadow-vibe-sm ${o.status === "Completed" ? "bg-tint-mint text-foreground" : o.status === "Refunded" ? "bg-tint-rose text-foreground" : "bg-tint-cream text-foreground"}`}
+                      className={`rounded-full border-[3px] border-border px-2 py-0.5 text-xs font-black shadow-vibe-sm ${o.status === "paid" ? "bg-tint-mint text-foreground" : o.status === "failed" ? "bg-tint-rose text-foreground" : "bg-tint-cream text-foreground"}`}
                     >
                       {o.status}
                     </span>
@@ -120,10 +146,8 @@ function Orders() {
                       : String(o.product)}
                   </div>
                   <div className="mt-4 flex justify-between text-sm text-foreground/70 font-bold border-t-[3px] border-border pt-3">
-                    <span className="truncate mr-2">
-                      {typeof o.buyer === "string" ? o.buyer : o.buyer?.username}
-                    </span>
-                    <span className="shrink-0">{o.date}</span>
+                    <span className="truncate mr-2">{o.buyer_email}</span>
+                    <span className="shrink-0">{new Date(o.created_at).toLocaleDateString()}</span>
                   </div>
                 </div>
               ))}

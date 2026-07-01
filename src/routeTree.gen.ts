@@ -26,6 +26,7 @@ import { Route as FeaturesRouteImport } from './routes/features'
 import { Route as FaqRouteImport } from './routes/faq'
 import { Route as DownloadsRouteImport } from './routes/downloads'
 import { Route as ContactRouteImport } from './routes/contact'
+import { Route as CheckoutSimulationRouteImport } from './routes/checkout-simulation'
 import { Route as CheckoutRouteImport } from './routes/checkout'
 import { Route as CategoriesRouteImport } from './routes/categories'
 import { Route as BlogRouteImport } from './routes/blog'
@@ -134,6 +135,11 @@ const DownloadsRoute = DownloadsRouteImport.update({
 const ContactRoute = ContactRouteImport.update({
   id: '/contact',
   path: '/contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CheckoutSimulationRoute = CheckoutSimulationRouteImport.update({
+  id: '/checkout-simulation',
+  path: '/checkout-simulation',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CheckoutRoute = CheckoutRouteImport.update({
@@ -272,6 +278,7 @@ export interface FileRoutesByFullPath {
   '/blog': typeof BlogRouteWithChildren
   '/categories': typeof CategoriesRoute
   '/checkout': typeof CheckoutRoute
+  '/checkout-simulation': typeof CheckoutSimulationRoute
   '/contact': typeof ContactRoute
   '/downloads': typeof DownloadsRoute
   '/faq': typeof FaqRoute
@@ -315,6 +322,7 @@ export interface FileRoutesByTo {
   '/blog': typeof BlogRouteWithChildren
   '/categories': typeof CategoriesRoute
   '/checkout': typeof CheckoutRoute
+  '/checkout-simulation': typeof CheckoutSimulationRoute
   '/contact': typeof ContactRoute
   '/downloads': typeof DownloadsRoute
   '/faq': typeof FaqRoute
@@ -359,6 +367,7 @@ export interface FileRoutesById {
   '/blog': typeof BlogRouteWithChildren
   '/categories': typeof CategoriesRoute
   '/checkout': typeof CheckoutRoute
+  '/checkout-simulation': typeof CheckoutSimulationRoute
   '/contact': typeof ContactRoute
   '/downloads': typeof DownloadsRoute
   '/faq': typeof FaqRoute
@@ -404,6 +413,7 @@ export interface FileRouteTypes {
     | '/blog'
     | '/categories'
     | '/checkout'
+    | '/checkout-simulation'
     | '/contact'
     | '/downloads'
     | '/faq'
@@ -447,6 +457,7 @@ export interface FileRouteTypes {
     | '/blog'
     | '/categories'
     | '/checkout'
+    | '/checkout-simulation'
     | '/contact'
     | '/downloads'
     | '/faq'
@@ -490,6 +501,7 @@ export interface FileRouteTypes {
     | '/blog'
     | '/categories'
     | '/checkout'
+    | '/checkout-simulation'
     | '/contact'
     | '/downloads'
     | '/faq'
@@ -534,6 +546,7 @@ export interface RootRouteChildren {
   BlogRoute: typeof BlogRouteWithChildren
   CategoriesRoute: typeof CategoriesRoute
   CheckoutRoute: typeof CheckoutRoute
+  CheckoutSimulationRoute: typeof CheckoutSimulationRoute
   ContactRoute: typeof ContactRoute
   DownloadsRoute: typeof DownloadsRoute
   FaqRoute: typeof FaqRoute
@@ -688,6 +701,13 @@ declare module '@tanstack/react-router' {
       path: '/contact'
       fullPath: '/contact'
       preLoaderRoute: typeof ContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/checkout-simulation': {
+      id: '/checkout-simulation'
+      path: '/checkout-simulation'
+      fullPath: '/checkout-simulation'
+      preLoaderRoute: typeof CheckoutSimulationRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/checkout': {
@@ -879,6 +899,7 @@ const rootRouteChildren: RootRouteChildren = {
   BlogRoute: BlogRouteWithChildren,
   CategoriesRoute: CategoriesRoute,
   CheckoutRoute: CheckoutRoute,
+  CheckoutSimulationRoute: CheckoutSimulationRoute,
   ContactRoute: ContactRoute,
   DownloadsRoute: DownloadsRoute,
   FaqRoute: FaqRoute,

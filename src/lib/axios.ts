@@ -63,16 +63,16 @@ api.interceptors.response.use(
       } catch (refreshError) {
         processQueue(refreshError, null);
         isRefreshing = false;
+        // Mirror clearClientSession() without importing auth.ts to avoid circular deps.
         if (typeof window !== "undefined") {
-          window.localStorage.removeItem("mock_token");
-          window.localStorage.removeItem("mock_role");
-          window.localStorage.removeItem("dashboard_role");
-          window.localStorage.removeItem("guest_token");
+          ["dashboard_role", "guest_token", "mock_token", "mock_role"].forEach((k) =>
+            window.localStorage.removeItem(k),
+          );
         }
         return Promise.reject(refreshError);
       }
     }
 
     return Promise.reject(error);
-  }
+  },
 );

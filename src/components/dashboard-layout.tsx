@@ -65,9 +65,7 @@ const CREATOR_NAV = [
   },
   {
     title: "ACTIVITY",
-    items: [
-      { label: "Notifications", to: "/dashboard/notifications" as const, icon: Bell },
-    ],
+    items: [{ label: "Notifications", to: "/dashboard/notifications" as const, icon: Bell }],
   },
 ];
 
@@ -96,7 +94,8 @@ export function DashboardLayout({ title, children }: { title: string; children: 
     else if (isOnCustomerRoute) window.localStorage.setItem("dashboard_role", "customer");
   }, [isOnCreatorRoute, isOnCustomerRoute]);
 
-  const isCreatorView = isOnCreatorRoute ||
+  const isCreatorView =
+    isOnCreatorRoute ||
     (!isOnCustomerRoute &&
       typeof window !== "undefined" &&
       window.localStorage.getItem("dashboard_role") === "creator");
@@ -242,7 +241,7 @@ export function DashboardLayout({ title, children }: { title: string; children: 
                     className="flex items-center gap-2 rounded-full border-[3px] border-border bg-tint-peach p-1 pr-3 shadow-vibe-sm transition-transform hover:-translate-y-1 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
                   >
                     <div className="flex h-10 w-10 overflow-hidden rounded-full border-[2px] border-border bg-white">
-                      {(user?.profile?.avatar || user?.creatorprofile?.avatar) ? (
+                      {user?.profile?.avatar || user?.creatorprofile?.avatar ? (
                         <img
                           src={user.profile?.avatar || user.creatorprofile?.avatar}
                           alt="Profile"
@@ -250,7 +249,10 @@ export function DashboardLayout({ title, children }: { title: string; children: 
                         />
                       ) : (
                         <span className="flex h-full w-full items-center justify-center font-display font-black text-primary uppercase">
-                          {user?.profile?.username?.[0] || user?.creatorprofile?.username?.[0] || user?.email?.[0] || "?"}
+                          {user?.profile?.username?.[0] ||
+                            user?.creatorprofile?.username?.[0] ||
+                            user?.email?.[0] ||
+                            "?"}
                         </span>
                       )}
                     </div>

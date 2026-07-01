@@ -6,6 +6,8 @@ import { DashboardLayout } from "@/components/dashboard-layout";
 import { Product } from "@/types";
 import { tintClass } from "@/lib/mock-products";
 import { products as mockProducts } from "@/lib/mock-data";
+import { useQuery } from "@tanstack/react-query";
+import { api } from "@/lib/axios";
 
 export const Route = createFileRoute("/edit-product/$id")({
   head: ({ params }) => ({ meta: [{ title: `Edit Product | Cetoh` }] }),
@@ -14,8 +16,14 @@ export const Route = createFileRoute("/edit-product/$id")({
 
 function EditProduct() {
   const { id } = Route.useParams();
-  const p = mockProducts.find((x) => String(x.id) === String(id));
-  const pLoading = false;
+  const navigate = Route.useNavigate();
+  const { data: p = null, isLoading: pLoading } = useQuery<Product>({
+    queryKey: ["product", id],
+    queryFn: async () => {
+      const res = await api.get(`/catalog/products/${id}/`);
+      return res.data;
+    },
+  });
 
   const [title, setTitle] = useState("");
   const [price, setPrice] = useState(0);
@@ -23,12 +31,22 @@ function EditProduct() {
   const [isPublished, setIsPublished] = useState(false);
   const [saving, setSaving] = useState(false);
 
+  // File and upload states
+  const [coverFile, setCoverFile] = useState<File | null>(null);
+  const [coverPreview, setCoverPreview] = useState<string | null>(null);
+  const [digitalFile, setDigitalFile] = useState<File | null>(null);
+  const [digitalFileName, setDigitalFileName] = useState("");
+  const [uploadProgress, setUploadProgress] = useState(0);
+  const [uploading, setUploading] = useState(false);
+
   useEffect(() => {
     if (p) {
       setTitle(p.title || "");
       setPrice(Number(p.price) || 0);
       setDesc(p.description || "");
       setIsPublished(p.is_published ?? false);
+      setCoverPreview(p.cover_image || null);
+      setDigitalFileName(p.digital_file ? p.digital_file.split("/").pop() || "" : "");
     }
   }, [p]);
 
@@ -48,12 +66,155 @@ function EditProduct() {
       </DashboardLayout>
     );
 
+  // --- S3 Presigned Upload Helper ---
+  async function performPresignedUpload(
+    file: File,
+    onProgress?: (pct: number) => void,
+  ): Promise<string> {
+    const res = await api.post("/catalog/products/upload/", {
+      filename: file.name,
+      content_type: file.type,
+      file_size: file.size,
+    });
+    const { upload_url, file_key } = res.data;
+
+    const isMock = upload_url.includes("mock-s3-bucket");
+
+    if (isMock) {
+      if (onProgress) {
+        for (let i = 10; i <= 100; i += 10) {
+          onProgress(i);
+          await new Promise((r) => setTimeout(r, 80));
+        }
+      }
+      return file_key;
+    }
+
+    await new Promise<void>((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+      xhr.open("PUT", upload_url, true);
+      xhr.setRequestHeader("Content-Type", file.type);
+
+      if (xhr.upload && onProgress) {
+        xhr.upload.onprogress = (e) => {
+          if (e.lengthComputable) {
+            const pct = Math.round((e.loaded / e.total) * 100);
+            onProgress(pct);
+          }
+        };
+      }
+
+      xhr.onload = () => {
+        if (xhr.status >= 200 && xhr.status < 300) {
+          resolve();
+        } else {
+          reject(new Error(`S3 upload failed with status ${xhr.status}`));
+        }
+      };
+
+      xhr.onerror = () => reject(new Error("S3 upload network error"));
+      xhr.send(file);
+    });
+
+    return file_key;
+  }
+
   async function save(e: React.FormEvent) {
     e.preventDefault();
     setSaving(true);
-    await new Promise((r) => setTimeout(r, 800));
-    toast.success("Product updated successfully!");
-    setSaving(false);
+    try {
+      let coverImageValue: any = null;
+      let digitalFileValue: any = null;
+
+      // Handle Cover Image upload
+      if (coverFile) {
+        try {
+          const res = await api.post("/catalog/products/upload/", {
+            filename: coverFile.name,
+            content_type: coverFile.type,
+            file_size: coverFile.size,
+          });
+          if (res.data.upload_url && !res.data.upload_url.includes("mock-s3-bucket")) {
+            coverImageValue = await performPresignedUpload(coverFile);
+          } else {
+            coverImageValue = coverFile;
+          }
+        } catch {
+          coverImageValue = coverFile;
+        }
+      }
+
+      // Handle Digital File upload
+      if (digitalFile) {
+        setUploading(true);
+        try {
+          const res = await api.post("/catalog/products/upload/", {
+            filename: digitalFile.name,
+            content_type: digitalFile.type,
+            file_size: digitalFile.size,
+          });
+          if (res.data.upload_url && !res.data.upload_url.includes("mock-s3-bucket")) {
+            digitalFileValue = await performPresignedUpload(digitalFile, setUploadProgress);
+          } else {
+            // Local fallback mock animation
+            for (let i = 20; i <= 100; i += 20) {
+              setUploadProgress(i);
+              await new Promise((r) => setTimeout(r, 100));
+            }
+            digitalFileValue = digitalFile;
+          }
+        } catch {
+          digitalFileValue = digitalFile;
+        } finally {
+          setUploading(false);
+        }
+      }
+
+      // Check if we need to use FormData for local uploads (when File objects exist)
+      const useFormData = coverImageValue instanceof File || digitalFileValue instanceof File;
+
+      if (useFormData) {
+        const fd = new FormData();
+        fd.append("title", title);
+        fd.append("description", desc);
+        fd.append("price", String(price));
+        fd.append("is_published", String(isPublished));
+        if (coverImageValue) fd.append("cover_image", coverImageValue);
+        if (digitalFileValue) fd.append("digital_file", digitalFileValue);
+
+        await api.patch(`/catalog/products/${id}/`, fd, {
+          headers: { "Content-Type": "multipart/form-data" },
+        });
+      } else {
+        const payload: any = {
+          title,
+          description: desc,
+          price,
+          is_published: isPublished,
+        };
+        if (coverImageValue) payload.cover_image = coverImageValue;
+        if (digitalFileValue) payload.digital_file = digitalFileValue;
+
+        await api.patch(`/catalog/products/${id}/`, payload);
+      }
+
+      toast.success("Product updated successfully!");
+    } catch (err: any) {
+      toast.error(err.response?.data?.detail || "Failed to update product.");
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  async function handleDelete() {
+    if (!window.confirm("Are you sure you want to delete this product?")) return;
+    try {
+      await api.delete(`/catalog/products/${id}/`);
+      toast.success("Product deleted successfully!");
+      navigate({ to: "/dashboard/creator/my-products" });
+    } catch (err: any) {
+      toast.error(err.response?.data?.detail || "Failed to delete product.");
+    }
   }
 
   return (
@@ -98,22 +259,47 @@ function EditProduct() {
           {/* Digital File */}
           <div className="rounded-[2.5rem] border-[4px] border-border bg-white p-6 sm:p-8 shadow-vibe">
             <h2 className="font-display text-xl font-black text-foreground">Digital File</h2>
-            <div className="mt-6 rounded-2xl border-[3px] border-dashed border-border bg-muted p-8 text-center">
+            <div className="mt-6 rounded-2xl border-[3px] border-dashed border-border bg-muted p-8 text-center relative">
               <Upload className="mx-auto h-10 w-10 stroke-[2] text-foreground/50" />
               <p className="mt-3 text-base font-bold text-foreground/70">
-                Current file:{" "}
-                <span className="font-mono text-foreground">
-                  {p.digital_file ? p.digital_file.split("/").pop() : "No file uploaded"}
-                </span>
+                {digitalFileName
+                  ? `Selected file: ${digitalFileName}`
+                  : `Current file: ${p.digital_file ? p.digital_file.split("/").pop() : "No file uploaded"}`}
               </p>
-              <button
-                type="button"
-                onClick={() => toast.error("File replace coming in a future update")}
-                className="mt-4 inline-flex items-center gap-2 rounded-xl border-[3px] border-border bg-white px-5 py-2.5 text-sm font-black shadow-vibe-sm transition-transform hover:-translate-y-1"
-              >
+              {digitalFile && (
+                <p className="text-xs font-bold text-foreground/60 mt-1">
+                  File size: {(digitalFile.size / 1024 / 1024).toFixed(2)} MB
+                </p>
+              )}
+              <label className="mt-4 inline-block cursor-pointer rounded-xl border-[3px] border-border bg-white px-5 py-2.5 text-sm font-black shadow-vibe-sm transition-transform hover:-translate-y-1">
                 Replace file
-              </button>
+                <input
+                  type="file"
+                  className="hidden"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (file) {
+                      setDigitalFile(file);
+                      setDigitalFileName(file.name);
+                    }
+                  }}
+                />
+              </label>
             </div>
+            {uploading && (
+              <div className="mt-4">
+                <div className="flex justify-between text-xs font-bold text-foreground/70 mb-1">
+                  <span>Uploading file...</span>
+                  <span>{uploadProgress}%</span>
+                </div>
+                <div className="w-full bg-border rounded-full h-3 overflow-hidden">
+                  <div
+                    className="bg-primary h-full transition-all duration-300"
+                    style={{ width: `${uploadProgress}%` }}
+                  />
+                </div>
+              </div>
+            )}
           </div>
         </div>
 
@@ -145,21 +331,29 @@ function EditProduct() {
             <div
               className={`mt-6 aspect-[4/3] rounded-2xl border-[3px] border-border overflow-hidden relative ${tintClass(p.tint || "mint")}`}
             >
-              {p.cover_image ? (
-                <img src={p.cover_image} alt={p.title} className="w-full h-full object-cover" />
+              {coverPreview ? (
+                <img src={coverPreview} alt={p.title} className="w-full h-full object-cover" />
               ) : (
                 <div className="w-full h-full flex items-center justify-center text-foreground/40 font-bold text-sm">
                   No Cover Image
                 </div>
               )}
             </div>
-            <button
-              type="button"
-              onClick={() => toast.error("Cover replace coming in a future update")}
-              className="mt-4 w-full inline-flex items-center justify-center gap-2 rounded-xl border-[3px] border-border bg-tint-cream px-5 py-2.5 text-sm font-black shadow-vibe-sm transition-transform hover:-translate-y-1"
-            >
-              <Upload className="h-4 w-4 stroke-[3px]" /> Change cover
-            </button>
+            <label className="mt-4 block w-full text-center cursor-pointer rounded-xl border-[3px] border-border bg-tint-cream py-2.5 text-sm font-black shadow-vibe-sm transition-transform hover:-translate-y-1">
+              Change cover
+              <input
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (file) {
+                    setCoverFile(file);
+                    setCoverPreview(URL.createObjectURL(file));
+                  }
+                }}
+              />
+            </label>
           </div>
 
           {/* Publish status */}
@@ -199,7 +393,7 @@ function EditProduct() {
 
           <button
             type="button"
-            onClick={() => toast.error("Delete disabled in demo")}
+            onClick={handleDelete}
             className="inline-flex w-full items-center justify-center gap-2 rounded-full border-[3px] border-border bg-tint-rose py-4 text-base font-black text-foreground shadow-vibe-sm transition-transform hover:-translate-y-1"
           >
             <Trash2 className="h-5 w-5 stroke-[3px]" /> Delete product

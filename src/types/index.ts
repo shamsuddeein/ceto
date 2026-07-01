@@ -1,7 +1,7 @@
 export interface UserProfile {
   id: string | number;
   username: string;
-  display_name?: string;      // CustomUser.display_name
+  display_name?: string; // CustomUser.display_name
   avatar?: string;
   avatar_url?: string | null;
   bio?: string;
@@ -19,7 +19,7 @@ export interface UserProfile {
   tiktok?: string;
   linkedin?: string;
   youtube?: string;
-  social_links?: any;
+  social_links?: Record<string, string>;
   // Bank / payouts
   bank_details?: {
     method?: string;
@@ -35,7 +35,7 @@ export interface User {
   email: string;
   username?: string;
   role?: string;
-  is_verified?: boolean;       // CustomUser.is_verified
+  is_verified?: boolean; // CustomUser.is_verified
   display_name?: string;
   first_name?: string;
   last_name?: string;
@@ -95,6 +95,7 @@ export interface Transaction {
   requested_at?: string;
   reference?: string;
   method?: string;
+  buyer_email?: string;
 }
 
 export interface APIError {

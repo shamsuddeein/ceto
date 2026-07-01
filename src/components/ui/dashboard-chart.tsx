@@ -12,7 +12,13 @@ export default function DashboardChart({ chartData }: { chartData: Record<string
           dy={10}
         />
         <YAxis
-          tickFormatter={(val) => (val === 0 ? "0" : `${val / 1000}k`)}
+          tickFormatter={(val) => {
+            if (val === 0) return "0";
+            if (val >= 1000) {
+              return `${(val / 1000).toFixed(val % 1000 === 0 ? 0 : 1)}k`;
+            }
+            return String(val);
+          }}
           tickLine={false}
           axisLine={false}
           tick={{ fontSize: 12, fontWeight: 700, fill: "var(--color-foreground)" }}

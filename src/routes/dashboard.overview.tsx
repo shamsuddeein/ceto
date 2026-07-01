@@ -1,20 +1,88 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState } from "react";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import { Loader2, PackageOpen, Download } from "lucide-react";
 import { DashboardLayout } from "@/components/dashboard-layout";
-import { profile as mockProfile, dashboardData } from "@/lib/mock-data";
+import { dashboardData } from "@/lib/mock-data";
 import { EmptyState } from "@/components/ui/empty-state";
 import { User, Order } from "@/types";
+import { api } from "@/lib/axios";
+import { useQuery } from "@tanstack/react-query";
+import { fetchCurrentUser } from "@/lib/auth";
+
+type OverviewSearch = {
+  access_token?: string;
+};
 
 export const Route = createFileRoute("/dashboard/overview")({
+  validateSearch: (search: Record<string, unknown>): OverviewSearch => ({
+    access_token: search.access_token ? (search.access_token as string) : undefined,
+  }),
   head: () => ({ meta: [{ title: "Overview | Cetoh" }] }),
   component: Overview,
 });
 
 function Overview() {
-  const user = mockProfile;
-  const isLoading = false;
+  const { access_token } = Route.useSearch();
+  const navigate = useNavigate();
+  const [verifying, setVerifying] = useState(!!access_token);
+
+  useEffect(() => {
+    if (!access_token) return;
+
+    let active = true;
+    async function verifyLink() {
+      if (!access_token) return;
+      try {
+        await api.get("/auth/verify-access-link/", {
+          params: { token: access_token },
+        });
+        if (!active) return;
+
+        window.localStorage.setItem("guest_token", access_token);
+        window.localStorage.setItem("dashboard_role", "customer");
+
+        toast.success("Access link verified successfully!");
+
+        // Redirect to overview page WITHOUT the query parameter
+        navigate({
+          to: "/dashboard/overview",
+          replace: true,
+        });
+      } catch (err: any) {
+        if (!active) return;
+        const msg = err.response?.data?.detail || "Invalid or expired access link.";
+        toast.error(msg);
+        navigate({
+          to: "/login",
+          replace: true,
+        });
+      } finally {
+        if (active) {
+          setVerifying(false);
+        }
+      }
+    }
+
+    verifyLink();
+    return () => {
+      active = false;
+    };
+  }, [access_token, navigate]);
+
+  const { data: profileUser, isLoading: profileLoading } = useQuery<User>({
+    queryKey: ["profile"],
+    queryFn: async () => {
+      const currentUser = await fetchCurrentUser();
+      if (!currentUser) {
+        throw new Error("Not authenticated");
+      }
+      return currentUser;
+    },
+    enabled:
+      typeof window !== "undefined" && !verifying && !window.localStorage.getItem("guest_token"),
+    retry: false,
+  });
 
   const [tab, setTab] = useState<"purchases" | "downloads" | "account" | "notifications">(
     "purchases",
@@ -26,15 +94,20 @@ function Overview() {
     { id: "notifications", label: "Notifications" },
   ] as const;
 
-  if (isLoading) {
+  if (verifying || profileLoading) {
     return (
       <DashboardLayout title="Overview">
-        <div className="flex justify-center p-10">
-          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        <div className="flex flex-col items-center justify-center p-12 gap-4">
+          <Loader2 className="h-8 w-8 animate-spin text-primary stroke-[3px]" />
+          <p className="font-bold text-foreground/70">
+            {verifying ? "Verifying access link..." : "Loading profile..."}
+          </p>
         </div>
       </DashboardLayout>
     );
   }
+
+  const user = profileUser || ({ id: "guest", email: "Magic-link guest" } as User);
 
   return (
     <DashboardLayout title="Overview">
@@ -69,8 +142,39 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
 }
 
 function PurchasesTab() {
-  // Using recent orders as dummy purchase history. Setting to empty for the empty state view.
-  const purchases: Order[] = [];
+  const guestToken =
+    typeof window !== "undefined" ? window.localStorage.getItem("guest_token") : null;
+
+  const { data: purchases = [], isLoading } = useQuery<Order[]>({
+    queryKey: ["purchases", guestToken],
+    queryFn: async () => {
+      const res = await api.get("/orders/purchases/", {
+        params: guestToken ? { token: guestToken } : {},
+      });
+      return Array.isArray(res.data) ? res.data : [];
+    },
+  });
+
+  const handleDownload = (o: Order) => {
+    const emailQuery = guestToken ? `?email=${o.buyer_email}` : "";
+    window.open(
+      `${api.defaults.baseURL || "/api"}/orders/${o.transaction_reference}/download/${emailQuery}`,
+      "_blank",
+    );
+  };
+
+  const getProductTitle = (product: Order["product"]) => {
+    if (product && typeof product === "object") return product.title;
+    return null;
+  };
+
+  if (isLoading) {
+    return (
+      <div className="flex justify-center py-10">
+        <Loader2 className="h-6 w-6 animate-spin text-primary" />
+      </div>
+    );
+  }
 
   if (purchases.length === 0) {
     return (
@@ -94,14 +198,19 @@ function PurchasesTab() {
               <PackageOpen className="h-6 w-6 stroke-[2.5]" />
             </div>
             <div>
-              <p className="font-black text-lg line-clamp-1">Product Purchase #{o.id}</p>
+              <p className="font-black text-lg line-clamp-1">
+                {getProductTitle(o.product) || `Purchase #${o.id}`}
+              </p>
               <p className="text-sm font-bold text-foreground/70">
                 {new Date(o.created_at).toLocaleDateString()} • ₦
                 {Number(o.amount).toLocaleString("en-US")}
               </p>
             </div>
           </div>
-          <button className="flex items-center justify-center gap-2 rounded-xl border-[3px] border-border bg-background px-4 py-2 text-sm font-black text-foreground shadow-vibe-sm transition-transform hover:-translate-y-1">
+          <button
+            onClick={() => handleDownload(o)}
+            className="flex items-center justify-center gap-2 rounded-xl border-[3px] border-border bg-background px-4 py-2 text-sm font-black text-foreground shadow-vibe-sm transition-transform hover:-translate-y-1"
+          >
             <Download className="h-4 w-4 stroke-[3px]" /> Download
           </button>
         </div>
@@ -111,8 +220,50 @@ function PurchasesTab() {
 }
 
 function DownloadsTab() {
-  const purchases = dashboardData()?.recent_orders || [];
-  const active = purchases.slice(0, 1); // Mock 1 active download
+  const guestToken =
+    typeof window !== "undefined" ? window.localStorage.getItem("guest_token") : null;
+
+  const { data: active = [], isLoading } = useQuery<Order[]>({
+    queryKey: ["downloads", guestToken],
+    queryFn: async () => {
+      const res = await api.get("/orders/purchases/", {
+        params: {
+          active: "true",
+          ...(guestToken ? { token: guestToken } : {}),
+        },
+      });
+      return Array.isArray(res.data) ? res.data : [];
+    },
+  });
+
+  const getExpiresInHours = (createdAt: string) => {
+    const created = new Date(createdAt).getTime();
+    const now = new Date().getTime();
+    const diffMs = created + 48 * 60 * 60 * 1000 - now;
+    const hours = Math.max(0, Math.floor(diffMs / (60 * 60 * 1000)));
+    return hours;
+  };
+
+  const handleDownload = (o: Order) => {
+    const emailQuery = guestToken ? `?email=${o.buyer_email}` : "";
+    window.open(
+      `${api.defaults.baseURL || "/api"}/orders/${o.transaction_reference}/download/${emailQuery}`,
+      "_blank",
+    );
+  };
+
+  const getProductTitle = (product: Order["product"]) => {
+    if (product && typeof product === "object") return product.title;
+    return null;
+  };
+
+  if (isLoading) {
+    return (
+      <div className="flex justify-center py-10">
+        <Loader2 className="h-6 w-6 animate-spin text-primary" />
+      </div>
+    );
+  }
 
   if (active.length === 0) {
     return (
@@ -136,11 +287,18 @@ function DownloadsTab() {
               <PackageOpen className="h-6 w-6 stroke-[2.5]" />
             </div>
             <div>
-              <p className="font-black text-lg line-clamp-1">Active Link #{o.id}</p>
-              <p className="text-sm font-bold text-foreground/70">Expires in 47 hours</p>
+              <p className="font-black text-lg line-clamp-1">
+                {getProductTitle(o.product) || `Active Link #${o.id}`}
+              </p>
+              <p className="text-sm font-bold text-foreground/70">
+                Expires in {getExpiresInHours(o.created_at)} hours
+              </p>
             </div>
           </div>
-          <button className="flex items-center justify-center gap-2 rounded-xl border-[3px] border-border bg-primary px-4 py-2 text-sm font-black text-white shadow-vibe-sm transition-transform hover:-translate-y-1">
+          <button
+            onClick={() => handleDownload(o)}
+            className="flex items-center justify-center gap-2 rounded-xl border-[3px] border-border bg-primary px-4 py-2 text-sm font-black text-white shadow-vibe-sm transition-transform hover:-translate-y-1"
+          >
             <Download className="h-4 w-4 stroke-[3px]" /> Download Now
           </button>
         </div>
@@ -150,28 +308,63 @@ function DownloadsTab() {
 }
 
 function AccountTab({ user }: { user: User }) {
-  const [password, setPassword] = useState("");
-  const [displayName, setDisplayName] = useState(user?.profile?.username || "");
-  const [loading, setLoading] = useState(false);
+  const [oldPassword, setOldPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [displayName, setDisplayName] = useState("");
+  const [savingName, setSavingName] = useState(false);
+  const [savingPw, setSavingPw] = useState(false);
 
-  async function handleSave(e: React.FormEvent) {
+  useEffect(() => {
+    if (user) {
+      setDisplayName(user.display_name || user.profile?.username || "");
+    }
+  }, [user]);
+
+  async function handleSaveName(e: React.FormEvent) {
     e.preventDefault();
-    setLoading(true);
+    setSavingName(true);
     try {
-      await new Promise((r) => setTimeout(r, 600));
-      toast.success("Settings updated successfully!");
-      setPassword("");
-    } catch (err: unknown) {
-      toast.error("Failed to update settings");
+      await api.put("/users/settings/", { display_name: displayName });
+      toast.success("Display name updated!");
+    } catch (err: any) {
+      toast.error(err.response?.data?.detail || "Failed to update display name.");
     } finally {
-      setLoading(false);
+      setSavingName(false);
+    }
+  }
+
+  async function handleChangePassword(e: React.FormEvent) {
+    e.preventDefault();
+    if (!oldPassword || !newPassword)
+      return toast.error("Enter both your current and new password.");
+    if (newPassword.length < 8) return toast.error("New password must be at least 8 characters.");
+    setSavingPw(true);
+    try {
+      await api.post("/users/change-password/", {
+        old_password: oldPassword,
+        new_password: newPassword,
+      });
+      toast.success("Password changed. Please log in again.");
+      setOldPassword("");
+      setNewPassword("");
+    } catch (err: any) {
+      const data = err.response?.data;
+      const msg =
+        data?.old_password?.[0] ||
+        data?.new_password?.[0] ||
+        data?.detail ||
+        "Failed to change password.";
+      toast.error(msg);
+    } finally {
+      setSavingPw(false);
     }
   }
 
   return (
     <div className="space-y-6">
+      {/* Display name */}
       <form
-        onSubmit={handleSave}
+        onSubmit={handleSaveName}
         className="rounded-[2.5rem] border-[4px] border-border bg-white p-6 sm:p-8 shadow-vibe"
       >
         <h2 className="font-display text-xl sm:text-2xl font-black text-foreground">
@@ -194,25 +387,57 @@ function AccountTab({ user }: { user: User }) {
               className="w-full rounded-2xl border-[3px] border-border bg-muted px-4 py-3 font-bold text-foreground/60 outline-none cursor-not-allowed"
             />
           </Field>
-          <Field label="New password">
+        </div>
+        <button
+          type="submit"
+          disabled={savingName}
+          className="mt-8 inline-flex items-center justify-center gap-2 rounded-full border-[3px] border-border bg-primary px-8 py-4 text-base font-black text-white shadow-vibe hover:-translate-y-1 hover:shadow-vibe-hover disabled:opacity-70 transition-transform"
+        >
+          {savingName && <Loader2 className="h-5 w-5 animate-spin stroke-[3px]" />}{" "}
+          {savingName ? "Saving…" : "Save display name"}
+        </button>
+      </form>
+
+      {/* Change password */}
+      <form
+        onSubmit={handleChangePassword}
+        className="rounded-[2.5rem] border-[4px] border-border bg-white p-6 sm:p-8 shadow-vibe"
+      >
+        <h2 className="font-display text-xl sm:text-2xl font-black text-foreground">
+          Change Password
+        </h2>
+        <div className="mt-8 space-y-6">
+          <Field label="Current Password">
             <input
               type="password"
               placeholder="••••••••"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              value={oldPassword}
+              onChange={(e) => setOldPassword(e.target.value)}
+              autoComplete="current-password"
+              className="w-full rounded-2xl border-[3px] border-border bg-background px-4 py-3 font-bold text-foreground outline-none shadow-vibe-sm transition-all focus:translate-x-[2px] focus:translate-y-[2px] focus:shadow-none"
+            />
+          </Field>
+          <Field label="New Password">
+            <input
+              type="password"
+              placeholder="••••••••"
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
+              autoComplete="new-password"
               className="w-full rounded-2xl border-[3px] border-border bg-background px-4 py-3 font-bold text-foreground outline-none shadow-vibe-sm transition-all focus:translate-x-[2px] focus:translate-y-[2px] focus:shadow-none"
             />
           </Field>
         </div>
         <button
           type="submit"
-          disabled={loading}
-          className="mt-10 inline-flex items-center justify-center gap-2 rounded-full border-[3px] border-border bg-primary px-8 py-4 text-base font-black text-white shadow-vibe hover:-translate-y-1 hover:shadow-vibe-hover disabled:opacity-70 transition-transform"
+          disabled={savingPw}
+          className="mt-8 inline-flex items-center justify-center gap-2 rounded-full border-[3px] border-border bg-foreground px-8 py-4 text-base font-black text-background shadow-vibe hover:-translate-y-1 hover:shadow-vibe-hover disabled:opacity-70 transition-transform"
         >
-          {loading && <Loader2 className="h-5 w-5 animate-spin stroke-[3px]" />}{" "}
-          {loading ? "Saving..." : "Save changes"}
+          {savingPw && <Loader2 className="h-5 w-5 animate-spin stroke-[3px]" />}{" "}
+          {savingPw ? "Updating…" : "Change password"}
         </button>
       </form>
+
       <div className="rounded-[2.5rem] border-[4px] border-border bg-tint-rose p-8 shadow-vibe">
         <h2 className="font-display text-2xl font-black text-foreground">Danger zone</h2>
         <p className="mt-2 text-base font-bold text-foreground/80">

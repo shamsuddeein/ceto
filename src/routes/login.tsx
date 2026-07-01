@@ -33,7 +33,11 @@ function LoginPage() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!identifier.trim()) {
-      toast.error(authType === "magic" ? "Enter your email address to continue." : "Enter your username or email to continue.");
+      toast.error(
+        authType === "magic"
+          ? "Enter your email address to continue."
+          : "Enter your username or email to continue.",
+      );
       return;
     }
 
@@ -69,7 +73,10 @@ function LoginPage() {
       toast.success("Welcome back! Redirecting...");
       setTimeout(() => navigate({ to: "/dashboard" }), 1000);
     } catch (err: any) {
-      const msg = err.response?.data?.detail || err.response?.data?.non_field_errors?.[0] || "Invalid credentials. Please try again.";
+      const msg =
+        err.response?.data?.detail ||
+        err.response?.data?.non_field_errors?.[0] ||
+        "Invalid credentials. Please try again.";
       setErrorMsg(msg);
       toast.error(msg);
     } finally {
@@ -210,14 +217,17 @@ function LoginPage() {
                     type={authType === "magic" ? "email" : "text"}
                     value={identifier}
                     onChange={(e) => setIdentifier(e.target.value)}
-                    placeholder={authType === "magic" ? "you@example.com" : "Username or Email address"}
+                    placeholder={
+                      authType === "magic" ? "you@example.com" : "Username or Email address"
+                    }
                     autoComplete={authType === "magic" ? "email" : "username"}
                     disabled={loading}
                     className="mt-2 w-full rounded-2xl border-[3px] border-border bg-background px-4 py-4 font-bold text-foreground outline-none shadow-vibe-sm transition-all focus:translate-x-[2px] focus:translate-y-[2px] focus:shadow-none disabled:opacity-60"
                   />
                   {authType === "magic" && (
                     <p className="mt-2 text-xs font-bold text-foreground/60">
-                      We'll email you a secure link to access your purchases and downloads without needing a password.
+                      We'll email you a secure link to access your purchases and downloads without
+                      needing a password.
                     </p>
                   )}
                 </div>
@@ -256,7 +266,11 @@ function LoginPage() {
                         aria-label={showPassword ? "Hide password" : "Show password"}
                         className="absolute inset-y-0 right-3 grid place-items-center text-foreground/60"
                       >
-                        {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                        {showPassword ? (
+                          <EyeOff className="h-4 w-4" />
+                        ) : (
+                          <Eye className="h-4 w-4" />
+                        )}
                       </button>
                     </div>
                   </div>

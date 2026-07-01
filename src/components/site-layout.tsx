@@ -106,7 +106,7 @@ export function SiteHeader() {
             <Search className="h-5 w-5 stroke-[2.5]" />
           </Link>
           <Link
-            to="/checkout"
+            to="/marketplace"
             aria-label="View cart"
             className="inline-flex h-11 w-11 items-center justify-center rounded-full text-foreground/70 hover:bg-tint-mint focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
           >
@@ -184,7 +184,7 @@ export function SiteHeader() {
                 <Search className="h-5 w-5 stroke-[2.5]" /> Search
               </Link>
               <Link
-                to="/checkout"
+                to="/marketplace"
                 onClick={() => setOpen(false)}
                 aria-label="View cart"
                 className="inline-flex h-12 w-12 items-center justify-center rounded-xl border-2 border-border hover:bg-tint-mint"

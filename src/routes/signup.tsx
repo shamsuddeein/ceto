@@ -341,13 +341,6 @@ function SignupPage() {
 
         {/* Right: marketing panel */}
         <section className="relative hidden overflow-hidden bg-primary-soft/40 px-4 py-10 sm:px-6 md:px-10 lg:block lg:py-16">
-          <div className="pointer-events-none absolute right-10 top-16 grid grid-cols-6 gap-2 opacity-40">
-            {Array.from({ length: 36 }).map((_, i) => (
-              <span key={i} className="h-1 w-1 rounded-full bg-primary" />
-            ))}
-          </div>
-          <div className="pointer-events-none absolute -right-32 bottom-10 h-80 w-80 rounded-full bg-primary-soft/70" />
-
           <div className="relative mx-auto max-w-xl text-center">
             <h2 className="font-display text-2xl font-bold text-primary md:text-3xl">
               Join our first creators today!

@@ -49,7 +49,6 @@ function AffiliatesPage() {
         <section className="container-page pb-32">
           <div className="grid gap-8 md:grid-cols-3">
             <div className="group relative overflow-hidden rounded-3xl border border-border/50 bg-surface/40 p-8 backdrop-blur-md transition-all hover:-translate-y-2 hover:border-primary/50 hover:bg-surface/80 hover:shadow-2xl hover:shadow-primary/10">
-              <div className="pointer-events-none absolute -right-10 -top-10 h-40 w-40 rounded-full bg-primary/10 blur-3xl transition-all group-hover:bg-primary/20" />
               <div className="mb-6 inline-flex rounded-2xl bg-primary/10 p-4 text-primary ring-1 ring-primary/20">
                 <DollarSign className="h-8 w-8" />
               </div>
@@ -60,7 +59,6 @@ function AffiliatesPage() {
               </p>
             </div>
             <div className="group relative overflow-hidden rounded-3xl border border-border/50 bg-surface/40 p-8 backdrop-blur-md transition-all hover:-translate-y-2 hover:border-blue-500/50 hover:bg-surface/80 hover:shadow-2xl hover:shadow-blue-500/10">
-              <div className="pointer-events-none absolute -right-10 -top-10 h-40 w-40 rounded-full bg-blue-500/10 blur-3xl transition-all group-hover:bg-blue-500/20" />
               <div className="mb-6 inline-flex rounded-2xl bg-blue-500/10 p-4 text-blue-500 ring-1 ring-blue-500/20">
                 <TrendingUp className="h-8 w-8" />
               </div>
@@ -71,7 +69,6 @@ function AffiliatesPage() {
               </p>
             </div>
             <div className="group relative overflow-hidden rounded-3xl border border-border/50 bg-surface/40 p-8 backdrop-blur-md transition-all hover:-translate-y-2 hover:border-purple-500/50 hover:bg-surface/80 hover:shadow-2xl hover:shadow-purple-500/10">
-              <div className="pointer-events-none absolute -right-10 -top-10 h-40 w-40 rounded-full bg-purple-500/10 blur-3xl transition-all group-hover:bg-purple-500/20" />
               <div className="mb-6 inline-flex rounded-2xl bg-purple-500/10 p-4 text-purple-500 ring-1 ring-purple-500/20">
                 <Users className="h-8 w-8" />
               </div>

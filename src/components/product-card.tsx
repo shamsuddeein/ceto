@@ -10,7 +10,7 @@ export function ProductCard({ p }: { p: Product }) {
   return (
     <Link
       to="/products/$id"
-      params={{ id: p.id.toString() }}
+      params={{ id: p.slug }}
       className="group flex flex-col overflow-hidden rounded-[2rem] border-[3px] border-border bg-white shadow-vibe-sm transition-transform hover:-translate-y-2 hover:shadow-vibe"
     >
       <div

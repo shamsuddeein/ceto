@@ -34,3 +34,8 @@ dist-ssr
 # Playwright
 playwright-report/
 test-results/
+
+# Environment and debug files
+.env
+debug_creator.js
+debug_creator.cjs

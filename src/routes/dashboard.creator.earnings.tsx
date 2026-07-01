@@ -2,7 +2,8 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { DashboardLayout } from "@/components/dashboard-layout";
 import { Transaction } from "@/types";
 import { ArrowDownToLine, Wallet, TrendingUp, Loader2 } from "lucide-react";
-import { dashboardData, wallet as mockWallet } from "@/lib/mock-data";
+import { useQuery } from "@tanstack/react-query";
+import { api } from "@/lib/axios";
 
 export const Route = createFileRoute("/dashboard/creator/earnings")({
   head: () => ({ meta: [{ title: "Earnings | Cetoh" }] }),
@@ -10,9 +11,48 @@ export const Route = createFileRoute("/dashboard/creator/earnings")({
 });
 
 function Earnings() {
-  const wallet = mockWallet;
-  const analytics = dashboardData();
-  const tx = analytics?.recent_orders || [];
+  // Load wallet balance
+  const { data: wallet = null, isLoading: walletLoading } = useQuery({
+    queryKey: ["wallet"],
+    queryFn: async () => {
+      const res = await api.get("/finance/wallet/");
+      return res.data;
+    },
+  });
+
+  // Load dashboard stats for transaction history
+  const { data: stats = null, isLoading: statsLoading } = useQuery({
+    queryKey: ["creatorDashboardStats"],
+    queryFn: async () => {
+      const res = await api.get("/analytics/dashboard/");
+      return res.data;
+    },
+  });
+
+  // Load withdrawal requests list to sum completed withdrawals
+  const { data: withdrawalsList = [], isLoading: withdrawalsLoading } = useQuery<any[]>({
+    queryKey: ["withdrawals"],
+    queryFn: async () => {
+      const res = await api.get("/finance/withdrawals/");
+      return res.data.results || [];
+    },
+  });
+
+  if (walletLoading || statsLoading || withdrawalsLoading) {
+    return (
+      <DashboardLayout title="Earnings">
+        <div className="flex justify-center py-20">
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        </div>
+      </DashboardLayout>
+    );
+  }
+
+  const tx = stats?.recent_orders || [];
+  const pendingClearance = Number(wallet?.pending_balance || 0);
+  const totalWithdrawn = withdrawalsList
+    .filter((w: any) => w.status === "completed")
+    .reduce((sum: number, w: any) => sum + Number(w.amount), 0);
 
   return (
     <DashboardLayout title="Earnings">
@@ -28,7 +68,11 @@ function Earnings() {
           label="Pending clearance"
           value={`₦${Number(wallet?.pending_balance || 0).toLocaleString("en-US")}`}
         />
-        <Stat icon={ArrowDownToLine} label="Total withdrawn" value="₦0.00" />
+        <Stat
+          icon={ArrowDownToLine}
+          label="Total withdrawn"
+          value={`₦${totalWithdrawn.toLocaleString("en-US")}`}
+        />
       </div>
       <div className="mt-10 flex flex-col gap-6 rounded-[2.5rem] border-[4px] border-border bg-tint-peach p-6 sm:p-8 sm:flex-row sm:items-center sm:justify-between shadow-vibe">
         <div>

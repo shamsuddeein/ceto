@@ -7,8 +7,8 @@ test.describe("Public routes", () => {
     await expect(page.locator("h1").first()).toContainText("The best way to sell");
 
     // Scroll and wait for the lazy loaded PaymentGateways section to appear
-    await page.locator("text=Never lose an international").scrollIntoViewIfNeeded();
-    await expect(page.locator("text=Never lose an international")).toBeVisible();
+    await page.locator("text=Local payments that actually work").scrollIntoViewIfNeeded();
+    await expect(page.locator("text=Local payments that actually work")).toBeVisible();
   });
 
   test("Marketplace route fetches and renders products", async ({ page }) => {
@@ -21,6 +21,9 @@ test.describe("Public routes", () => {
 
   test("Creator profile fetches and renders creator data", async ({ page }) => {
     await page.goto("/creators/janedoe");
+
+    // Wait for the loading state to complete
+    await expect(page.locator("text=Loading store...")).not.toBeVisible({ timeout: 15000 });
 
     // The queryOptions loader uppercases the first letter
     await expect(page.locator("h1").first()).toContainText("Janedoe");

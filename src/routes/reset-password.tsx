@@ -20,7 +20,8 @@ function ResetPassword() {
   const { uid, token } = Route.useSearch();
   const [pw, setPw] = useState("");
   const [pw2, setPw2] = useState("");
-  const [show, setShow] = useState(false);
+  const [show1, setShow1] = useState(false);
+  const [show2, setShow2] = useState(false);
   const [loading, setLoading] = useState(false);
   const [done, setDone] = useState(false);
   const navigate = Route.useNavigate();
@@ -81,16 +82,16 @@ function ResetPassword() {
                   label="New password"
                   value={pw}
                   onChange={setPw}
-                  show={show}
-                  setShow={setShow}
+                  show={show1}
+                  setShow={setShow1}
                   disabled={loading}
                 />
                 <PasswordField
                   label="Confirm password"
                   value={pw2}
                   onChange={setPw2}
-                  show={show}
-                  setShow={setShow}
+                  show={show2}
+                  setShow={setShow2}
                   disabled={loading}
                 />
                 <ul className="space-y-1 text-xs">

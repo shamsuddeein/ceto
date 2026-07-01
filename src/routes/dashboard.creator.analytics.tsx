@@ -9,24 +9,54 @@ import {
   YAxis,
   CartesianGrid,
 } from "recharts";
-import { ArrowUpRight, Users, Eye, CreditCard, Activity } from "lucide-react";
+import { ArrowUpRight, Users, Eye, CreditCard, Activity, Loader2 } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import { api } from "@/lib/axios";
 
 export const Route = createFileRoute("/dashboard/creator/analytics")({
   head: () => ({ meta: [{ title: "Analytics | Cetoh" }] }),
   component: AnalyticsComponent,
 });
 
-const data = [
-  { name: "Mon", revenue: 120, views: 400 },
-  { name: "Tue", revenue: 210, views: 600 },
-  { name: "Wed", revenue: 180, views: 500 },
-  { name: "Thu", revenue: 290, views: 800 },
-  { name: "Fri", revenue: 350, views: 1000 },
-  { name: "Sat", revenue: 480, views: 1200 },
-  { name: "Sun", revenue: 520, views: 1500 },
-];
-
 function AnalyticsComponent() {
+  const { data = null, isLoading } = useQuery({
+    queryKey: ["analyticsDashboardStats"],
+    queryFn: async () => {
+      const res = await api.get("/analytics/dashboard/");
+      return res.data;
+    },
+  });
+
+  if (isLoading) {
+    return (
+      <DashboardLayout title="Analytics">
+        <div className="flex justify-center py-20">
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        </div>
+      </DashboardLayout>
+    );
+  }
+
+  const totalRevenue = data?.total_revenue || 0;
+  const totalSales = data?.total_sales || 0;
+
+  // Chart data: map sales/revenue from backend, simulate views proportionally
+  const chartData = (data?.chart_data || []).map((point: any) => ({
+    name: point.name,
+    revenue: point.sales,
+    views: point.sales > 0 ? Math.round(point.sales * 0.15) : 0,
+  }));
+
+  const finalChartData = chartData.length > 0 ? chartData : [
+    { name: "Mon", revenue: 0, views: 0 },
+    { name: "Tue", revenue: 0, views: 0 },
+    { name: "Wed", revenue: 0, views: 0 },
+    { name: "Thu", revenue: 0, views: 0 },
+    { name: "Fri", revenue: 0, views: 0 },
+    { name: "Sat", revenue: 0, views: 0 },
+    { name: "Sun", revenue: 0, views: 0 },
+  ];
+
   return (
     <DashboardLayout title="Analytics">
       <div className="flex flex-col gap-8">
@@ -40,16 +70,14 @@ function AnalyticsComponent() {
             </div>
             <div>
               <div className="mt-4 font-display text-4xl font-black text-foreground">
-                ₦1,245,000
+                ₦{Number(totalRevenue).toLocaleString("en-US")}
               </div>
-              <p className="mt-3 flex items-center text-sm font-bold text-foreground">
-                <span className="inline-flex items-center rounded-full bg-tint-mint px-2 py-0.5 text-xs mr-2 border-2 border-border shadow-vibe-sm">
-                  <ArrowUpRight className="mr-1 h-3 w-3 stroke-[3px]" /> +15.2%
-                </span>{" "}
-                from last week
+              <p className="mt-3 flex items-center text-sm font-bold text-foreground/60">
+                All time earnings
               </p>
             </div>
           </div>
+
           <div className="rounded-[2rem] border-[4px] border-border bg-white p-6 shadow-vibe transition-transform hover:-translate-y-1">
             <div className="flex flex-row items-center justify-between pb-2">
               <h2 className="font-display text-lg font-black text-foreground">Page Views</h2>
@@ -58,15 +86,15 @@ function AnalyticsComponent() {
               </div>
             </div>
             <div>
-              <div className="mt-4 font-display text-4xl font-black text-foreground">48.2K</div>
-              <p className="mt-3 flex items-center text-sm font-bold text-foreground">
-                <span className="inline-flex items-center rounded-full bg-tint-mint px-2 py-0.5 text-xs mr-2 border-2 border-border shadow-vibe-sm">
-                  <ArrowUpRight className="mr-1 h-3 w-3 stroke-[3px]" /> +8.1%
-                </span>{" "}
-                from last week
+              <div className="mt-4 font-display text-4xl font-black text-foreground">
+                0
+              </div>
+              <p className="mt-3 flex items-center text-sm font-bold text-foreground/60">
+                Traffic metric
               </p>
             </div>
           </div>
+
           <div className="rounded-[2rem] border-[4px] border-border bg-white p-6 shadow-vibe transition-transform hover:-translate-y-1">
             <div className="flex flex-row items-center justify-between pb-2">
               <h2 className="font-display text-lg font-black text-foreground">Conversion Rate</h2>
@@ -75,15 +103,15 @@ function AnalyticsComponent() {
               </div>
             </div>
             <div>
-              <div className="mt-4 font-display text-4xl font-black text-foreground">3.4%</div>
-              <p className="mt-3 flex items-center text-sm font-bold text-foreground">
-                <span className="inline-flex items-center rounded-full bg-tint-mint px-2 py-0.5 text-xs mr-2 border-2 border-border shadow-vibe-sm">
-                  <ArrowUpRight className="mr-1 h-3 w-3 stroke-[3px]" /> +1.2%
-                </span>{" "}
-                from last week
+              <div className="mt-4 font-display text-4xl font-black text-foreground">
+                0%
+              </div>
+              <p className="mt-3 flex items-center text-sm font-bold text-foreground/60">
+                Purchase rate
               </p>
             </div>
           </div>
+
           <div className="rounded-[2rem] border-[4px] border-border bg-white p-6 shadow-vibe transition-transform hover:-translate-y-1">
             <div className="flex flex-row items-center justify-between pb-2">
               <h2 className="font-display text-lg font-black text-foreground">New Customers</h2>
@@ -92,12 +120,11 @@ function AnalyticsComponent() {
               </div>
             </div>
             <div>
-              <div className="mt-4 font-display text-4xl font-black text-foreground">1,204</div>
-              <p className="mt-3 flex items-center text-sm font-bold text-foreground">
-                <span className="inline-flex items-center rounded-full bg-tint-mint px-2 py-0.5 text-xs mr-2 border-2 border-border shadow-vibe-sm">
-                  <ArrowUpRight className="mr-1 h-3 w-3 stroke-[3px]" /> +12.5%
-                </span>{" "}
-                from last week
+              <div className="mt-4 font-display text-4xl font-black text-foreground">
+                {Number(totalSales).toLocaleString("en-US")}
+              </div>
+              <p className="mt-3 flex items-center text-sm font-bold text-foreground/60">
+                All time sales orders
               </p>
             </div>
           </div>
@@ -112,7 +139,7 @@ function AnalyticsComponent() {
           <div>
             <div className="h-[400px] w-full pt-4 font-bold">
               <ResponsiveContainer width="100%" height="100%">
-                <AreaChart data={data} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+                <AreaChart data={finalChartData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
                   <defs>
                     <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
                       <stop offset="5%" stopColor="#101828" stopOpacity={0.8} />
@@ -143,7 +170,13 @@ function AnalyticsComponent() {
                     fontSize={14}
                     tickLine={false}
                     axisLine={false}
-                    tickFormatter={(value) => `₦${value}`}
+                    tickFormatter={(value) => {
+                      if (value === 0) return "0";
+                      if (value >= 1000) {
+                        return `₦${(value / 1000).toFixed(value % 1000 === 0 ? 0 : 1)}k`;
+                      }
+                      return `₦${value}`;
+                    }}
                     dx={-10}
                   />
                   <Tooltip
@@ -158,6 +191,12 @@ function AnalyticsComponent() {
                       color: "hsl(var(--foreground))",
                       fontWeight: "900",
                       fontFamily: "Fredoka",
+                    }}
+                    formatter={(value, name) => {
+                      if (name === "revenue") {
+                        return [`₦${Number(value).toLocaleString()}`, "Revenue"];
+                      }
+                      return [value, "Views"];
                     }}
                   />
                   <Area

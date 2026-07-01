@@ -3,17 +3,7 @@ import { Link } from "@tanstack/react-router";
 export default function Hero() {
   return (
     <section className="relative overflow-hidden bg-background pt-20 pb-24 lg:pt-32 lg:pb-36">
-      <div className="pointer-events-none absolute inset-0">
-        <svg
-          className="absolute left-10 top-20 text-gold h-8 w-8"
-          viewBox="0 0 24 24"
-          fill="currentColor"
-        >
-          <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
-        </svg>
-        <div className="absolute right-20 top-32 h-4 w-4 rounded-full bg-tint-mint border-2 border-border" />
-        <div className="absolute left-1/4 bottom-20 h-6 w-6 rounded-full bg-tint-peach border-2 border-border" />
-      </div>
+
 
       <div className="container-page relative grid lg:grid-cols-[1fr_auto] gap-12 items-center">
         <div className="max-w-2xl text-left relative z-10">
@@ -32,7 +22,7 @@ export default function Hero() {
           <div className="mt-8 flex flex-wrap items-center gap-4">
             <Link
               to="/signup"
-              className="inline-flex items-center justify-center rounded-full border-[3px] border-border bg-primary px-10 py-5 text-xl font-black text-white shadow-vibe shadow-vibe-hover"
+              className="inline-flex items-center justify-center rounded-full border-[3px] border-border bg-primary px-10 py-5 text-xl font-black text-white shadow-vibe-cta shadow-vibe-cta-hover"
             >
               Start Selling with Cetoh
             </Link>

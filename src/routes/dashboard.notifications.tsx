@@ -1,18 +1,27 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
-import { Bell, CheckCheck, Package, Wallet, ShoppingBag, Info } from "lucide-react";
+import { Bell, CheckCheck, Package, Wallet, ShoppingBag, Info, Loader2 } from "lucide-react";
 import { DashboardLayout } from "@/components/dashboard-layout";
 import { toast } from "sonner";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { api } from "@/lib/axios";
 
 export const Route = createFileRoute("/dashboard/notifications")({
   head: () => ({ meta: [{ title: "Notifications | Cetoh" }] }),
   component: NotificationsPage,
 });
 
-type NotificationType = "sale" | "withdrawal" | "product" | "info";
+type NotificationType =
+  | "sale"
+  | "withdrawal"
+  | "product"
+  | "info"
+  | "payment_confirmed"
+  | "delivery_sent"
+  | "announcement";
 
 interface Notification {
-  id: string;
+  id: string | number;
   type: NotificationType;
   title: string;
   body: string;
@@ -20,62 +29,14 @@ interface Notification {
   created_at: string;
 }
 
-const MOCK_NOTIFICATIONS: Notification[] = [
-  {
-    id: "n1",
-    type: "sale",
-    title: "New sale",
-    body: "Ada Okafor purchased Creator Launch Course for ₦30,000.",
-    is_read: false,
-    created_at: "2026-06-10T10:20:00.000Z",
-  },
-  {
-    id: "n2",
-    type: "withdrawal",
-    title: "Withdrawal processed",
-    body: "Your withdrawal of ₦120,000 has been processed and sent to your bank account.",
-    is_read: false,
-    created_at: "2026-06-09T09:00:00.000Z",
-  },
-  {
-    id: "n3",
-    type: "sale",
-    title: "New sale",
-    body: "Tunde Bello purchased Milk and Honey [eBook] for ₦4,500.",
-    is_read: false,
-    created_at: "2026-06-09T13:45:00.000Z",
-  },
-  {
-    id: "n4",
-    type: "product",
-    title: "Product published",
-    body: "Your product Notion Business Template is now live on the marketplace.",
-    is_read: true,
-    created_at: "2026-06-07T08:10:00.000Z",
-  },
-  {
-    id: "n5",
-    type: "info",
-    title: "0% commission extended",
-    body: "Great news! Your 0% commission period has been extended for another month. Keep selling!",
-    is_read: true,
-    created_at: "2026-06-05T12:00:00.000Z",
-  },
-  {
-    id: "n6",
-    type: "sale",
-    title: "New sale",
-    body: "Maryam Yusuf purchased Notion Business Template for ₦15,000.",
-    is_read: true,
-    created_at: "2026-06-04T15:30:00.000Z",
-  },
-];
-
 const TYPE_CONFIG: Record<NotificationType, { icon: React.ElementType; tint: string }> = {
   sale: { icon: ShoppingBag, tint: "bg-tint-mint" },
-  withdrawal: { icon: Wallet, tint: "bg-tint-peach" },
-  product: { icon: Package, tint: "bg-tint-lilac" },
+  payment_confirmed: { icon: ShoppingBag, tint: "bg-tint-mint" },
+  withdrawal: { icon: Wallet, tint: "bg-tint-mint" },
+  product: { icon: Package, tint: "bg-tint-peach" },
+  delivery_sent: { icon: Package, tint: "bg-tint-peach" },
   info: { icon: Info, tint: "bg-tint-cream" },
+  announcement: { icon: Info, tint: "bg-tint-cream" },
 };
 
 function formatDate(iso: string) {
@@ -89,22 +50,51 @@ function formatDate(iso: string) {
 }
 
 function NotificationsPage() {
-  const [notifications, setNotifications] = useState<Notification[]>(MOCK_NOTIFICATIONS);
+  const queryClient = useQueryClient();
   const [markingAll, setMarkingAll] = useState(false);
+
+  // Fetch notifications dynamically from API
+  const { data: notifications = [], isLoading } = useQuery<Notification[]>({
+    queryKey: ["notifications"],
+    queryFn: async () => {
+      const res = await api.get("/notifications/");
+      // The API returns a paginated list of notifications: results
+      return res.data.results || [];
+    },
+  });
 
   const unreadCount = notifications.filter((n) => !n.is_read).length;
 
-  function markRead(id: string) {
-    setNotifications((prev) => prev.map((n) => (n.id === id ? { ...n, is_read: true } : n)));
+  async function markRead(id: string | number) {
+    try {
+      await api.post(`/notifications/${id}/mark-read/`);
+      queryClient.invalidateQueries({ queryKey: ["notifications"] });
+    } catch {
+      toast.error("Could not mark notification as read.");
+    }
   }
 
   async function markAllRead() {
     setMarkingAll(true);
-    // Mocked — replace with: await api.post("/notifications/mark-all-read/")
-    await new Promise((r) => setTimeout(r, 600));
-    setNotifications((prev) => prev.map((n) => ({ ...n, is_read: true })));
-    toast.success("All notifications marked as read.");
-    setMarkingAll(false);
+    try {
+      await api.post("/notifications/mark-all-read/");
+      queryClient.invalidateQueries({ queryKey: ["notifications"] });
+      toast.success("All notifications marked as read.");
+    } catch {
+      toast.error("Could not mark all notifications as read.");
+    } finally {
+      setMarkingAll(false);
+    }
+  }
+
+  if (isLoading) {
+    return (
+      <DashboardLayout title="Notifications">
+        <div className="flex h-64 items-center justify-center">
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        </div>
+      </DashboardLayout>
+    );
   }
 
   return (
@@ -113,7 +103,7 @@ function NotificationsPage() {
         {/* Header row */}
         <div className="mb-6 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="grid h-11 w-11 place-items-center rounded-xl border-[3px] border-border bg-tint-peach shadow-vibe-sm">
+            <div className="grid h-11 w-11 place-items-center rounded-xl border-[3px] border-border bg-tint-mint shadow-vibe-sm">
               <Bell className="h-5 w-5 stroke-[2.5] text-foreground" />
             </div>
             <div>
@@ -129,7 +119,7 @@ function NotificationsPage() {
             <button
               onClick={markAllRead}
               disabled={markingAll}
-              className="inline-flex items-center gap-2 rounded-xl border-[3px] border-border bg-white px-4 py-2.5 text-sm font-black text-foreground shadow-vibe-sm transition-transform hover:-translate-y-1 hover:bg-tint-mint disabled:opacity-60"
+              className="inline-flex items-center gap-2 rounded-xl border-[3px] border-border bg-white px-4 py-2.5 text-sm font-black text-foreground shadow-vibe-sm transition-transform hover:-translate-y-1 hover:bg-tint-peach disabled:opacity-60"
             >
               {markingAll ? (
                 <>

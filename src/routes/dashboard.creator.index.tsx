@@ -1,11 +1,20 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { TrendingUp, Banknote, ShoppingBag, Eye, ArrowUpRight, PackageOpen } from "lucide-react";
+import {
+  TrendingUp,
+  Banknote,
+  ShoppingBag,
+  Eye,
+  ArrowUpRight,
+  PackageOpen,
+  Loader2,
+} from "lucide-react";
 import { DashboardLayout } from "@/components/dashboard-layout";
 import { EmptyState } from "@/components/ui/empty-state";
 import { lazy, Suspense } from "react";
 const DashboardChart = lazy(() => import("@/components/ui/dashboard-chart"));
 import { Order } from "@/types";
-import { dashboardData } from "@/lib/mock-data";
+import { useQuery } from "@tanstack/react-query";
+import { api } from "@/lib/axios";
 
 export const Route = createFileRoute("/dashboard/creator/")({
   head: () => ({ meta: [{ title: "Creator Dashboard | Cetoh" }] }),
@@ -13,8 +22,23 @@ export const Route = createFileRoute("/dashboard/creator/")({
 });
 
 function Dashboard() {
-  const data = dashboardData();
-  const isLoading = false;
+  const { data = null, isLoading } = useQuery({
+    queryKey: ["creatorDashboardStats"],
+    queryFn: async () => {
+      const res = await api.get("/analytics/dashboard/");
+      return res.data;
+    },
+  });
+
+  if (isLoading) {
+    return (
+      <DashboardLayout title="Overview">
+        <div className="flex justify-center py-20">
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        </div>
+      </DashboardLayout>
+    );
+  }
 
   const stats = data
     ? [
@@ -47,7 +71,7 @@ function Dashboard() {
       <div className="mb-6 flex justify-end">{/* Toggle Demo Data button removed */}</div>
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
         {stats.map((s, i) => {
-          const tints = ["bg-tint-mint", "bg-tint-peach", "bg-tint-lilac", "bg-tint-rose"];
+          const tints = ["bg-tint-mint", "bg-tint-peach", "bg-tint-cream", "bg-tint-peach"];
           return (
             <div
               key={s.label}
@@ -147,14 +171,25 @@ function Dashboard() {
                           >
                             <PackageOpen className="h-6 w-6 stroke-[2.5]" />
                           </div>
-                          <span className="font-black line-clamp-1">Order #{o.id}</span>
+                          <div className="flex flex-col">
+                            <span className="font-black line-clamp-1">
+                              {typeof o.product === "object" && o.product !== null
+                                ? (o.product as import("@/types").Product).title
+                                : String(o.product)}
+                            </span>
+                            <span className="text-xs font-bold text-foreground/60">
+                              Order #{o.id}
+                            </span>
+                          </div>
                         </div>
                       </td>
                       <td>₦{Number(o.amount).toLocaleString("en-US")}</td>
                       <td>{o.buyer_email}</td>
                       <td>{new Date(o.created_at).toLocaleDateString()}</td>
                       <td>
-                        <span className="rounded-full border-[3px] border-border bg-tint-peach px-3 py-1 text-xs font-black shadow-vibe-sm">
+                        <span
+                          className={`rounded-full border-[3px] border-border px-3 py-1 text-xs font-black shadow-vibe-sm ${o.status === "paid" ? "bg-tint-mint text-foreground" : o.status === "failed" ? "bg-tint-rose text-foreground" : "bg-tint-cream text-foreground"}`}
+                        >
                           {o.status}
                         </span>
                       </td>
@@ -178,12 +213,19 @@ function Dashboard() {
                       </div>
                       <span className="font-black text-lg">#{o.id}</span>
                     </div>
-                    <span className="rounded-full border-[3px] border-border bg-tint-peach px-2 py-0.5 text-xs font-black shadow-vibe-sm">
+                    <span
+                      className={`rounded-full border-[3px] border-border px-2 py-0.5 text-xs font-black shadow-vibe-sm ${o.status === "paid" ? "bg-tint-mint text-foreground" : o.status === "failed" ? "bg-tint-rose text-foreground" : "bg-tint-cream text-foreground"}`}
+                    >
                       {o.status}
                     </span>
                   </div>
-                  <div className="text-2xl font-black mb-2">
+                  <div className="text-2xl font-black mb-1">
                     ₦{Number(o.amount).toLocaleString("en-US")}
+                  </div>
+                  <div className="text-sm font-bold text-foreground/80 mb-3 line-clamp-1">
+                    {typeof o.product === "object" && o.product !== null
+                      ? (o.product as import("@/types").Product).title
+                      : String(o.product)}
                   </div>
                   <div className="flex justify-between text-sm text-foreground/70 font-bold border-t-[3px] border-border pt-3">
                     <span className="truncate mr-2">{o.buyer_email}</span>

@@ -2,13 +2,11 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { toast } from "sonner";
 import { DashboardLayout } from "@/components/dashboard-layout";
-import { Transaction, APIError } from "@/types";
+import { Transaction } from "@/types";
 import { Loader2, Building2 } from "lucide-react";
-import {
-  wallet as mockWallet,
-  withdrawals as mockWithdrawals,
-  profile as mockProfile,
-} from "@/lib/mock-data";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { api } from "@/lib/axios";
+import { fetchCurrentUser } from "@/lib/auth";
 
 export const Route = createFileRoute("/dashboard/creator/withdrawals")({
   head: () => ({ meta: [{ title: "Withdraw Funds | Cetoh" }] }),
@@ -16,22 +14,55 @@ export const Route = createFileRoute("/dashboard/creator/withdrawals")({
 });
 
 function Withdrawals() {
+  const queryClient = useQueryClient();
   const [amount, setAmount] = useState("");
-  const wallet = mockWallet;
-  const history = mockWithdrawals;
-  const profile = mockProfile;
-  const walletLoading = false;
-  const historyLoading = false;
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const withdrawMutation = {
-    isPending: false,
-    mutate: (v: number) => {
-      toast.success(`Withdrawal of ₦${Number(v).toLocaleString("en-US")} requested`);
-      setAmount("");
+  // Load user profile
+  const { data: user = null, isLoading: profileLoading } = useQuery({
+    queryKey: ["profile"],
+    queryFn: fetchCurrentUser,
+  });
+
+  // Load wallet balance
+  const { data: wallet = null, isLoading: walletLoading } = useQuery({
+    queryKey: ["wallet"],
+    queryFn: async () => {
+      const res = await api.get("/finance/wallet/");
+      return res.data;
     },
-  };
+  });
+
+  // Load withdrawal history
+  const { data: history = [], isLoading: historyLoading } = useQuery<any[]>({
+    queryKey: ["withdrawals"],
+    queryFn: async () => {
+      const res = await api.get("/finance/withdrawals/");
+      // The API returns a list of withdrawal requests
+      return res.data.results || [];
+    },
+  });
 
   const balance = Number(wallet?.available_balance || 0);
+
+  const withdrawMutation = {
+    isPending: isSubmitting,
+    mutate: async (v: number) => {
+      setIsSubmitting(true);
+      try {
+        await api.post("/finance/withdrawals/", { amount: v });
+        queryClient.invalidateQueries({ queryKey: ["wallet"] });
+        queryClient.invalidateQueries({ queryKey: ["withdrawals"] });
+        toast.success(`Withdrawal of ₦${v.toLocaleString("en-US")} requested successfully!`);
+        setAmount("");
+      } catch (err: any) {
+        const msg = err.response?.data?.detail || "Could not process withdrawal request.";
+        toast.error(msg);
+      } finally {
+        setIsSubmitting(false);
+      }
+    },
+  };
 
   if (walletLoading || historyLoading) {
     return (
@@ -45,13 +76,16 @@ function Withdrawals() {
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
+    if (!bankDetails.account_number || !bankDetails.bank_name) {
+      return toast.error("Please configure your bank payout details in your profile first.");
+    }
     const v = parseFloat(amount);
     if (!v || v <= 0) return toast.error("Enter a valid amount");
     if (v > balance) return toast.error("Amount exceeds available balance");
     withdrawMutation.mutate(v);
   }
 
-  const bankDetails = profile?.profile?.bank_details || {};
+  const bankDetails = user?.profile?.bank_details || {};
   return (
     <DashboardLayout title="Withdraw Funds">
       <div className="grid gap-8 lg:grid-cols-[1fr_400px]">
@@ -163,7 +197,7 @@ function Withdrawals() {
                   <tr key={h.id} className="transition-colors hover:bg-muted/50">
                     <td className="py-4 font-mono text-sm">WD-{h.id}</td>
                     <td className="py-4">
-                      {new Date(h.requested_at || h.created_at).toLocaleDateString()}
+                      {new Date(h.requested_at ?? h.created_at).toLocaleDateString()}
                     </td>
                     <td className="py-4 text-foreground/70">Bank Transfer</td>
                     <td className="py-4 font-black text-foreground">

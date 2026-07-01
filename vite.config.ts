@@ -7,6 +7,7 @@ import { tanstackStart } from "@tanstack/react-start/plugin/vite";
 export default defineConfig({
   plugins: [tsConfigPaths(), tailwindcss(), tanstackStart(), react()],
   server: {
+    port: 5174,
     proxy: {
       "/api": {
         target: "http://127.0.0.1:8000",
@@ -15,4 +16,3 @@ export default defineConfig({
     },
   },
 });
-
